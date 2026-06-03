@@ -1,0 +1,66 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>&#12356;&#12375;&#12402;&#12429;&#12356;&#12510;&#12483;&#12503;</title>
+    <link
+      rel="stylesheet"
+      href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
+    <link rel="stylesheet" href="styles.css?v=20260604-5">
+    <script
+      defer
+      src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <script defer src="script.js?v=20260604-5"></script>
+  </head>
+  <body>
+    <header class="app-header">
+      <div>
+        <p class="eyebrow">&#22320;&#36074;&#22259;&#12363;&#12425;&#30707;&#12434;&#25506;&#12377;&#12503;&#12525;&#12488;&#12479;&#12452;&#12503;</p>
+        <h1>&#12356;&#12375;&#12402;&#12429;&#12356;&#12510;&#12483;&#12503;</h1>
+      </div>
+    </header>
+
+    <main class="app-shell">
+      <section class="map-pane" aria-label="&#22320;&#22259;">
+        <div class="map-tools">
+          <button id="locateButton" class="locate-button" type="button" aria-label="&#29694;&#22312;&#22320;" title="&#29694;&#22312;&#22320;">&#128205;&#29694;&#22312;&#22320;</button>
+          <form id="searchForm" class="search-form">
+            <input id="searchInput" type="search" placeholder="&#20989;&#39208;&#12289;&#31569;&#27874;&#23665;&#12394;&#12393;" autocomplete="off">
+            <button type="submit">&#26908;&#32034;</button>
+          </form>
+        </div>
+        <div id="map"></div>
+      </section>
+
+      <aside class="result-pane" aria-live="polite">
+        <section class="selected-place">
+          <h2>&#36984;&#25246;&#22320;&#28857;</h2>
+          <p id="selectedPoint">&#22320;&#22259;&#12434;&#12463;&#12522;&#12483;&#12463;&#12377;&#12427;&#12363;&#12289;&#29694;&#22312;&#22320;&#12539;&#26908;&#32034;&#12391;&#22580;&#25152;&#12434;&#36984;&#12435;&#12391;&#12367;&#12384;&#12373;&#12356;&#12290;</p>
+          <button id="inspectButton" type="button" disabled>&#12371;&#12371;&#12434;&#35519;&#12409;&#12427;&#65281;</button>
+        </section>
+
+        <section class="tabs" aria-label="&#26908;&#32034;&#32080;&#26524;">
+          <div class="tab-buttons" role="tablist">
+            <button id="rocksTab" class="active" type="button" role="tab" aria-selected="true">&#30707;&#12434;&#35211;&#12427;</button>
+            <button id="geologyTab" type="button" role="tab" aria-selected="false">&#22320;&#36074;&#12434;&#35211;&#12427;</button>
+          </div>
+
+          <div id="rocksPanel" class="tab-panel active" role="tabpanel" aria-labelledby="rocksTab">
+            <p class="empty-message">&#35211;&#12388;&#12363;&#12427;&#21487;&#33021;&#24615;&#12398;&#12354;&#12427;&#30707;&#12434;&#26908;&#32034;&#12391;&#12365;&#12414;&#12377;&#12290;&#12414;&#12378;&#22580;&#25152;&#12434;&#36984;&#12435;&#12391;&#12367;&#12384;&#12373;&#12356;&#12290;</p>
+            <div id="rockCards" class="rock-cards"></div>
+          </div>
+
+          <div id="geologyPanel" class="tab-panel" role="tabpanel" aria-labelledby="geologyTab">
+            <p class="empty-message">&#21462;&#24471;&#12375;&#12383;&#22320;&#36074;&#24773;&#22577;&#12434;&#12371;&#12371;&#12395;&#34920;&#31034;&#12375;&#12414;&#12377;&#12290;</p>
+            <div id="geologyList" class="geology-list"></div>
+          </div>
+        </section>
+
+        <p class="note">
+          &#12371;&#12398;&#32080;&#26524;&#12399;&#22320;&#36074;&#22259;&#12434;&#12418;&#12392;&#12395;&#12375;&#12383;&#25512;&#23450;&#12391;&#12377;&#12290;&#23455;&#38555;&#12395;&#35211;&#12388;&#12363;&#12427;&#30707;&#12399;&#12289;&#24029;&#12420;&#28023;&#12395;&#12424;&#12387;&#12390;&#21029;&#12398;&#22320;&#22495;&#12363;&#12425;&#36939;&#12400;&#12428;&#12390;&#12367;&#12427;&#22580;&#21512;&#12364;&#12354;&#12426;&#12414;&#12377;&#12290;
+        </p>
+      </aside>
+    </main>
+  </body>
+</html>

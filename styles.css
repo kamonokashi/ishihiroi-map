@@ -1,0 +1,466 @@
+:root {
+  color-scheme: light;
+  --bg: #f6f7f2;
+  --panel: #ffffff;
+  --ink: #20251f;
+  --muted: #677060;
+  --line: #d9ded2;
+  --accent: #2e7d5b;
+  --accent-dark: #1d5f43;
+  --warm: #d28d37;
+  --rare: #7f669d;
+  --shadow: 0 18px 48px rgba(35, 42, 33, 0.14);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  height: 100%;
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, "Noto Sans JP", sans-serif;
+}
+
+button,
+input {
+  font: inherit;
+}
+
+button {
+  min-height: 42px;
+  border: 0;
+  border-radius: 6px;
+  background: var(--accent);
+  color: #fff;
+  cursor: pointer;
+  font-weight: 700;
+  transition: background 160ms ease, transform 160ms ease;
+}
+
+button:hover {
+  background: var(--accent-dark);
+}
+
+button:active {
+  transform: translateY(1px);
+}
+
+button:disabled {
+  background: #a9b0a3;
+  cursor: not-allowed;
+}
+
+.app-header {
+  min-height: 86px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 16px clamp(16px, 3vw, 36px);
+  border-bottom: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(12px);
+}
+
+.eyebrow {
+  margin: 0 0 4px;
+  color: var(--muted);
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+h1,
+h2,
+h3,
+p {
+  margin-top: 0;
+}
+
+h1 {
+  margin-bottom: 0;
+  font-size: clamp(1.55rem, 3vw, 2.2rem);
+  letter-spacing: 0;
+}
+
+h2 {
+  margin-bottom: 10px;
+  font-size: 1.05rem;
+}
+
+h3 {
+  margin-bottom: 6px;
+  font-size: 1rem;
+}
+
+.layer-toggle label {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 0 14px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #fff;
+  font-weight: 700;
+}
+
+.app-shell {
+  height: calc(100vh - 86px);
+  display: grid;
+  grid-template-columns: minmax(0, 1.35fr) minmax(340px, 0.65fr);
+  overflow: hidden;
+}
+
+.map-pane {
+  position: relative;
+  min-width: 0;
+  min-height: 0;
+  overflow: hidden;
+  border-right: 1px solid var(--line);
+  isolation: isolate;
+}
+
+#map {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  background: #dce3d3;
+}
+
+.leaflet-container {
+  width: 100%;
+  height: 100%;
+}
+
+.leaflet-top,
+.leaflet-bottom {
+  position: absolute;
+  z-index: 1000;
+  pointer-events: none;
+}
+
+.leaflet-top {
+  top: 0;
+}
+
+.leaflet-right {
+  right: 0;
+}
+
+.leaflet-left {
+  left: 0;
+}
+
+.leaflet-control {
+  position: relative;
+  z-index: 1000;
+  pointer-events: auto;
+}
+
+.leaflet-right .leaflet-control {
+  float: right;
+  clear: both;
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+.map-tools {
+  position: absolute;
+  z-index: 500;
+  top: 16px;
+  left: 16px;
+  right: clamp(150px, 22vw, 190px);
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  pointer-events: none;
+}
+
+.map-tools > * {
+  pointer-events: auto;
+}
+
+.map-tools button,
+.search-form button {
+  padding: 0 15px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.14);
+}
+
+.map-tools .locate-button {
+  width: auto;
+  min-width: 88px;
+  padding: 0 12px;
+  white-space: nowrap;
+  font-size: 0.95rem;
+  line-height: 1;
+}
+
+.search-form {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  flex: 1 1 260px;
+  gap: 8px;
+  max-width: 420px;
+  min-width: 220px;
+}
+
+.search-form input {
+  min-height: 42px;
+  min-width: 0;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  padding: 0 12px;
+  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+}
+
+.result-pane {
+  position: relative;
+  z-index: 2;
+  min-width: 0;
+  min-height: 0;
+  padding: 20px;
+  overflow: auto;
+  background: #fbfcf8;
+}
+
+.geology-control {
+  padding: 8px 10px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: rgba(255, 255, 255, 0.95);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+}
+
+.geology-control label {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  min-height: 26px;
+  color: var(--ink);
+  font-size: 0.9rem;
+  font-weight: 700;
+  white-space: nowrap;
+  cursor: pointer;
+}
+
+.selected-place,
+.tabs,
+.note {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  box-shadow: var(--shadow);
+}
+
+.selected-place {
+  padding: 18px;
+}
+
+.selected-place p {
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+#inspectButton {
+  width: 100%;
+}
+
+.tabs {
+  margin-top: 16px;
+  overflow: hidden;
+}
+
+.tab-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  border-bottom: 1px solid var(--line);
+}
+
+.tab-buttons button {
+  border-radius: 0;
+  background: #eef2e7;
+  color: var(--ink);
+  box-shadow: none;
+}
+
+.tab-buttons button.active {
+  background: #fff;
+  color: var(--accent-dark);
+}
+
+.tab-panel {
+  display: none;
+  padding: 16px;
+}
+
+.tab-panel.active {
+  display: block;
+}
+
+.empty-message {
+  color: var(--muted);
+  line-height: 1.7;
+}
+
+.rock-cards,
+.geology-list {
+  display: grid;
+  gap: 12px;
+}
+
+.rock-card,
+.geology-card {
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: #fff;
+  overflow: hidden;
+}
+
+.rock-card {
+  display: grid;
+  grid-template-columns: 72px minmax(0, 1fr);
+}
+
+.rock-swatch {
+  min-height: 120px;
+  background:
+    radial-gradient(circle at 22px 20px, rgba(255, 255, 255, 0.28), transparent 15px),
+    linear-gradient(135deg, #9b9487, #554f48);
+}
+
+.rock-body,
+.geology-card {
+  padding: 14px;
+}
+
+.rock-meta,
+.geology-meta {
+  color: var(--muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
+.tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin: 10px 0;
+}
+
+.tag {
+  padding: 4px 7px;
+  border-radius: 999px;
+  background: #eef2e7;
+  color: #3e4939;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.level {
+  display: inline-flex;
+  align-items: center;
+  margin-bottom: 8px;
+  padding: 3px 8px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.level.maybe {
+  background: var(--warm);
+}
+
+.level.rare {
+  background: var(--rare);
+}
+
+.details {
+  border-top: 1px solid var(--line);
+  padding-top: 10px;
+  color: var(--muted);
+  line-height: 1.65;
+}
+
+.details[hidden] {
+  display: none;
+}
+
+.secondary-button {
+  min-height: 34px;
+  padding: 0 10px;
+  background: #eef2e7;
+  color: var(--ink);
+  box-shadow: none;
+}
+
+.secondary-button:hover {
+  background: #e1e9d9;
+}
+
+.geology-color {
+  width: 100%;
+  height: 8px;
+  background: var(--line);
+}
+
+.note {
+  margin-top: 16px;
+  padding: 14px;
+  color: var(--muted);
+  line-height: 1.7;
+  font-size: 0.9rem;
+}
+
+@media (max-width: 820px) {
+  .app-header {
+    align-items: flex-start;
+    flex-direction: column;
+    min-height: 128px;
+  }
+
+  .app-shell {
+    height: calc(100vh - 128px);
+    grid-template-columns: 1fr;
+    grid-template-rows: minmax(360px, 52vh) minmax(0, 1fr);
+  }
+
+  .map-pane {
+    border-right: 0;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .map-pane.collapsed {
+    min-height: 74px;
+  }
+
+  .map-pane.collapsed #map {
+    height: 74px;
+  }
+
+  .map-tools {
+    top: 64px;
+    right: 14px;
+    left: 14px;
+    gap: 10px;
+  }
+
+  .search-form {
+    min-width: 0;
+    max-width: none;
+  }
+
+  .result-pane {
+    padding: 14px;
+  }
+}
