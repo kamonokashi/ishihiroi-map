@@ -1,15 +1,24 @@
 :root {
   color-scheme: light;
-  --bg: #f6f7f2;
-  --panel: #ffffff;
-  --ink: #20251f;
-  --muted: #677060;
-  --line: #d9ded2;
-  --accent: #2e7d5b;
-  --accent-dark: #1d5f43;
-  --warm: #d28d37;
-  --rare: #7f669d;
-  --shadow: 0 18px 48px rgba(35, 42, 33, 0.14);
+  --color-primary: #0DA2BD;
+  --color-stone: #ABA79D;
+  --color-bg: #F4F5F3;
+  --color-text: #303438;
+  --color-surface: #FFFFFF;
+  --color-border: #D8D6CF;
+  --color-likely: #0DA2BD;
+  --color-maybe: #ABA79D;
+  --color-rare: #6B7785;
+  --bg: var(--color-bg);
+  --panel: var(--color-surface);
+  --ink: var(--color-text);
+  --muted: #6B706A;
+  --line: var(--color-border);
+  --accent: var(--color-primary);
+  --accent-dark: #087C91;
+  --warm: var(--color-maybe);
+  --rare: var(--color-rare);
+  --shadow: 0 16px 36px rgba(48, 52, 56, 0.1);
 }
 
 * {
@@ -54,7 +63,7 @@ button:active {
 }
 
 button:disabled {
-  background: #a9b0a3;
+  background: var(--color-stone);
   cursor: not-allowed;
 }
 
@@ -66,7 +75,7 @@ button:disabled {
   gap: 20px;
   padding: 16px clamp(16px, 3vw, 36px);
   border-bottom: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.78);
+  background: rgba(255, 255, 255, 0.84);
   backdrop-filter: blur(12px);
 }
 
@@ -244,10 +253,10 @@ h3 {
   z-index: 3200;
   width: 38px;
   min-height: 68px;
-  border: 1px solid rgba(29, 95, 67, 0.22);
+  border: 1px solid rgba(13, 162, 189, 0.24);
   background: rgba(255, 255, 255, 0.96);
   color: var(--accent-dark);
-  box-shadow: 0 12px 28px rgba(35, 42, 33, 0.18);
+  box-shadow: 0 12px 28px rgba(48, 52, 56, 0.14);
   font-size: 1.22rem;
 }
 
@@ -267,7 +276,7 @@ h3 {
 
 .map-collapse-button:hover,
 .map-restore-button:hover {
-  background: #eef2e7;
+  background: rgba(13, 162, 189, 0.08);
   color: var(--accent-dark);
 }
 
@@ -309,7 +318,7 @@ h3 {
   border: 1px solid var(--line);
   border-radius: 6px;
   background: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.14);
+  box-shadow: 0 10px 24px rgba(48, 52, 56, 0.12);
   pointer-events: auto;
 }
 
@@ -327,7 +336,7 @@ h3 {
 .map-tools button,
 .search-form button {
   padding: 0 15px;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.14);
+  box-shadow: 0 10px 24px rgba(13, 162, 189, 0.2);
 }
 
 .map-tools .locate-button {
@@ -354,7 +363,7 @@ h3 {
   border: 1px solid var(--line);
   border-radius: 6px;
   padding: 0 12px;
-  box-shadow: 0 10px 28px rgba(0, 0, 0, 0.12);
+  box-shadow: 0 10px 24px rgba(48, 52, 56, 0.1);
 }
 
 .result-pane {
@@ -364,7 +373,7 @@ h3 {
   min-height: 0;
   padding: 20px;
   overflow: auto;
-  background: #fbfcf8;
+  background: var(--bg);
 }
 
 .geology-control {
@@ -372,7 +381,7 @@ h3 {
   border: 1px solid var(--line);
   border-radius: 6px;
   background: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.16);
+  box-shadow: 0 8px 24px rgba(48, 52, 56, 0.14);
 }
 
 .geology-control label {
@@ -407,13 +416,13 @@ h3 {
 
 .tab-buttons button {
   border-radius: 0;
-  background: #eef2e7;
+  background: rgba(171, 167, 157, 0.18);
   color: var(--ink);
   box-shadow: none;
 }
 
 .tab-buttons button.active {
-  background: #fff;
+  background: rgba(13, 162, 189, 0.12);
   color: var(--accent-dark);
 }
 
@@ -443,7 +452,12 @@ h3 {
 
 .rock-level-section {
   display: grid;
-  gap: 12px;
+  gap: 14px;
+}
+
+.rock-section-header {
+  display: grid;
+  gap: 5px;
 }
 
 .rock-section-title {
@@ -454,9 +468,16 @@ h3 {
   margin: 0;
   padding: 7px 12px;
   border-radius: 999px;
-  background: #eef2e7;
-  color: var(--accent-dark);
+  background: rgba(13, 162, 189, 0.1);
+  color: var(--rock-section-accent);
   font-size: 0.96rem;
+}
+
+.rock-section-header p {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.86rem;
+  line-height: 1.5;
 }
 
 .rock-section-title::before {
@@ -466,8 +487,9 @@ h3 {
   height: 22px;
   border-radius: 999px;
   background: #fff;
-  box-shadow: inset 0 0 0 1px rgba(29, 95, 67, 0.16);
+  box-shadow: inset 0 0 0 1px rgba(13, 162, 189, 0.24);
   font-size: 0.78rem;
+  color: var(--rock-section-accent);
 }
 
 .rock-grid {
@@ -479,7 +501,10 @@ h3 {
 }
 
 .rock-level-likely {
+  --rock-section-accent: var(--color-likely);
   --rock-card-size: 220px;
+  --rock-name-size: 1.1rem;
+  --rock-detail-size: 1.1rem;
   --rock-columns: 2;
   --rock-gap: 16px;
 }
@@ -489,9 +514,20 @@ h3 {
 }
 
 .rock-level-maybe {
+  --rock-section-accent: var(--color-maybe);
   --rock-card-size: 180px;
+  --rock-name-size: 0.95rem;
+  --rock-detail-size: 0.95rem;
   --rock-columns: 3;
   --rock-gap: 16px;
+}
+
+.rock-level-maybe .rock-section-title {
+  background: rgba(171, 167, 157, 0.18);
+}
+
+.rock-level-maybe .rock-section-title::before {
+  box-shadow: inset 0 0 0 1px rgba(171, 167, 157, 0.34);
 }
 
 .rock-level-maybe .rock-section-title::before {
@@ -499,9 +535,20 @@ h3 {
 }
 
 .rock-level-rare {
+  --rock-section-accent: var(--color-rare);
   --rock-card-size: 140px;
+  --rock-name-size: 0.8rem;
+  --rock-detail-size: 0.8rem;
   --rock-columns: 4;
   --rock-gap: 16px;
+}
+
+.rock-level-rare .rock-section-title {
+  background: rgba(107, 119, 133, 0.12);
+}
+
+.rock-level-rare .rock-section-title::before {
+  box-shadow: inset 0 0 0 1px rgba(107, 119, 133, 0.3);
 }
 
 .rock-level-rare .rock-section-title::before {
@@ -524,9 +571,9 @@ h3 {
   width: 100%;
   display: grid;
   border: 1px solid var(--line);
-  border-radius: 20px;
+  border-radius: 5px;
   background: #fff;
-  box-shadow: 0 12px 32px rgba(35, 42, 33, 0.1);
+  box-shadow: 0 10px 24px rgba(48, 52, 56, 0.08);
   overflow: hidden;
 }
 
@@ -536,7 +583,7 @@ h3 {
 
 .rock-photo-link {
   display: block;
-  background: #e8ece2;
+  background: rgba(171, 167, 157, 0.14);
 }
 
 .rock-photo-link:focus-visible,
@@ -555,12 +602,12 @@ h3 {
 
 .rock-card-summary {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) 38px;
+  grid-template-columns: minmax(0, 1fr) 28px;
   align-items: center;
-  gap: 8px;
+  gap: 6px;
   width: 100%;
-  min-height: 86px;
-  padding: 12px 14px 14px;
+  min-height: 42px;
+  padding: 7px 10px 8px;
   border-radius: 0;
   background: #fff;
   color: var(--ink);
@@ -570,12 +617,12 @@ h3 {
 
 .rock-card-summary h4 {
   margin: 0;
-  font-size: clamp(0.95rem, 1.5vw, 1.08rem);
-  line-height: 1.25;
+  font-size: var(--rock-name-size);
+  line-height: 1.12;
 }
 
 .rock-card-summary:hover {
-  background: #f8faf4;
+  background: rgba(244, 245, 243, 0.9);
   color: var(--ink);
 }
 
@@ -587,15 +634,15 @@ h3 {
   display: inline-grid;
   place-items: center;
   justify-self: end;
-  width: 32px;
-  height: 32px;
-  color: var(--accent-dark);
+  width: 24px;
+  height: 24px;
+  color: var(--color-primary);
   transition: transform 180ms ease;
 }
 
 .rock-toggle-icon svg {
-  width: 18px;
-  height: 18px;
+  width: 16px;
+  height: 16px;
   fill: none;
   stroke: currentColor;
   stroke-width: 2.2;
@@ -615,8 +662,9 @@ h3 {
   display: grid;
   gap: 10px;
   border-top: 1px solid var(--line);
-  padding: 0 14px 14px;
+  padding: 0 16px 16px;
   color: var(--muted);
+  font-size: var(--rock-detail-size);
   line-height: 1.6;
 }
 
@@ -645,30 +693,10 @@ h3 {
 .tag {
   padding: 4px 7px;
   border-radius: 999px;
-  background: #eef2e7;
-  color: #3e4939;
+  background: rgba(171, 167, 157, 0.16);
+  color: var(--ink);
   font-size: 0.78rem;
   font-weight: 700;
-}
-
-.level {
-  display: inline-flex;
-  align-items: center;
-  margin-bottom: 6px;
-  padding: 3px 8px;
-  border-radius: 999px;
-  background: var(--accent);
-  color: #fff;
-  font-size: 0.78rem;
-  font-weight: 700;
-}
-
-.level.maybe {
-  background: var(--warm);
-}
-
-.level.rare {
-  background: var(--rare);
 }
 
 .secondary-button {
@@ -678,15 +706,15 @@ h3 {
   min-height: 34px;
   padding: 0 10px;
   border-radius: 6px;
-  background: #eef2e7;
-  color: var(--ink);
+  background: rgba(13, 162, 189, 0.1);
+  color: var(--accent-dark);
   box-shadow: none;
   font-weight: 700;
   text-decoration: none;
 }
 
 .secondary-button:hover {
-  background: #e1e9d9;
+  background: rgba(13, 162, 189, 0.16);
 }
 
 .geology-color {

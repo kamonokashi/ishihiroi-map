@@ -491,7 +491,10 @@ function renderRocks(rocks) {
 
   rockCards.innerHTML = groups.map((group) => `
     <section class="rock-level-section rock-level-${escapeHtml(group.level)}" aria-label="${levelLabel(group.level)}">
-      <h3 class="rock-section-title">${levelLabel(group.level)}</h3>
+      <header class="rock-section-header">
+        <h3 class="rock-section-title">${levelLabel(group.level)}</h3>
+        <p>${escapeHtml(levelDescription(group.level))}</p>
+      </header>
       <div class="rock-grid">
         ${group.rocks.map((rock) => renderRockCard(rock)).join("")}
       </div>
@@ -518,7 +521,6 @@ function renderRockCard(rock) {
       </a>
       <button class="rock-card-summary" type="button" data-details="${escapeHtml(rock.id)}" aria-expanded="false" aria-controls="rock-details-${escapeHtml(rock.id)}">
         <div>
-          <span class="level ${escapeHtml(rock.level)}">${levelLabel(rock.level)}</span>
           <h4>${escapeHtml(rock.name)}</h4>
         </div>
         <span class="rock-toggle-icon" aria-hidden="true">
@@ -529,12 +531,34 @@ function renderRockCard(rock) {
       </button>
       <div class="rock-details" id="rock-details-${escapeHtml(rock.id)}" hidden>
         <div class="tags">${rock.tags.map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("")}</div>
+        <p class="rock-minerals">${escapeHtml(mainMinerals(rock))}</p>
         <p>${escapeHtml(rock.description || text.noDetails)}</p>
-        <p class="rock-meta">${text.matchedKeyword}: ${escapeHtml(rock.matchedKeyword)}</p>
         <a class="secondary-button rock-detail-link" href="${detailUrl}">${text.details}</a>
       </div>
     </article>
   `;
+}
+
+function levelDescription(level) {
+  return {
+    likely: "\u3053\u306e\u3042\u305f\u308a\u3067\u3088\u304f\u898b\u3064\u304b\u308b\u53ef\u80fd\u6027\u304c\u3042\u308b\u77f3",
+    maybe: "\u6761\u4ef6\u306b\u3088\u3063\u3066\u898b\u3064\u304b\u308b\u53ef\u80fd\u6027\u304c\u3042\u308b\u77f3",
+    rare: "\u904b\u304c\u3088\u3051\u308c\u3070\u898b\u3064\u304b\u308b\u304b\u3082\u3057\u308c\u306a\u3044\u77f3"
+  }[level] || "";
+}
+
+function mainMinerals(rock) {
+  return {
+    granite: "\u4e3b\u306a\u9271\u7269\uff1a\u77f3\u82f1\u30fb\u9577\u77f3\u30fb\u9ed2\u96f2\u6bcd",
+    sandstone: "\u4e3b\u306a\u69cb\u6210\uff1a\u77f3\u82f1\u7c92\u30fb\u9577\u77f3\u7c92\u30fb\u5ca9\u7247",
+    mudstone: "\u4e3b\u306a\u69cb\u6210\uff1a\u7c98\u571f\u9271\u7269\u30fb\u77f3\u82f1\u306e\u7d30\u7c92",
+    basalt: "\u4e3b\u306a\u9271\u7269\uff1a\u8f1d\u77f3\u30fb\u659c\u9577\u77f3\u30fb\u304b\u3093\u3089\u3093\u77f3",
+    andesite: "\u4e3b\u306a\u9271\u7269\uff1a\u659c\u9577\u77f3\u30fb\u8f1d\u77f3\u30fb\u89d2\u9583\u77f3",
+    limestone: "\u4e3b\u306a\u6210\u5206\uff1a\u65b9\u89e3\u77f3",
+    chert: "\u4e3b\u306a\u6210\u5206\uff1a\u77f3\u82f1\u306e\u5fae\u7d30\u306a\u7d50\u6676",
+    "sedimentary-fragment": "\u4e3b\u306a\u69cb\u6210\uff1a\u7802\u30fb\u6ce5\u30fb\u5ca9\u7247",
+    "igneous-fragment": "\u4e3b\u306a\u9271\u7269\uff1a\u9577\u77f3\u30fb\u8f1d\u77f3\u30fb\u77f3\u82f1\u306a\u3069"
+  }[rock.id] || "\u4e3b\u306a\u9271\u7269\uff1a\u672a\u767b\u9332";
 }
 
 function rockImageSrc(rock) {
