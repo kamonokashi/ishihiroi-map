@@ -463,12 +463,10 @@ h3 {
 .rock-section-title {
   display: inline-flex;
   align-items: center;
-  gap: 8px;
+  gap: 10px;
   width: fit-content;
   margin: 0;
-  padding: 7px 12px;
-  border-radius: 999px;
-  background: rgba(13, 162, 189, 0.1);
+  padding: 0;
   color: var(--rock-section-accent);
   font-size: 0.96rem;
 }
@@ -481,15 +479,12 @@ h3 {
 }
 
 .rock-section-title::before {
-  display: inline-grid;
-  place-items: center;
-  width: 22px;
-  height: 22px;
-  border-radius: 999px;
-  background: #fff;
-  box-shadow: inset 0 0 0 1px rgba(13, 162, 189, 0.24);
-  font-size: 0.78rem;
-  color: var(--rock-section-accent);
+  display: block;
+  width: 4px;
+  height: 1.35em;
+  border-radius: 1px;
+  background: var(--rock-section-accent);
+  content: "";
 }
 
 .rock-grid {
@@ -509,10 +504,6 @@ h3 {
   --rock-gap: 16px;
 }
 
-.rock-level-likely .rock-section-title::before {
-  content: "\2605";
-}
-
 .rock-level-maybe {
   --rock-section-accent: var(--color-maybe);
   --rock-card-size: 180px;
@@ -522,18 +513,6 @@ h3 {
   --rock-gap: 16px;
 }
 
-.rock-level-maybe .rock-section-title {
-  background: rgba(171, 167, 157, 0.18);
-}
-
-.rock-level-maybe .rock-section-title::before {
-  box-shadow: inset 0 0 0 1px rgba(171, 167, 157, 0.34);
-}
-
-.rock-level-maybe .rock-section-title::before {
-  content: "\273f";
-}
-
 .rock-level-rare {
   --rock-section-accent: var(--color-rare);
   --rock-card-size: 140px;
@@ -541,18 +520,6 @@ h3 {
   --rock-detail-size: 0.8rem;
   --rock-columns: 4;
   --rock-gap: 16px;
-}
-
-.rock-level-rare .rock-section-title {
-  background: rgba(107, 119, 133, 0.12);
-}
-
-.rock-level-rare .rock-section-title::before {
-  box-shadow: inset 0 0 0 1px rgba(107, 119, 133, 0.3);
-}
-
-.rock-level-rare .rock-section-title::before {
-  content: "\25c6";
 }
 
 .app-shell.map-collapsed .rock-grid {
