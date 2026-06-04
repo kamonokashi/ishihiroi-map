@@ -268,7 +268,7 @@ async function loadRockMap() {
 async function selectPoint(latlng, initialAddress = "") {
   clickedLatLng = latlng;
   const requestId = ++selectedAddressRequestId;
-  const pendingAddress = initialAddress || text.addressLoading;
+  const pendingAddress = initialAddress ? formatAddress(initialAddress) : text.addressLoading;
   selectedPoint.textContent = pendingAddress;
 
   if (!marker) {
@@ -279,7 +279,7 @@ async function selectPoint(latlng, initialAddress = "") {
 
   showInspectPopup(pendingAddress);
 
-  const address = initialAddress || await fetchAddress(latlng);
+  const address = initialAddress ? pendingAddress : await fetchAddress(latlng);
   if (requestId !== selectedAddressRequestId) {
     return;
   }
@@ -431,11 +431,30 @@ async function fetchAddress(latlng) {
       throw new Error(`reverse geocode failed: ${response.status}`);
     }
     const result = await response.json();
-    return result.display_name || "";
+    return formatAddress(result.display_name || "");
   } catch (error) {
     console.info("Address lookup failed:", error);
     return "";
   }
+}
+
+function formatAddress(address) {
+  const parts = String(address)
+    .split(",")
+    .map((part) => part.trim())
+    .filter(Boolean);
+
+  if (parts.length <= 1) {
+    return String(address);
+  }
+
+  const countryIndex = parts.findIndex((part) => part === "\u65e5\u672c" || part.toLowerCase() === "japan");
+  if (countryIndex <= 0) {
+    return parts.join(" ");
+  }
+
+  const [country] = parts.splice(countryIndex, 1);
+  return [country, ...parts.reverse()].join(" ");
 }
 
 function normalizeLegendResponse(value) {
