@@ -144,6 +144,9 @@ let selectedAddressRequestId = 0;
 
 const selectedPoint = document.querySelector("#selectedPoint");
 const inspectPopupOverlay = document.querySelector("#inspectPopupOverlay");
+const appShell = document.querySelector("#appShell");
+const mapCollapseButton = document.querySelector("#mapCollapseButton");
+const mapRestoreButton = document.querySelector("#mapRestoreButton");
 const rockCards = document.querySelector("#rockCards");
 const geologyList = document.querySelector("#geologyList");
 const rocksPanel = document.querySelector("#rocksPanel");
@@ -224,7 +227,7 @@ function addGeologyControl() {
 }
 
 function bindUi() {
-  [".map-selected-place", ".map-tools"].forEach((selector) => {
+  [".map-selected-place", ".map-tools", ".map-collapse-button", ".map-restore-button"].forEach((selector) => {
     const element = document.querySelector(selector);
     if (element) {
       L.DomEvent.disableClickPropagation(element);
@@ -234,8 +237,20 @@ function bindUi() {
 
   document.querySelector("#locateButton").addEventListener("click", locateUser);
   document.querySelector("#searchForm").addEventListener("submit", searchPlace);
+  mapCollapseButton.addEventListener("click", () => setMapCollapsed(true));
+  mapRestoreButton.addEventListener("click", () => setMapCollapsed(false));
   rocksTab.addEventListener("click", () => activateTab("rocks"));
   geologyTab.addEventListener("click", () => activateTab("geology"));
+}
+
+function setMapCollapsed(collapsed) {
+  appShell.classList.toggle("map-collapsed", collapsed);
+  mapCollapseButton.setAttribute("aria-expanded", String(!collapsed));
+  mapRestoreButton.hidden = !collapsed;
+  setTimeout(() => {
+    map.invalidateSize();
+    updateInspectPopupPosition();
+  }, 260);
 }
 
 async function loadRockMap() {
@@ -470,28 +485,99 @@ function renderRocks(rocks) {
   }
 
   clearPanelMessage(rocksPanel);
-  rockCards.innerHTML = rocks.map((rock) => `
-    <article class="rock-card">
-      <div class="rock-swatch" aria-hidden="true"></div>
-      <div class="rock-body">
-        <span class="level ${escapeHtml(rock.level)}">${levelLabel(rock.level)}</span>
-        <h3>${escapeHtml(rock.name)} <span class="rock-meta">${escapeHtml(rock.en)}</span></h3>
-        <div class="tags">${rock.tags.map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("")}</div>
-        <p class="rock-meta">${text.matchedKeyword}: ${escapeHtml(rock.matchedKeyword)}</p>
-        <button class="secondary-button" type="button" data-details="${escapeHtml(rock.id)}">${text.details}</button>
-        <div class="details" id="details-${escapeHtml(rock.id)}" hidden>
-          ${escapeHtml(rock.description || text.noDetails)}
-        </div>
+  const groups = ["likely", "maybe", "rare"]
+    .map((level) => ({ level, rocks: rocks.filter((rock) => rock.level === level) }))
+    .filter((group) => group.rocks.length > 0);
+
+  rockCards.innerHTML = groups.map((group) => `
+    <section class="rock-level-section rock-level-${escapeHtml(group.level)}" aria-label="${levelLabel(group.level)}">
+      <h3 class="rock-section-title">${levelLabel(group.level)}</h3>
+      <div class="rock-grid">
+        ${group.rocks.map((rock) => renderRockCard(rock)).join("")}
       </div>
-    </article>
+    </section>
   `).join("");
 
   rockCards.querySelectorAll("[data-details]").forEach((button) => {
     button.addEventListener("click", () => {
-      const detail = document.querySelector(`#details-${CSS.escape(button.dataset.details)}`);
-      detail.hidden = !detail.hidden;
+      const detail = document.querySelector(`#rock-details-${CSS.escape(button.dataset.details)}`);
+      const expanded = detail.hidden;
+      detail.hidden = !expanded;
+      button.setAttribute("aria-expanded", String(expanded));
+      button.classList.toggle("is-open", expanded);
     });
   });
+}
+
+function renderRockCard(rock) {
+  const detailUrl = `stone.html?id=${encodeURIComponent(rock.id)}`;
+  return `
+    <article class="rock-card rock-card-${escapeHtml(rock.level)}">
+      <a class="rock-photo-link" href="${detailUrl}" aria-label="${escapeHtml(rock.name)}${text.details}">
+        <img class="rock-photo" src="${rockImageSrc(rock)}" alt="${escapeHtml(rock.name)}の表面イメージ" loading="lazy">
+      </a>
+      <button class="rock-card-summary" type="button" data-details="${escapeHtml(rock.id)}" aria-expanded="false" aria-controls="rock-details-${escapeHtml(rock.id)}">
+        <div>
+          <span class="level ${escapeHtml(rock.level)}">${levelLabel(rock.level)}</span>
+          <h4>${escapeHtml(rock.name)}</h4>
+        </div>
+        <span class="rock-toggle-icon" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false">
+            <path d="M6 9l6 6 6-6"/>
+          </svg>
+        </span>
+      </button>
+      <div class="rock-details" id="rock-details-${escapeHtml(rock.id)}" hidden>
+        <div class="tags">${rock.tags.map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("")}</div>
+        <p>${escapeHtml(rock.description || text.noDetails)}</p>
+        <p class="rock-meta">${text.matchedKeyword}: ${escapeHtml(rock.matchedKeyword)}</p>
+        <a class="secondary-button rock-detail-link" href="${detailUrl}">${text.details}</a>
+      </div>
+    </article>
+  `;
+}
+
+function rockImageSrc(rock) {
+  const palette = {
+    granite: ["#d7d2c9", "#7e7468", "#f3f0ea"],
+    sandstone: ["#c99b5d", "#8f6f45", "#ead1a5"],
+    mudstone: ["#6e6a63", "#373b36", "#a39b8f"],
+    basalt: ["#333a3b", "#111719", "#677071"],
+    andesite: ["#848987", "#565d5d", "#c4c7bd"],
+    limestone: ["#e5e1d3", "#b8b49f", "#faf8ed"],
+    chert: ["#8e5b5d", "#52465a", "#d1c2b6"],
+    "sedimentary-fragment": ["#b99369", "#6f5841", "#e2c398"],
+    "igneous-fragment": ["#7e8178", "#343934", "#c5c6bc"]
+  }[rock.id] || ["#9b9487", "#554f48", "#ddd8cf"];
+
+  const svg = `
+    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 320 240">
+      <defs>
+        <linearGradient id="g" x1="0" x2="1" y1="0" y2="1">
+          <stop offset="0" stop-color="${palette[0]}"/>
+          <stop offset="0.58" stop-color="${palette[1]}"/>
+          <stop offset="1" stop-color="${palette[2]}"/>
+        </linearGradient>
+        <filter id="grain">
+          <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" seed="${escapeHtml(rock.id).length}"/>
+          <feColorMatrix type="saturate" values="0.2"/>
+          <feBlend mode="multiply" in2="SourceGraphic"/>
+        </filter>
+      </defs>
+      <rect width="320" height="240" fill="url(#g)"/>
+      <g filter="url(#grain)" opacity="0.45">
+        <rect width="320" height="240" fill="${palette[0]}"/>
+      </g>
+      <g opacity="0.36" fill="${palette[2]}">
+        <circle cx="58" cy="48" r="18"/>
+        <circle cx="132" cy="92" r="11"/>
+        <circle cx="238" cy="62" r="15"/>
+        <circle cx="276" cy="164" r="24"/>
+        <circle cx="84" cy="184" r="13"/>
+      </g>
+    </svg>
+  `;
+  return `data:image/svg+xml,${encodeURIComponent(svg)}`;
 }
 
 function renderGeology(legends) {

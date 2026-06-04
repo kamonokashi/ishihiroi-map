@@ -7,11 +7,11 @@
     <link
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-    <link rel="stylesheet" href="styles.css?v=20260604-11">
+    <link rel="stylesheet" href="styles.css?v=20260604-18">
     <script
       defer
       src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script defer src="script.js?v=20260604-12"></script>
+    <script defer src="script.js?v=20260604-15"></script>
   </head>
   <body>
     <header class="app-header">
@@ -21,7 +21,7 @@
       </div>
     </header>
 
-    <main class="app-shell">
+    <main class="app-shell" id="appShell">
       <section class="map-pane" aria-label="&#22320;&#22259;">
         <div id="map">
           <div class="map-selected-place">
@@ -37,7 +37,9 @@
           </div>
         </div>
         <div id="inspectPopupOverlay" class="map-inspect-popup" hidden></div>
+        <button id="mapCollapseButton" class="map-collapse-button" type="button" aria-label="&#22320;&#22259;&#12434;&#25240;&#12426;&#12383;&#12383;&#12416;" aria-expanded="true" title="&#22320;&#22259;&#12434;&#25240;&#12426;&#12383;&#12383;&#12416;">&#9664;</button>
       </section>
+      <button id="mapRestoreButton" class="map-restore-button" type="button" aria-label="&#22320;&#22259;&#12434;&#34920;&#31034;" title="&#22320;&#22259;&#12434;&#34920;&#31034;" hidden>&#128506;&#65039;</button>
 
       <aside class="result-pane" aria-live="polite">
         <section class="tabs" aria-label="&#26908;&#32034;&#32080;&#26524;">
