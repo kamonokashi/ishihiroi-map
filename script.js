@@ -11,10 +11,9 @@ const text = {
   noRocks: "\u898b\u3064\u304b\u308b\u77f3\u3092\u63a8\u5b9a\u3067\u304d\u307e\u305b\u3093\u3067\u3057\u305f\u3002\u5730\u8cea\u3092\u898b\u308b\u30bf\u30d6\u3067\u53d6\u5f97\u7d50\u679c\u3092\u78ba\u8a8d\u3067\u304d\u307e\u3059\u3002",
   noGeology: "\u3053\u306e\u7bc4\u56f2\u3067\u306f\u5730\u8cea\u60c5\u5831\u304c\u898b\u3064\u304b\u308a\u307e\u305b\u3093\u3067\u3057\u305f\u3002",
   fetchFailed: "\u5730\u8cea\u60c5\u5831\u3092\u53d6\u5f97\u3067\u304d\u307e\u305b\u3093\u3067\u3057\u305f\u3002CORS\u306e\u5834\u5408\u306fPHP\u30d7\u30ed\u30ad\u30b7\u3067\u78ba\u8a8d\u3057\u3066\u304f\u3060\u3055\u3044\u3002",
-  selectedPrefix: "\u7def\u5ea6",
-  selectedLng: "\u7d4c\u5ea6",
   selectedTitle: "\u9078\u629e\u5730\u70b9",
-  popupHelp: "\u3053\u3053\u3092\u8abf\u3079\u308b\uff01\u3067\u8abf\u3079\u307e\u3059\u3002",
+  addressLoading: "\u4f4f\u6240\u3092\u78ba\u8a8d\u3057\u3066\u3044\u307e\u3059",
+  addressUnavailable: "\u4f4f\u6240\u3092\u53d6\u5f97\u3067\u304d\u307e\u305b\u3093\u3067\u3057\u305f",
   likely: "\u3088\u304f\u898b\u3064\u304b\u308b",
   maybe: "\u898b\u3064\u304b\u308b\u304b\u3082",
   rare: "\u73cd\u3057\u3044",
@@ -141,9 +140,10 @@ let clickedLatLng = null;
 let rockMap = fallbackRockMap;
 let lastLegends = [];
 let inspectInProgress = false;
+let selectedAddressRequestId = 0;
 
 const selectedPoint = document.querySelector("#selectedPoint");
-const inspectButton = document.querySelector("#inspectButton");
+const inspectPopupOverlay = document.querySelector("#inspectPopupOverlay");
 const rockCards = document.querySelector("#rockCards");
 const geologyList = document.querySelector("#geologyList");
 const rocksPanel = document.querySelector("#rocksPanel");
@@ -187,6 +187,7 @@ function initMap() {
   addGeologyControl();
 
   map.on("click", (event) => selectPoint(event.latlng));
+  map.on("move zoom zoomend", updateInspectPopupPosition);
   setTimeout(() => map.invalidateSize(), 0);
 }
 
@@ -223,11 +224,11 @@ function addGeologyControl() {
 }
 
 function bindUi() {
-  inspectButton.addEventListener("click", (event) => {
-    event.preventDefault();
-    event.stopPropagation();
-    if (clickedLatLng && !inspectInProgress) {
-      inspectGeology(clickedLatLng);
+  [".map-selected-place", ".map-tools"].forEach((selector) => {
+    const element = document.querySelector(selector);
+    if (element) {
+      L.DomEvent.disableClickPropagation(element);
+      L.DomEvent.disableScrollPropagation(element);
     }
   });
 
@@ -249,10 +250,11 @@ async function loadRockMap() {
   }
 }
 
-function selectPoint(latlng) {
+async function selectPoint(latlng, initialAddress = "") {
   clickedLatLng = latlng;
-  inspectButton.disabled = false;
-  selectedPoint.textContent = `${text.selectedPrefix} ${latlng.lat.toFixed(6)}、${text.selectedLng} ${latlng.lng.toFixed(6)}`;
+  const requestId = ++selectedAddressRequestId;
+  const pendingAddress = initialAddress || text.addressLoading;
+  selectedPoint.textContent = pendingAddress;
 
   if (!marker) {
     marker = L.marker(latlng).addTo(map);
@@ -260,15 +262,98 @@ function selectPoint(latlng) {
     marker.setLatLng(latlng);
   }
 
-  marker
-    .bindPopup(`<strong>${text.selectedTitle}</strong><br>${latlng.lat.toFixed(6)}, ${latlng.lng.toFixed(6)}<br>${text.popupHelp}`)
-    .openPopup();
+  showInspectPopup(pendingAddress);
+
+  const address = initialAddress || await fetchAddress(latlng);
+  if (requestId !== selectedAddressRequestId) {
+    return;
+  }
+
+  updateSelectedAddress(address || text.addressUnavailable);
+}
+
+function showInspectPopup(address) {
+  inspectPopupOverlay.innerHTML = "";
+  inspectPopupOverlay.append(createInspectPopupContent(address));
+  inspectPopupOverlay.hidden = false;
+  L.DomEvent.disableClickPropagation(inspectPopupOverlay);
+  L.DomEvent.disableScrollPropagation(inspectPopupOverlay);
+  requestAnimationFrame(updateInspectPopupPosition);
+}
+
+function createInspectPopupContent(address) {
+  const content = document.createElement("div");
+  content.className = "inspect-popup";
+
+  const title = document.createElement("strong");
+  title.textContent = text.selectedTitle;
+
+  const addressText = document.createElement("p");
+  addressText.className = "inspect-popup-address";
+  addressText.textContent = address;
+
+  const button = document.createElement("button");
+  button.type = "button";
+  button.className = "inspect-popup-button";
+  button.textContent = inspectInProgress ? text.loading : text.inspect;
+  button.disabled = inspectInProgress;
+  button.addEventListener("click", (event) => {
+    event.preventDefault();
+    event.stopPropagation();
+    if (clickedLatLng && !inspectInProgress) {
+      hideInspectPopupButton();
+      inspectGeology(clickedLatLng);
+    }
+  });
+
+  content.append(title, addressText, button);
+  return content;
+}
+
+function updateSelectedAddress(address) {
+  selectedPoint.textContent = address;
+  inspectPopupOverlay.querySelectorAll(".inspect-popup-address").forEach((element) => {
+    element.textContent = address;
+  });
+  requestAnimationFrame(updateInspectPopupPosition);
+}
+
+function hideInspectPopupButton() {
+  inspectPopupOverlay.querySelectorAll(".inspect-popup-button").forEach((button) => {
+    button.remove();
+  });
+  updateInspectPopupPosition();
+}
+
+function setInspectPopupButtonsState({ disabled, label }) {
+  inspectPopupOverlay.querySelectorAll(".inspect-popup-button").forEach((button) => {
+    button.disabled = disabled;
+    button.textContent = label;
+  });
+}
+
+function updateInspectPopupPosition() {
+  if (!clickedLatLng || inspectPopupOverlay.hidden || !map) {
+    return;
+  }
+
+  const mapPaneRect = document.querySelector(".map-pane").getBoundingClientRect();
+  const markerRect = marker?._icon?.getBoundingClientRect();
+  const point = markerRect
+    ? {
+        x: markerRect.left - mapPaneRect.left + markerRect.width / 2,
+        y: markerRect.top - mapPaneRect.top
+      }
+    : map.latLngToContainerPoint(clickedLatLng);
+  const width = inspectPopupOverlay.offsetWidth;
+  const height = inspectPopupOverlay.offsetHeight;
+  inspectPopupOverlay.style.left = `${Math.round(point.x - width / 2)}px`;
+  inspectPopupOverlay.style.top = `${Math.round(point.y - height - 12)}px`;
 }
 
 async function inspectGeology(latlng) {
   inspectInProgress = true;
-  inspectButton.disabled = true;
-  inspectButton.textContent = text.loading;
+  setInspectPopupButtonsState({ disabled: true, label: text.loading });
   rockCards.innerHTML = "";
   geologyList.innerHTML = "";
   setPanelMessage(rocksPanel, text.fetching);
@@ -287,8 +372,7 @@ async function inspectGeology(latlng) {
     setPanelMessage(geologyPanel, text.fetchFailed);
   } finally {
     inspectInProgress = false;
-    inspectButton.disabled = false;
-    inspectButton.textContent = text.inspect;
+    setInspectPopupButtonsState({ disabled: false, label: text.inspect });
   }
 }
 
@@ -314,6 +398,28 @@ async function fetchLegends(latlng) {
       throw new Error(`Proxy API error: ${proxyResponse.status}`);
     }
     return proxyResponse.json();
+  }
+}
+
+async function fetchAddress(latlng) {
+  try {
+    const url = new URL("https://nominatim.openstreetmap.org/reverse");
+    url.searchParams.set("format", "json");
+    url.searchParams.set("accept-language", "ja");
+    url.searchParams.set("lat", String(latlng.lat));
+    url.searchParams.set("lon", String(latlng.lng));
+    url.searchParams.set("zoom", "18");
+    url.searchParams.set("addressdetails", "0");
+
+    const response = await fetch(url, { headers: { Accept: "application/json" } });
+    if (!response.ok) {
+      throw new Error(`reverse geocode failed: ${response.status}`);
+    }
+    const result = await response.json();
+    return result.display_name || "";
+  } catch (error) {
+    console.info("Address lookup failed:", error);
+    return "";
   }
 }
 
@@ -442,7 +548,7 @@ async function searchPlace(event) {
   if (fixedPlaces[query]) {
     const latlng = L.latLng(fixedPlaces[query][0], fixedPlaces[query][1]);
     map.setView(latlng, 12);
-    selectPoint(latlng);
+    selectPoint(latlng, query);
     setTimeout(() => map.invalidateSize(), 0);
     return;
   }
@@ -457,7 +563,7 @@ async function searchPlace(event) {
     }
     const latlng = L.latLng(Number(results[0].lat), Number(results[0].lon));
     map.setView(latlng, 12);
-    selectPoint(latlng);
+    selectPoint(latlng, results[0].display_name || query);
     setTimeout(() => map.invalidateSize(), 0);
   } catch (error) {
     console.error("Place search failed:", error);

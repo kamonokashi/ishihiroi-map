@@ -7,11 +7,11 @@
     <link
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-    <link rel="stylesheet" href="styles.css?v=20260604-5">
+    <link rel="stylesheet" href="styles.css?v=20260604-11">
     <script
       defer
       src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
-    <script defer src="script.js?v=20260604-5"></script>
+    <script defer src="script.js?v=20260604-12"></script>
   </head>
   <body>
     <header class="app-header">
@@ -23,23 +23,23 @@
 
     <main class="app-shell">
       <section class="map-pane" aria-label="&#22320;&#22259;">
-        <div class="map-tools">
-          <button id="locateButton" class="locate-button" type="button" aria-label="&#29694;&#22312;&#22320;" title="&#29694;&#22312;&#22320;">&#128205;&#29694;&#22312;&#22320;</button>
-          <form id="searchForm" class="search-form">
-            <input id="searchInput" type="search" placeholder="&#20989;&#39208;&#12289;&#31569;&#27874;&#23665;&#12394;&#12393;" autocomplete="off">
-            <button type="submit">&#26908;&#32034;</button>
-          </form>
+        <div id="map">
+          <div class="map-selected-place">
+            <strong>&#36984;&#25246;&#22320;&#28857;</strong>
+            <span id="selectedPoint">&#22320;&#22259;&#12434;&#12463;&#12522;&#12483;&#12463;&#12377;&#12427;&#12363;&#12289;&#29694;&#22312;&#22320;&#12539;&#26908;&#32034;&#12391;&#22580;&#25152;&#12434;&#36984;&#12435;&#12391;&#12367;&#12384;&#12373;&#12356;&#12290;</span>
+          </div>
+          <div class="map-tools">
+            <button id="locateButton" class="locate-button" type="button" aria-label="&#29694;&#22312;&#22320;" title="&#29694;&#22312;&#22320;">&#128205;&#29694;&#22312;&#22320;</button>
+            <form id="searchForm" class="search-form">
+              <input id="searchInput" type="search" placeholder="&#20989;&#39208;&#12289;&#31569;&#27874;&#23665;&#12394;&#12393;" autocomplete="off">
+              <button type="submit">&#26908;&#32034;</button>
+            </form>
+          </div>
         </div>
-        <div id="map"></div>
+        <div id="inspectPopupOverlay" class="map-inspect-popup" hidden></div>
       </section>
 
       <aside class="result-pane" aria-live="polite">
-        <section class="selected-place">
-          <h2>&#36984;&#25246;&#22320;&#28857;</h2>
-          <p id="selectedPoint">&#22320;&#22259;&#12434;&#12463;&#12522;&#12483;&#12463;&#12377;&#12427;&#12363;&#12289;&#29694;&#22312;&#22320;&#12539;&#26908;&#32034;&#12391;&#22580;&#25152;&#12434;&#36984;&#12435;&#12391;&#12367;&#12384;&#12373;&#12356;&#12290;</p>
-          <button id="inspectButton" type="button" disabled>&#12371;&#12371;&#12434;&#35519;&#12409;&#12427;&#65281;</button>
-        </section>
-
         <section class="tabs" aria-label="&#26908;&#32034;&#32080;&#26524;">
           <div class="tab-buttons" role="tablist">
             <button id="rocksTab" class="active" type="button" role="tab" aria-selected="true">&#30707;&#12434;&#35211;&#12427;</button>
