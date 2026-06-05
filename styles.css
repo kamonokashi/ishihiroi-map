@@ -251,33 +251,82 @@ h3 {
 .map-restore-button {
   position: absolute;
   z-index: 3200;
-  width: 38px;
-  min-height: 68px;
-  border: 1px solid rgba(13, 162, 189, 0.24);
-  background: rgba(255, 255, 255, 0.96);
-  color: var(--accent-dark);
-  box-shadow: 0 12px 28px rgba(48, 52, 56, 0.14);
-  font-size: 1.22rem;
+  display: grid;
+  width: 30px;
+  min-height: 88px;
+  padding: 0;
+  place-items: center;
+  border: 1px solid var(--line);
+  background-color: #f4f5f3;
+  background-image: none;
+  color: var(--color-rare);
+  box-shadow: 0 4px 12px rgba(48, 52, 56, 0.08);
+  transition: background 160ms ease, box-shadow 160ms ease, color 160ms ease, transform 160ms ease;
 }
 
 .map-collapse-button {
   top: 50%;
   right: -1px;
-  border-radius: 18px 0 0 18px;
+  border-right: 0;
+  border-radius: 12px 0 0 12px;
   transform: translateY(-50%);
 }
 
 .map-restore-button {
   top: 50%;
   left: 0;
-  border-radius: 0 18px 18px 0;
+  border-left: 0;
+  border-radius: 0 12px 12px 0;
   transform: translateY(-50%);
+}
+
+.map-restore-button[hidden] {
+  display: none;
 }
 
 .map-collapse-button:hover,
 .map-restore-button:hover {
-  background: rgba(13, 162, 189, 0.08);
-  color: var(--accent-dark);
+  background-color: #e6f4f4;
+  background-image: none;
+  color: var(--color-primary);
+  box-shadow: 0 6px 14px rgba(48, 52, 56, 0.12);
+}
+
+.map-collapse-button:hover {
+  transform: translateY(-50%);
+}
+
+.map-restore-button:hover {
+  transform: translateY(-50%);
+}
+
+.map-collapse-button:active {
+  transform: translateY(-50%);
+}
+
+.map-restore-button:active {
+  transform: translateY(-50%);
+}
+
+.map-panel-handle-icon {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2.4;
+  transition: transform 160ms ease;
+}
+
+.map-collapse-button:hover .map-panel-handle-icon,
+.map-collapse-button:active .map-panel-handle-icon {
+  transform: translateX(-2px);
+}
+
+.map-restore-button:hover .map-panel-handle-icon,
+.map-restore-button:active .map-panel-handle-icon {
+  transform: translateX(2px);
 }
 
 .leaflet-right .leaflet-control {
@@ -734,18 +783,29 @@ h3 {
     top: auto;
     right: 16px;
     bottom: -1px;
-    width: 68px;
-    min-height: 36px;
-    border-radius: 18px 18px 0 0;
+    width: 58px;
+    min-height: 32px;
+    border-right: 1px solid var(--line);
+    border-bottom: 0;
+    border-radius: 10px 10px 0 0;
     transform: none;
   }
 
   .map-restore-button {
     top: 0;
     left: 16px;
-    width: 68px;
-    min-height: 36px;
-    border-radius: 0 0 18px 18px;
+    width: 58px;
+    min-height: 32px;
+    border-top: 0;
+    border-left: 1px solid var(--line);
+    border-radius: 0 0 10px 10px;
+    transform: none;
+  }
+
+  .map-collapse-button:hover,
+  .map-collapse-button:active,
+  .map-restore-button:hover,
+  .map-restore-button:active {
     transform: none;
   }
 

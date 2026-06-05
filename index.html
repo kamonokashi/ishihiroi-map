@@ -7,7 +7,7 @@
     <link
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-    <link rel="stylesheet" href="styles.css?v=20260604-26">
+    <link rel="stylesheet" href="styles.css?v=20260605-01">
     <script
       defer
       src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -37,9 +37,17 @@
           </div>
         </div>
         <div id="inspectPopupOverlay" class="map-inspect-popup" hidden></div>
-        <button id="mapCollapseButton" class="map-collapse-button" type="button" aria-label="&#22320;&#22259;&#12434;&#25240;&#12426;&#12383;&#12383;&#12416;" aria-expanded="true" title="&#22320;&#22259;&#12434;&#25240;&#12426;&#12383;&#12383;&#12416;">&#9664;</button>
+        <button id="mapCollapseButton" class="map-collapse-button" type="button" aria-label="&#22320;&#22259;&#12434;&#25240;&#12426;&#12383;&#12383;&#12416;" aria-expanded="true" title="&#22320;&#22259;&#12434;&#25240;&#12426;&#12383;&#12383;&#12416;">
+          <svg class="map-panel-handle-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M15 6l-6 6 6 6"></path>
+          </svg>
+        </button>
       </section>
-      <button id="mapRestoreButton" class="map-restore-button" type="button" aria-label="&#22320;&#22259;&#12434;&#34920;&#31034;" title="&#22320;&#22259;&#12434;&#34920;&#31034;" hidden>&#128506;&#65039;</button>
+      <button id="mapRestoreButton" class="map-restore-button" type="button" aria-label="&#22320;&#22259;&#12434;&#34920;&#31034;" title="&#22320;&#22259;&#12434;&#34920;&#31034;" hidden>
+        <svg class="map-panel-handle-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+          <path d="M9 6l6 6-6 6"></path>
+        </svg>
+      </button>
 
       <aside class="result-pane" aria-live="polite">
         <section class="tabs" aria-label="&#26908;&#32034;&#32080;&#26524;">
