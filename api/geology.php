@@ -4,14 +4,24 @@ declare(strict_types=1);
 header('Content-Type: application/json; charset=utf-8');
 header('Access-Control-Allow-Origin: *');
 
+$number = '-?\d+(\.\d+)?';
 $box = $_GET['box'] ?? '';
-if (!preg_match('/^-?\d+(\.\d+)?,-?\d+(\.\d+)?,-?\d+(\.\d+)?,-?\d+(\.\d+)?$/', $box)) {
+$point = $_GET['point'] ?? '';
+
+if ($box !== '' && preg_match("/^$number,$number,$number,$number$/", $box)) {
+    $query = 'box=' . rawurlencode($box);
+} elseif ($point !== '' && preg_match("/^$number,$number$/", $point)) {
+    $query = 'point=' . rawurlencode($point);
+} else {
     http_response_code(400);
-    echo json_encode(['error' => 'box must be south,west,north,east'], JSON_UNESCAPED_UNICODE);
+    echo json_encode(
+        ['error' => 'box must be south,west,north,east or point must be lat,lng'],
+        JSON_UNESCAPED_UNICODE
+    );
     exit;
 }
 
-$url = 'https://gbank.gsj.jp/seamless/v2/api/1.3/legend.json?box=' . rawurlencode($box);
+$url = 'https://gbank.gsj.jp/seamless/v2/api/1.3/legend.json?' . $query;
 $context = stream_context_create([
     'http' => [
         'method' => 'GET',

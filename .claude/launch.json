@@ -1,0 +1,11 @@
+{
+  "version": "0.0.1",
+  "configurations": [
+    {
+      "name": "ishihiroi-map",
+      "runtimeExecutable": "node",
+      "runtimeArgs": ["local-server.cjs"],
+      "port": 8000
+    }
+  ]
+}

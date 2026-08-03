@@ -26,12 +26,7 @@ async function renderStonePage() {
   }
 
   try {
-    const response = await fetch("data/rocks.json", { cache: "no-store" });
-    if (!response.ok) {
-      throw new Error(`rocks fetch failed: ${response.status}`);
-    }
-
-    const rocks = await response.json();
+    const rocks = await loadRocks();
     const stone = rocks.find((rock) => rock.id === id);
 
     if (!stone) {
@@ -48,6 +43,23 @@ async function renderStonePage() {
         <p>\u6642\u9593\u3092\u304a\u3044\u3066\u3082\u3046\u4e00\u5ea6\u304a\u8a66\u3057\u304f\u3060\u3055\u3044\u3002</p>
       </section>
     `;
+  }
+}
+
+// file:// で開くと fetch が使えないので、data/bundle.js の同じ内容に切り替える。
+async function loadRocks() {
+  try {
+    const response = await fetch("data/rocks.json", { cache: "no-store" });
+    if (!response.ok) {
+      throw new Error(`rocks fetch failed: ${response.status}`);
+    }
+    return response.json();
+  } catch (error) {
+    if (window.ISHIHIROI_DATA?.rocks) {
+      console.info("data/rocks.json を読めないので data/bundle.js を使います。", error);
+      return window.ISHIHIROI_DATA.rocks;
+    }
+    throw error;
   }
 }
 
@@ -72,7 +84,7 @@ function renderStone(stone) {
         <img id="mainStonePhoto" class="stone-main-photo" src="${mainImage}" alt="${escapeHtml(stone.name)}\u306e\u8868\u9762\u30a4\u30e1\u30fc\u30b8">
       </div>
       <div class="stone-summary">
-        <p class="stone-category">${escapeHtml(stone.category || "\u672a\u5206\u985e")}</p>
+        <p class="stone-category">${escapeHtml(categoryLabel(stone))}</p>
         <h1>${escapeHtml(stone.name)}</h1>
         <p class="stone-english">${escapeHtml(stone.english || "")}</p>
         <p class="stone-short">${escapeHtml(stone.shortDescription || "")}</p>
@@ -80,6 +92,14 @@ function renderStone(stone) {
     </section>
 
     <section class="stone-content-grid">
+      <article class="stone-info-panel stone-wide-panel stone-identify-panel">
+        <h2>\u898b\u5206\u3051\u65b9</h2>
+        <p>${escapeHtml(stone.identification || "")}</p>
+        ${renderFieldTests(stone.fieldTests)}
+      </article>
+
+      ${renderConfusedWith(stone.confusedWith)}
+
       <article class="stone-info-panel stone-description-panel">
         <h2>\u57fa\u672c\u60c5\u5831\u30fb\u8aac\u660e</h2>
         <p>${escapeHtml(stone.description || "")}</p>
@@ -147,8 +167,45 @@ function renderThumbnail(image, stone, index) {
   return `
     <button class="stone-thumbnail${activeClass}" type="button" data-stone-image="${index}" aria-label="${escapeHtml(label)}\u3092\u8868\u793a">
       <img src="${imageSrc(image, stone, index)}" alt="${escapeHtml(label)}">
-      <span>${escapeHtml(label)}</span>
     </button>
+  `;
+}
+
+function categoryLabel(stone) {
+  const category = stone.category || "\u672a\u5206\u985e";
+  return stone.subCategory ? `${category} / ${stone.subCategory}` : category;
+}
+
+// 道具なしか、身近なもので現場でできる確かめ方。
+function renderFieldTests(tests) {
+  if (!Array.isArray(tests) || tests.length === 0) {
+    return "";
+  }
+
+  return `
+    <h3 class="stone-subheading">現場でできる確かめ方</h3>
+    <ul class="stone-test-list">
+      ${tests.map((test) => `<li>${escapeHtml(test)}</li>`).join("")}
+    </ul>
+  `;
+}
+
+// 似ていて取り違えやすい石と、その決め手。
+function renderConfusedWith(pairs) {
+  if (!Array.isArray(pairs) || pairs.length === 0) {
+    return "";
+  }
+
+  return `
+    <article class="stone-info-panel stone-wide-panel">
+      <h2>間違えやすい石</h2>
+      <dl class="stone-confuse-list">
+        ${pairs.map((pair) => `
+          <dt>${escapeHtml(pair.name)}</dt>
+          <dd>${escapeHtml(pair.howToTell)}</dd>
+        `).join("")}
+      </dl>
+    </article>
   `;
 }
 

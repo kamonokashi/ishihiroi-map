@@ -1,0 +1,182 @@
+[
+  {
+    "id": "quartz",
+    "name": "石英",
+    "english": "Quartz",
+    "shortDescription": "白または透明の硬い粒。ガラスのような光り方をします。",
+    "features": ["白〜無色", "ガラス光沢", "とても硬い"],
+    "hosts": [["granite", 0.9], ["granodiorite", 0.85], ["rhyolite", 0.7], ["dacite", 0.6], ["sandstone", 0.7], ["chert", 0.8], ["gneiss", 0.7], ["siliceous-schist", 0.8], ["mylonite", 0.7]],
+    "zones": []
+  },
+  {
+    "id": "rock-crystal",
+    "name": "水晶",
+    "english": "Rock crystal",
+    "shortDescription": "石英が六角柱の形に育ったもの。晶洞やペグマタイトで見つかります。",
+    "features": ["六角柱", "透明", "先がとがる"],
+    "hosts": [["granite", 0.4], ["granodiorite", 0.35], ["rhyolite", 0.3]],
+    "zones": []
+  },
+  {
+    "id": "feldspar",
+    "name": "長石",
+    "english": "Feldspar",
+    "shortDescription": "白やうすいピンクの四角い粒。平らな面でよく光ります。",
+    "features": ["白〜ピンク", "四角い粒", "平らな割れ口"],
+    "hosts": [["granite", 0.9], ["granodiorite", 0.9], ["diorite", 0.85], ["gabbro", 0.7], ["rhyolite", 0.7], ["dacite", 0.7], ["andesite", 0.7], ["trachyte", 0.8], ["gneiss", 0.8]],
+    "zones": [["カリ長石菫青石帯", 0.8], ["珪線石カリ長石帯", 0.8]]
+  },
+  {
+    "id": "biotite",
+    "name": "黒雲母",
+    "english": "Biotite",
+    "shortDescription": "黒くて薄くはがれる粒。爪でめくれるほどやわらかいのが特徴です。",
+    "features": ["黒い", "薄くはがれる", "きらきら光る"],
+    "hosts": [["granite", 0.85], ["granodiorite", 0.85], ["gneiss", 0.8], ["hornfels", 0.7], ["mylonite", 0.6]],
+    "zones": [["黒雲母帯", 0.9], ["アルバイト黒雲母帯", 0.9], ["オリゴクレース黒雲母帯", 0.9]]
+  },
+  {
+    "id": "muscovite",
+    "name": "白雲母",
+    "english": "Muscovite",
+    "shortDescription": "銀色に光る薄い板。片岩の面がきらきらするのはこの鉱物です。",
+    "features": ["銀色", "薄くはがれる", "絹のような光沢"],
+    "hosts": [["pelitic-schist", 0.85], ["siliceous-schist", 0.7], ["schist", 0.75], ["phyllite", 0.8], ["granite", 0.5], ["mylonite", 0.6]],
+    "zones": []
+  },
+  {
+    "id": "garnet",
+    "name": "ざくろ石",
+    "english": "Garnet",
+    "shortDescription": "赤褐色の丸い粒。岩石のなかに埋まった小さな球として見つかります。",
+    "features": ["赤褐色", "丸い粒", "とても硬い"],
+    "hosts": [["gneiss", 0.5], ["amphibolite", 0.45], ["hornfels", 0.4], ["pelitic-schist", 0.35]],
+    "zones": [["ざくろ石帯", 0.95], ["ざくろ石菫青石帯", 0.95], ["角閃岩相", 0.6], ["グラニュライト相", 0.6]]
+  },
+  {
+    "id": "cordierite",
+    "name": "菫青石",
+    "english": "Cordierite",
+    "shortDescription": "青みがかった灰色の粒。風化すると花のような模様になり、桜石と呼ばれます。",
+    "features": ["青灰色", "見る向きで色が変わる", "六角形のことがある"],
+    "hosts": [["hornfels", 0.5], ["gneiss", 0.3]],
+    "zones": [["ざくろ石菫青石帯", 0.95], ["カリ長石菫青石帯", 0.95]]
+  },
+  {
+    "id": "sillimanite",
+    "name": "珪線石",
+    "english": "Sillimanite",
+    "shortDescription": "白っぽい針や繊維の束。とても高い温度で変成した岩石の目印です。",
+    "features": ["白い針状", "繊維の束", "絹のような光沢"],
+    "hosts": [["gneiss", 0.3]],
+    "zones": [["珪線石カリ長石帯", 0.95]]
+  },
+  {
+    "id": "chlorite",
+    "name": "緑泥石",
+    "english": "Chlorite",
+    "shortDescription": "深い緑色の細かい鱗。緑色岩や緑色片岩が緑に見える理由です。",
+    "features": ["深い緑", "細かい鱗状", "やわらかい"],
+    "hosts": [["greenstone", 0.85], ["mafic-schist", 0.9], ["serpentinite", 0.4]],
+    "zones": [["緑泥石帯", 0.95], ["緑色片岩相", 0.85], ["緑片岩相", 0.85]]
+  },
+  {
+    "id": "epidote",
+    "name": "緑れん石",
+    "english": "Epidote",
+    "shortDescription": "黄緑色の細長い粒。抹茶やピスタチオのような色をしています。",
+    "features": ["黄緑色", "細長い粒", "ガラス光沢"],
+    "hosts": [["greenstone", 0.7], ["mafic-schist", 0.7], ["amphibolite", 0.55], ["marble", 0.3]],
+    "zones": [["緑色片岩相", 0.7], ["緑片岩相", 0.7]]
+  },
+  {
+    "id": "lawsonite",
+    "name": "ローソン石",
+    "english": "Lawsonite",
+    "shortDescription": "白から淡い青の四角い粒。深く沈み込んだ低温高圧の岩石にだけ出ます。",
+    "features": ["白〜淡青", "四角い粒", "ガラス光沢"],
+    "hosts": [],
+    "zones": [["ローソン石青色片岩亜相", 0.95]]
+  },
+  {
+    "id": "amphibole",
+    "name": "角閃石",
+    "english": "Amphibole",
+    "shortDescription": "黒緑色の細長い結晶。断面がひし形に見えることがあります。",
+    "features": ["黒緑色", "細長い", "ひし形の断面"],
+    "hosts": [["amphibolite", 0.9], ["diorite", 0.8], ["andesite", 0.6], ["granodiorite", 0.6], ["gabbro", 0.5], ["mafic-schist", 0.5]],
+    "zones": [["角閃岩相", 0.8], ["ぶどう石アクチノ閃石亜相", 0.7]]
+  },
+  {
+    "id": "pyroxene",
+    "name": "輝石",
+    "english": "Pyroxene",
+    "shortDescription": "黒や暗緑色の短い柱状結晶。玄武岩や斑れい岩の黒い粒の正体です。",
+    "features": ["黒〜暗緑色", "短い柱状", "重い"],
+    "hosts": [["basalt", 0.85], ["gabbro", 0.85], ["andesite", 0.7], ["peridotite", 0.7]],
+    "zones": [["斜方輝石帯", 0.9]]
+  },
+  {
+    "id": "olivine",
+    "name": "かんらん石",
+    "english": "Olivine",
+    "shortDescription": "黄緑色の透明な粒。宝石になるものはペリドットと呼ばれます。",
+    "features": ["黄緑色", "透明感", "ガラス光沢"],
+    "hosts": [["peridotite", 0.95], ["basalt", 0.5], ["gabbro", 0.45]],
+    "zones": []
+  },
+  {
+    "id": "calcite",
+    "name": "方解石",
+    "english": "Calcite",
+    "shortDescription": "白く透明感のある粒。うすい酸をかけると泡が出ます。",
+    "features": ["白〜無色", "やわらかい", "菱形に割れる"],
+    "hosts": [["limestone", 0.9], ["marble", 0.95], ["greenstone", 0.4], ["conglomerate", 0.2]],
+    "zones": []
+  },
+  {
+    "id": "pyrite",
+    "name": "黄鉄鉱",
+    "english": "Pyrite",
+    "shortDescription": "金色に光る立方体。金と間違えられることから愚者の金とも呼ばれます。",
+    "features": ["金色", "立方体", "金属光沢"],
+    "hosts": [["mudstone", 0.35], ["slate", 0.4], ["chert", 0.3], ["greenstone", 0.35], ["pelitic-schist", 0.3]],
+    "zones": []
+  },
+  {
+    "id": "magnetite",
+    "name": "磁鉄鉱",
+    "english": "Magnetite",
+    "shortDescription": "黒くて磁石につく粒。川原や砂浜では砂鉄として集まります。",
+    "features": ["黒い", "磁石につく", "重い"],
+    "hosts": [["granite", 0.5], ["granodiorite", 0.5], ["andesite", 0.55], ["basalt", 0.6], ["gabbro", 0.5], ["serpentinite", 0.5]],
+    "zones": []
+  },
+  {
+    "id": "agate",
+    "name": "めのう",
+    "english": "Agate",
+    "shortDescription": "縞模様の入った半透明の石英。火山岩のすき間を埋めて育ちます。",
+    "features": ["縞模様", "半透明", "つるつる"],
+    "hosts": [["rhyolite", 0.45], ["andesite", 0.35], ["basalt", 0.35], ["tuff", 0.3], ["trachyte", 0.3]],
+    "zones": []
+  },
+  {
+    "id": "jadeite",
+    "name": "ひすい輝石",
+    "english": "Jadeite",
+    "shortDescription": "白や緑の緻密で重い石。蛇紋岩の分布域でまれに見つかります。",
+    "features": ["白〜緑", "とても緻密", "重い"],
+    "hosts": [["serpentinite", 0.12]],
+    "zones": [["ローソン石青色片岩亜相", 0.45]]
+  },
+  {
+    "id": "serpentine",
+    "name": "蛇紋石",
+    "english": "Serpentine",
+    "shortDescription": "つるつるした暗緑色の鉱物。ろう石のような手触りです。",
+    "features": ["暗緑色", "つるつる", "やわらかい"],
+    "hosts": [["serpentinite", 0.95], ["peridotite", 0.5]],
+    "zones": []
+  }
+]

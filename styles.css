@@ -238,6 +238,13 @@ h3 {
   transform: translateX(-50%) rotate(45deg);
 }
 
+/* 上に収まらないときは下側に出す。矢印も上向きに付け替える。 */
+.map-inspect-popup.is-below::before {
+  top: -9px;
+  bottom: auto;
+  box-shadow: -3px -3px 8px rgba(0, 0, 0, 0.1);
+}
+
 .map-inspect-popup[hidden] {
   display: none;
 }
@@ -336,9 +343,10 @@ h3 {
   margin-right: 10px;
 }
 
+/* 地点のポップアップ(3000)より前面に置く。操作できなくなるのを防ぐ。 */
 .map-tools {
   position: absolute;
-  z-index: 900;
+  z-index: 3300;
   top: 84px;
   left: 16px;
   right: clamp(150px, 22vw, 190px);
@@ -354,7 +362,7 @@ h3 {
 
 .map-selected-place {
   position: absolute;
-  z-index: 900;
+  z-index: 3300;
   top: 14px;
   left: 16px;
   right: clamp(150px, 22vw, 190px);
@@ -699,6 +707,165 @@ h3 {
   line-height: 1.6;
 }
 
+/* 川原や埋立地など、石が他所から運ばれてくる場所での断り書き */
+.rock-place-note {
+  margin: 0;
+  border-left: 3px solid var(--color-primary);
+  border-radius: 0 6px 6px 0;
+  padding: 11px 14px;
+  background: rgba(46, 125, 91, 0.07);
+  color: var(--ink);
+  font-size: 0.86rem;
+  line-height: 1.65;
+}
+
+/* さらに広い範囲を取得中であることの断り */
+.rock-widening-note {
+  margin: 10px 0 0;
+  border-radius: 6px;
+  padding: 10px 13px;
+  background: rgba(171, 167, 157, 0.16);
+  color: var(--muted);
+  font-size: 0.82rem;
+  line-height: 1.6;
+}
+
+/* 候補の根拠（この地点の地質 / 周辺の地質 / 運ばれてくる石） */
+.rock-source {
+  margin: 3px 0 0;
+  color: var(--muted);
+  font-size: 0.72rem;
+  line-height: 1.2;
+}
+
+.geology-group-title {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+}
+
+.geology-group-title:not(:first-child) {
+  margin-top: 14px;
+}
+
+.geology-card-point {
+  border-color: var(--color-primary);
+  box-shadow: 0 0 0 1px rgba(46, 125, 91, 0.22);
+}
+
+/* 見どころの鉱物 */
+.mineral-section {
+  display: grid;
+  gap: 14px;
+  margin-top: 24px;
+  border-top: 1px solid var(--line);
+  padding-top: 22px;
+}
+
+.mineral-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.mineral-item {
+  border: 1px solid var(--line);
+  border-left: 3px solid var(--line);
+  border-radius: 5px;
+  padding: 11px 13px;
+  background: #fff;
+}
+
+.mineral-likely {
+  border-left-color: var(--color-primary);
+}
+
+.mineral-maybe {
+  border-left-color: rgba(46, 125, 91, 0.45);
+}
+
+.mineral-head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.mineral-name {
+  font-size: 1rem;
+  font-weight: 700;
+}
+
+.mineral-level {
+  color: var(--muted);
+  font-size: 0.74rem;
+  white-space: nowrap;
+}
+
+.mineral-note {
+  margin: 5px 0 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.6;
+}
+
+.mineral-item .tags {
+  margin: 8px 0 0;
+}
+
+.mineral-source {
+  margin: 8px 0 0;
+  color: var(--color-primary);
+  font-size: 0.78rem;
+  line-height: 1.5;
+}
+
+/* 上流域の地質一覧 */
+.catchment-list {
+  display: grid;
+  gap: 6px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+}
+
+.catchment-list li {
+  display: grid;
+  grid-template-columns: 44px minmax(0, 1fr);
+  align-items: baseline;
+  gap: 8px;
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+.catchment-share {
+  color: var(--color-primary);
+  font-weight: 700;
+  text-align: right;
+}
+
+.catchment-lithology {
+  color: var(--ink);
+}
+
+.geology-share {
+  margin: 6px 0 0;
+  color: var(--color-primary);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.geology-rocks {
+  margin: 8px 0 0;
+  color: var(--ink);
+  font-size: 0.86rem;
+  line-height: 1.6;
+}
+
 .tags {
   display: flex;
   flex-wrap: wrap;
@@ -904,6 +1071,55 @@ body.stone-page {
   grid-column: 1 / -1;
 }
 
+/* 見分け方。現場でいちばん使うので目立たせる */
+.stone-identify-panel {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 1px var(--accent) inset;
+}
+
+.stone-subheading {
+  margin: 16px 0 8px;
+  color: var(--ink);
+  font-size: 0.92rem;
+}
+
+.stone-test-list {
+  display: grid;
+  gap: 7px;
+  margin: 0;
+  padding-left: 1.2em;
+  color: #4f5659;
+  font-size: 0.93rem;
+  line-height: 1.7;
+}
+
+/* 間違えやすい石。石の名前と決め手を対で並べる */
+.stone-confuse-list {
+  display: grid;
+  gap: 14px;
+  margin: 0;
+}
+
+.stone-confuse-list dt {
+  margin-bottom: 4px;
+  color: var(--ink);
+  font-size: 0.95rem;
+  font-weight: 700;
+}
+
+.stone-confuse-list dt::before {
+  margin-right: 7px;
+  color: var(--accent);
+  content: "↔";
+}
+
+.stone-confuse-list dd {
+  margin: 0;
+  color: #4f5659;
+  font-size: 0.93rem;
+  line-height: 1.75;
+}
+
 .stone-info-panel p {
   margin-bottom: 12px;
   color: #4f5659;
@@ -982,15 +1198,6 @@ body.stone-page {
   aspect-ratio: 4 / 3;
   border-radius: 4px;
   object-fit: cover;
-}
-
-.stone-thumbnail span {
-  overflow: hidden;
-  color: #555b5f;
-  font-size: 0.86rem;
-  font-weight: 800;
-  text-overflow: ellipsis;
-  white-space: nowrap;
 }
 
 @media (max-width: 820px) {
