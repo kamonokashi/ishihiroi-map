@@ -1,0 +1,9 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "noEmit": false,
+    "outDir": "dist/renderer",
+    "types": ["vite/client", "vitest"]
+  },
+  "include": ["src/renderer/**/*"]
+}

@@ -1,0 +1,83 @@
+{
+  "name": "komorebi",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "A calm desktop companion that grows a small forest as you work.",
+  "main": "dist/main/index.js",
+  "scripts": {
+    "dev": "npm-run-all --parallel dev:renderer dev:watch-main dev:electron",
+    "dev:renderer": "vite",
+    "dev:watch-main": "tsc -p tsconfig.main.json --watch",
+    "dev:electron": "wait-on http://localhost:5173 && electron .",
+    "build:renderer": "vite build",
+    "build:main": "tsc -p tsconfig.main.json",
+    "build": "npm run build:renderer && npm run build:main",
+    "typecheck": "tsc -p tsconfig.main.json && tsc -p tsconfig.renderer.json",
+    "lint": "eslint . --ext .ts,.tsx",
+    "test": "vitest",
+    "test:run": "vitest run",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "package": "npm run build && electron-builder --win nsis",
+    "package:portable": "npm run build && electron-builder --win portable"
+  },
+  "author": "komonokashi",
+  "build": {
+    "appId": "com.kamonokashi.komorebi",
+    "productName": "Komorebi",
+    "directories": {
+      "output": "build"
+    },
+    "files": [
+      "dist/**",
+      "package.json"
+    ],
+    "win": {
+      "target": [
+        "nsis",
+        "portable"
+      ]
+    },
+    "nsis": {
+      "oneClick": false,
+      "perMachine": false,
+      "allowElevation": true,
+      "allowToChangeInstallationDirectory": true
+    },
+    "extraMetadata": {
+      "main": "dist/main/index.js"
+    }
+  },
+  "dependencies": {
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  },
+  "devDependencies": {
+    "electron": "^27.0.0",
+    "@testing-library/jest-dom": "^6.0.0",
+    "@testing-library/react": "^14.0.0",
+    "@testing-library/user-event": "^14.6.1",
+    "@types/jest": "^29.5.5",
+    "@types/node": "^20.14.3",
+    "@types/react": "^18.3.3",
+    "@types/react-dom": "^18.3.0",
+    "@typescript-eslint/eslint-plugin": "^7.11.0",
+    "@typescript-eslint/parser": "^7.11.0",
+    "@vitejs/plugin-react": "^5.2.0",
+    "cross-env": "^7.0.3",
+    "electron-builder": "^26.15.3",
+    "eslint": "^8.57.0",
+    "eslint-config-prettier": "^9.0.0",
+    "eslint-plugin-jsx-a11y": "^6.7.1",
+    "eslint-plugin-react": "^7.34.1",
+    "eslint-plugin-react-hooks": "^4.6.0",
+    "jsdom": "^30.0.1",
+    "npm-run-all": "^4.1.5",
+    "prettier": "^3.0.0",
+    "typescript": "^5.5.4",
+    "vite": "^5.4.1",
+    "vitest": "^4.1.10",
+    "wait-on": "^7.0.1"
+  }
+}
