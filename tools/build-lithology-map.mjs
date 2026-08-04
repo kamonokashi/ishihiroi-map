@@ -23,6 +23,7 @@ const DATA_DIR = join(dirname(fileURLToPath(import.meta.url)), "..", "data");
 const OUT_PATH = join(DATA_DIR, "lithology-map.json");
 const INDEX_PATH = join(DATA_DIR, "legend-index.json");
 const BUNDLE_PATH = join(DATA_DIR, "bundle.js");
+const CREDITS_PATH = join(DATA_DIR, "..", "PHOTO-CREDITS.md");
 
 // 時代コード。堆積岩は古いものほど固く締まっていて、礫として残りやすい。
 const AGE_QUATERNARY = 0;
@@ -265,6 +266,63 @@ function symbolKey(symbol) {
   return String(symbol).replace(/^[^_]+_/, "");
 }
 
+// 写真を1枚でも置くなら、出典・著作者・ライセンスを必ずそろえる。
+// ここで落としておかないと、表記のない写真がそのまま公開されてしまう。
+const REQUIRED_PHOTO_FIELDS = ["credit", "license", "licenseUrl", "sourceUrl"];
+
+function checkPhotoCredits(rocks) {
+  const problems = [];
+
+  rocks.forEach((rock) => {
+    (rock.images || []).forEach((image, index) => {
+      if (!image.src) {
+        // 模様で代用しているものは出典不要。
+        return;
+      }
+      const missing = REQUIRED_PHOTO_FIELDS.filter((field) => !image[field]);
+      if (missing.length > 0) {
+        problems.push(`${rock.id} の画像${index + 1}: ${missing.join(", ")} がない`);
+      }
+    });
+  });
+
+  if (problems.length > 0) {
+    console.error("\n写真の出典表記が足りません。修正するまでビルドを中止します。");
+    problems.forEach((problem) => console.error("  - " + problem));
+    process.exit(1);
+  }
+}
+
+// 出典一覧を自動生成する。手で書くと必ずずれるので rocks.json から作る。
+function buildCreditList(rocks) {
+  const lines = [
+    "# 写真の出典",
+    "",
+    "このファイルは `tools/build-lithology-map.mjs` が `data/rocks.json` から生成します。手で編集しないでください。",
+    ""
+  ];
+
+  const used = rocks.flatMap((rock) =>
+    (rock.images || [])
+      .filter((image) => image.src)
+      .map((image) => ({ rock, image }))
+  );
+
+  if (used.length === 0) {
+    lines.push("現在、実物の写真は使っていません。すべてSVGの模様で代用しています。", "");
+    return lines.join("\n");
+  }
+
+  lines.push("| 石 | 説明 | 著作者 | ライセンス | 出典 |", "|---|---|---|---|---|");
+  used.forEach(({ rock, image }) => {
+    lines.push(
+      `| ${rock.name} | ${image.label || "-"} | ${image.credit} | [${image.license}](${image.licenseUrl}) | [リンク](${image.sourceUrl}) |`
+    );
+  });
+  lines.push("");
+  return lines.join("\n");
+}
+
 const response = await fetch(LEGEND_URL);
 if (!response.ok) {
   throw new Error(`legend.json fetch failed: ${response.status}`);
@@ -323,6 +381,9 @@ await writeFile(INDEX_PATH, `${JSON.stringify(sortedIndex, null, 0)}\n`, "utf8")
 // これがないと、index.html をダブルクリックしただけでは石が一つも出ない。
 const rocks = JSON.parse(await readFile(join(DATA_DIR, "rocks.json"), "utf8"));
 const minerals = JSON.parse(await readFile(join(DATA_DIR, "minerals.json"), "utf8"));
+
+checkPhotoCredits(rocks);
+await writeFile(CREDITS_PATH, buildCreditList(rocks), "utf8");
 
 const bundle = [
   "// 自動生成。tools/build-lithology-map.mjs が data/*.json から作ります。",

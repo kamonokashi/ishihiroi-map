@@ -82,6 +82,7 @@ function renderStone(stone) {
     <section class="stone-hero">
       <div class="stone-main-photo-wrap">
         <img id="mainStonePhoto" class="stone-main-photo" src="${mainImage}" alt="${escapeHtml(stone.name)}\u306e\u8868\u9762\u30a4\u30e1\u30fc\u30b8">
+        <p id="mainStoneCredit" class="stone-credit">${photoCredit(images[0])}</p>
       </div>
       <div class="stone-summary">
         <p class="stone-category">${escapeHtml(categoryLabel(stone))}</p>
@@ -146,6 +147,7 @@ function renderStone(stone) {
 
 function bindGallery(stone, images) {
   const mainPhoto = document.querySelector("#mainStonePhoto");
+  const mainCredit = document.querySelector("#mainStoneCredit");
   const buttons = document.querySelectorAll("[data-stone-image]");
 
   buttons.forEach((button) => {
@@ -154,6 +156,8 @@ function bindGallery(stone, images) {
       const image = images[index];
       mainPhoto.src = imageSrc(image, stone, index);
       mainPhoto.alt = `${stone.name}\u306e${image.label || "\u8868\u9762"}\u30a4\u30e1\u30fc\u30b8`;
+      // \u5199\u771f\u3092\u5207\u308a\u66ff\u3048\u305f\u3089\u51fa\u5178\u3082\u5fc5\u305a\u5dee\u3057\u66ff\u3048\u308b\u3002\u51fa\u3057\u3063\u3071\u306a\u3057\u306f\u8aa4\u8868\u793a\u306b\u306a\u308b\u3002
+      mainCredit.innerHTML = photoCredit(image);
 
       buttons.forEach((item) => item.classList.remove("is-active"));
       button.classList.add("is-active");
@@ -174,6 +178,34 @@ function renderThumbnail(image, stone, index) {
 function categoryLabel(stone) {
   const category = stone.category || "\u672a\u5206\u985e";
   return stone.subCategory ? `${category} / ${stone.subCategory}` : category;
+}
+
+// 写真の出典表示。ライセンスによっては表記が義務なので、
+// 写真を出すところには必ずこれを添える。src が空（模様で代用）なら何も出さない。
+function photoCredit(image) {
+  if (!image || !image.src) {
+    return "";
+  }
+
+  const parts = [];
+  if (image.credit) {
+    parts.push(escapeHtml(image.credit));
+  }
+  if (image.license) {
+    parts.push(
+      image.licenseUrl
+        ? `<a href="${escapeHtml(image.licenseUrl)}" target="_blank" rel="noreferrer noopener">${escapeHtml(image.license)}</a>`
+        : escapeHtml(image.license)
+    );
+  }
+  if (image.sourceUrl) {
+    parts.push(`<a href="${escapeHtml(image.sourceUrl)}" target="_blank" rel="noreferrer noopener">出典</a>`);
+  }
+  if (image.modified) {
+    parts.push("表示のためにサイズを変更しています");
+  }
+
+  return parts.join(" / ");
 }
 
 // 道具なしか、身近なもので現場でできる確かめ方。

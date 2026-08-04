@@ -93,6 +93,32 @@ node local-server.cjs
 
 対応表を作り直したいときは `node tools/build-lithology-map.mjs` を実行する。ルールはこのスクリプトの中にあり、`data/lithology-map.json` は生成物なので直接編集しない。
 
+## 写真の扱い
+
+現在は実物の写真を使っておらず、`images[].palette` からSVGの模様を生成して代用している。
+
+写真を入れるときは `data/rocks.json` の `images[]` に次をそろえる。**`src` を入れたのに出典が欠けていると、`build-lithology-map.mjs` がビルドを中止する**（`checkPhotoCredits()`）。表記のない写真が公開されないようにするための仕掛けなので、この検査を緩めない。
+
+```json
+{
+  "label": "ゴマ塩模様",
+  "src": "photos/granite-1.jpg",
+  "credit": "撮影者名または提供機関名",
+  "license": "CC BY 4.0",
+  "licenseUrl": "https://creativecommons.org/licenses/by/4.0/",
+  "sourceUrl": "https://…（ファイルそのもののページ）",
+  "modified": true,
+  "palette": ["#d8d3ca", "#5d5952", "#f2efe8"],
+  "seed": 7
+}
+```
+
+- `modified` はサイズ変更や切り抜きをしたときに `true`。CC BY / CC BY-SA は改変の明示が要る
+- `palette` は写真が読めなかったときのために残しておく
+- 出典は写真を出すすべての場所に表示する（詳細ページは `photoCredit()`、地図カードは `rockPhotoCredit()`）
+- `PHOTO-CREDITS.md` は `rocks.json` から自動生成する。手で書くと必ずずれるので編集しない
+- **CC BY-SA** は改変物に同ライセンスの継承義務がある。縮小しただけでも改変にあたるので、採用するなら承知のうえで
+
 ## 書き方の約束
 
 - 日本語文字列はそのまま書く。サーバーもHTMLもUTF-8を明示している（`\uXXXX` エスケープは旧コードの名残）

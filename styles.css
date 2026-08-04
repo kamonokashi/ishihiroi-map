@@ -1071,6 +1071,31 @@ body.stone-page {
   grid-column: 1 / -1;
 }
 
+/* 写真の出典。ライセンス上の表記義務なので、小さくても必ず出す */
+.stone-credit {
+  margin: 8px 0 0;
+  color: var(--muted);
+  font-size: 0.76rem;
+  line-height: 1.5;
+}
+
+.stone-credit:empty {
+  display: none;
+}
+
+.stone-credit a {
+  color: var(--muted);
+  text-decoration: underline;
+}
+
+.rock-credit {
+  margin: 0;
+  padding: 4px 10px 0;
+  color: var(--muted);
+  font-size: 0.68rem;
+  line-height: 1.4;
+}
+
 /* 見分け方。現場でいちばん使うので目立たせる */
 .stone-identify-panel {
   border-color: var(--accent);

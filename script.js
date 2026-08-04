@@ -1394,6 +1394,7 @@ function renderRockCard(rock) {
       <a class="rock-photo-link" href="${detailUrl}" aria-label="${escapeHtml(rock.name)}${text.details}">
         <img class="rock-photo" src="${rockImageSrc(rock)}" alt="${escapeHtml(rock.name)}の表面イメージ" loading="lazy">
       </a>
+      ${rockPhotoCredit(rock)}
       <button class="rock-card-summary" type="button" data-details="${escapeHtml(rock.id)}" aria-expanded="false" aria-controls="rock-details-${escapeHtml(rock.id)}">
         <div>
           <h4>${escapeHtml(rock.name)}</h4>
@@ -1428,7 +1429,23 @@ function mainMinerals(rock) {
   return minerals.length > 0 ? `主な鉱物：${minerals.join("・")}` : "主な鉱物：未登録";
 }
 
+// 写真の出典表示。CC BY などは表記が義務なので、写真を出す場所には必ず添える。
+function rockPhotoCredit(rock) {
+  const image = rock.images?.[0];
+  if (!image?.src) {
+    return "";
+  }
+  const parts = [image.credit, image.license].filter(Boolean);
+  return parts.length > 0 ? `<p class="rock-credit">${escapeHtml(parts.join(" / "))}</p>` : "";
+}
+
 function rockImageSrc(rock) {
+  // 実物の写真があればそれを使う。無い場合だけ模様で代用する。
+  const photo = rock.images?.[0]?.src;
+  if (photo) {
+    return photo;
+  }
+
   const palette = rock.images?.[0]?.palette || ["#9b9487", "#554f48", "#ddd8cf"];
 
   const svg = `
