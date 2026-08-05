@@ -605,21 +605,9 @@ h3 {
   width: var(--rock-card-size);
 }
 
-/* 開いたカードだけ横に2枚ぶん広げる。写真が上・説明が下という形は変えない。
-   幅いっぱいに広げて中身を横並びにすると、カードの形が変わりすぎて
-   「下に開いた」ように見えなくなる。
-   「よく見つかる」はもともと2列で幅があるので何もしない。 */
-.rock-level-maybe .rock-card.is-expanded,
-.rock-level-rare .rock-card.is-expanded {
-  grid-column: span 2;
-}
-
-/* 地図を畳んだときと狭い画面では、グリッドではなく flex 並びになる。
-   grid-column が効かないので、カード2枚ぶんの幅を直接指定する */
-.app-shell.map-collapsed .rock-level-maybe .rock-card.is-expanded,
-.app-shell.map-collapsed .rock-level-rare .rock-card.is-expanded {
-  width: calc(var(--rock-card-size) * 2 + var(--rock-gap));
-  max-width: 100%;
+/* 開いているカードは、下に敷いた説明とつながって見えるように縁を色で示す */
+.rock-card.is-expanded {
+  border-color: var(--rock-section-accent);
 }
 
 .rock-photo-link {
@@ -699,14 +687,42 @@ h3 {
   padding: 14px;
 }
 
+/* 説明はカードの中ではなく、カードの行の下に幅いっぱいで敷く。
+   カードを広げると押したカードが別の行へ飛ぶうえ、「珍しい」は幅110pxしか
+   ないので、広げても本文が読める幅にならない（差し込む位置は
+   script.js の layoutRockDetails() が決める）。 */
 .rock-details {
+  position: relative;
   display: grid;
   gap: 10px;
-  border-top: 1px solid var(--line);
-  padding: 0 16px 16px;
+  grid-column: 1 / -1;
+  width: 100%;
+  margin-top: 7px;
+  border: 1px solid var(--rock-section-accent);
+  border-radius: 5px;
+  background: #fff;
+  box-shadow: 0 10px 24px rgba(48, 52, 56, 0.08);
+  padding: 14px 16px 16px;
   color: var(--muted);
-  font-size: var(--rock-detail-size);
+  /* 見つかる度が低いほど文字を小さくしているが、説明まで小さいと読めない */
+  font-size: max(0.95rem, var(--rock-detail-size));
   line-height: 1.6;
+}
+
+/* どのカードの説明かを三角で指す。--notch-x はカードの中心の位置 */
+.rock-details::before {
+  position: absolute;
+  top: -7px;
+  left: clamp(16px, var(--notch-x, 24px), calc(100% - 16px));
+  width: 12px;
+  height: 12px;
+  margin-left: -6px;
+  border-top: 1px solid var(--rock-section-accent);
+  border-left: 1px solid var(--rock-section-accent);
+  border-radius: 3px 0 0 0;
+  background: #fff;
+  transform: rotate(45deg);
+  content: "";
 }
 
 .rock-details p {
@@ -1350,12 +1366,6 @@ body.stone-page {
 
   .rock-card {
     width: var(--rock-card-size);
-  }
-
-  .rock-level-maybe .rock-card.is-expanded,
-  .rock-level-rare .rock-card.is-expanded {
-    width: calc(var(--rock-card-size) * 2 + var(--rock-gap));
-    max-width: 100%;
   }
 
   .result-pane {

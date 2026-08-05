@@ -226,6 +226,19 @@ function bindUi() {
   mapRestoreButton.addEventListener("click", () => setMapCollapsed(false));
   rocksTab.addEventListener("click", () => activateTab("rocks"));
   geologyTab.addEventListener("click", () => activateTab("geology"));
+
+  // 開いた説明をどの行の下に敷くかは列数で決まるので、パネルの幅が変われば測り直す。
+  // 高さは差し込んだ結果として変わるだけなので、幅を見ないと無限に呼び合う。
+  if (typeof ResizeObserver === "function") {
+    let lastWidth = 0;
+    new ResizeObserver((entries) => {
+      const width = Math.round(entries[0].contentRect.width);
+      if (width !== lastWidth) {
+        lastWidth = width;
+        layoutRockDetails();
+      }
+    }).observe(rockCards);
+  }
 }
 
 function setMapCollapsed(collapsed) {
@@ -235,6 +248,9 @@ function setMapCollapsed(collapsed) {
   setTimeout(() => {
     map.invalidateSize();
     updateInspectPopupPosition();
+    // 畳むとカードの並びが grid から flex に変わる。パネルの幅は変わらないことも
+    // あるので、幅を見ている ResizeObserver では気づけない
+    layoutRockDetails();
   }, 260);
 }
 
@@ -1349,14 +1365,95 @@ function renderRocks({ rocks, minerals: found = [], note }, stillWidening = fals
 
   rockCards.querySelectorAll("[data-details]").forEach((button) => {
     button.addEventListener("click", () => {
-      const detail = document.querySelector(`#rock-details-${CSS.escape(button.dataset.details)}`);
-      const expanded = detail.hidden;
-      detail.hidden = !expanded;
-      button.setAttribute("aria-expanded", String(expanded));
-      button.classList.toggle("is-open", expanded);
-      // 開いたカードだけ行いっぱいに広げる。「珍しい」は幅78pxしかなく、
-      // そのままだと説明が1文字ずつ折り返されて読めない。
-      button.closest(".rock-card").classList.toggle("is-expanded", expanded);
+      const card = button.closest(".rock-card");
+      setRockDetailOpen(card, !card.classList.contains("is-expanded"));
+      layoutRockDetails();
+    });
+  });
+
+  layoutRockDetails();
+}
+
+// 開いた順番。同じ行に2つ開いたとき、どちらを残すかの判断に使う
+let rockDetailOrder = 0;
+
+function rockDetailOf(card) {
+  return document.querySelector(`#rock-details-${CSS.escape(card.dataset.rock)}`);
+}
+
+function openedAt(card) {
+  return Number(rockDetailOf(card).dataset.openedAt || 0);
+}
+
+function setRockDetailOpen(card, open) {
+  const button = card.querySelector(".rock-card-summary");
+  const detail = rockDetailOf(card);
+  detail.hidden = !open;
+  if (open) {
+    detail.dataset.openedAt = String(++rockDetailOrder);
+  }
+  button.setAttribute("aria-expanded", String(open));
+  button.classList.toggle("is-open", open);
+  card.classList.toggle("is-expanded", open);
+}
+
+// 開いた説明を、そのカードが並んでいる行の真下に幅いっぱいで差し込む。
+//
+// カード自体を広げるやり方だと、最終列のカードを開いたときにそのカードが次の行へ
+// 押し出され、押した本人が画面から消えて空きマスだけが残る。行の下に敷けば
+// カードは1枚も動かず、説明もパネルの幅をまるごと使える（「珍しい」で
+// 本文110px → 487px）。
+//
+// 差し込む位置は幅で変わるので、パネルの幅が変わったら測り直す。
+function layoutRockDetails() {
+  rockCards.querySelectorAll(".rock-grid").forEach((grid) => {
+    const cardFor = (detail) => grid.querySelector(`.rock-card[data-rock="${CSS.escape(detail.dataset.rock)}"]`);
+    // 閉じている説明はカードの直後に戻しておく。表示には関わらないが、
+    // 読み上げやコピーのときに石の順番どおりに並んでいてほしい
+    grid.querySelectorAll(".rock-details[hidden]").forEach((detail) => cardFor(detail).after(detail));
+
+    const open = [...grid.querySelectorAll(".rock-details:not([hidden])")];
+    // いったん末尾に逃がして、カードだけが並んだ状態で行を測る
+    open.forEach((detail) => grid.append(detail));
+    if (open.length === 0) {
+      return;
+    }
+
+    const gridLeft = grid.getBoundingClientRect().left;
+    const rows = [];
+    grid.querySelectorAll(".rock-card").forEach((card) => {
+      const top = card.getBoundingClientRect().top;
+      const row = rows[rows.length - 1];
+      if (row && Math.abs(row.top - top) < 2) {
+        row.cards.push(card);
+      } else {
+        rows.push({ top, cards: [card] });
+      }
+    });
+
+    // 同じ行に2つ以上開いていると、帯が縦に積み上がってどれがどのカードのものか
+    // 分からなくなる。行ごとに、最後に開いたものだけ残す
+    rows.forEach((row) => {
+      row.cards
+        .filter((card) => card.classList.contains("is-expanded"))
+        .sort((a, b) => openedAt(b) - openedAt(a))
+        .slice(1)
+        .forEach((card) => {
+          setRockDetailOpen(card, false);
+          card.after(rockDetailOf(card));
+        });
+    });
+
+    open.filter((detail) => !detail.hidden).forEach((detail) => {
+      const card = cardFor(detail);
+      const row = rows.find((entry) => entry.cards.includes(card));
+      if (!row) {
+        return;
+      }
+      row.cards[row.cards.length - 1].after(detail);
+      // どのカードの説明かがわかるように、カードの真ん中に三角を出す
+      const box = card.getBoundingClientRect();
+      detail.style.setProperty("--notch-x", `${Math.round(box.left - gridLeft + box.width / 2)}px`);
     });
   });
 }
@@ -1392,8 +1489,10 @@ function renderMinerals(found) {
 function renderRockCard(rock) {
   const detailUrl = `stone.html?id=${encodeURIComponent(rock.id)}`;
   const tags = (rock.features || []).slice(0, 3);
+  // 説明はカードの外に出しておく。カード自体を広げると、押したカードが
+  // 別の行へ動いてしまう（layoutRockDetails() の注記を参照）。
   return `
-    <article class="rock-card rock-card-${escapeHtml(rock.level)}">
+    <article class="rock-card rock-card-${escapeHtml(rock.level)}" data-rock="${escapeHtml(rock.id)}">
       <a class="rock-photo-link" href="${detailUrl}" aria-label="${escapeHtml(rock.name)}${text.details}">
         <img class="rock-photo" src="${rockImageSrc(rock)}" alt="${escapeHtml(rock.name)}の表面イメージ" loading="lazy">
       </a>
@@ -1409,13 +1508,13 @@ function renderRockCard(rock) {
           </svg>
         </span>
       </button>
-      <div class="rock-details" id="rock-details-${escapeHtml(rock.id)}" hidden>
-        <div class="tags">${tags.map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("")}</div>
-        <p class="rock-minerals">${escapeHtml(mainMinerals(rock))}</p>
-        <p>${escapeHtml(rock.shortDescription || text.noDetails)}</p>
-        <a class="secondary-button rock-detail-link" href="${detailUrl}">${text.details}</a>
-      </div>
     </article>
+    <div class="rock-details" id="rock-details-${escapeHtml(rock.id)}" data-rock="${escapeHtml(rock.id)}" hidden>
+      <div class="tags">${tags.map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("")}</div>
+      <p class="rock-minerals">${escapeHtml(mainMinerals(rock))}</p>
+      <p>${escapeHtml(rock.shortDescription || text.noDetails)}</p>
+      <a class="secondary-button rock-detail-link" href="${detailUrl}">${text.details}</a>
+    </div>
   `;
 }
 
