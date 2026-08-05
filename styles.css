@@ -902,6 +902,23 @@ h3 {
   line-height: 1.6;
 }
 
+/* 地質図の記号。石を拾うのには要らないので畳んでおく */
+.geology-symbol {
+  margin: 10px 0 0;
+  color: var(--muted);
+  font-size: 0.78rem;
+}
+
+.geology-symbol summary {
+  width: fit-content;
+  cursor: pointer;
+}
+
+.geology-symbol p {
+  margin: 5px 0 0;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
 .tags {
   display: flex;
   flex-wrap: wrap;

@@ -1672,8 +1672,12 @@ function geologyCard(legend, isPoint, area) {
       ${shareHtml}
       <p class="geology-meta">${escapeHtml(legend.lithology_ja || text.lithologyUnavailable)}</p>
       <p class="geology-meta">${escapeHtml(legend.formationAge_ja || text.ageUnavailable)}</p>
-      <p class="geology-meta">symbol: ${escapeHtml(legend.symbol || "-")}</p>
       ${rockNames.length > 0 ? `<p class="geology-rocks">対応する石：${escapeHtml(rockNames.join("・"))}</p>` : ""}
+      <!-- 記号は石を拾うのに要らないが、対応表の突き合わせには要る。畳んで残す -->
+      <details class="geology-symbol">
+        <summary>地質図の記号</summary>
+        <p>${escapeHtml(legend.symbol || "-")}</p>
+      </details>
     </article>
   `;
 }
