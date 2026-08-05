@@ -1031,9 +1031,11 @@ body.stone-page {
   font-size: clamp(1.3rem, 3vw, 1.9rem);
 }
 
+/* 標本写真の実寸は354pxしかない。写真の列をこれ以上広げても引き伸ばして
+   ぼやけるだけなので、幅を実寸で頭打ちにして、余った幅は説明に回す */
 .stone-hero {
   display: grid;
-  grid-template-columns: minmax(0, 1.35fr) minmax(320px, 0.65fr);
+  grid-template-columns: minmax(0, 354px) minmax(0, 1fr);
   gap: 24px;
   align-items: stretch;
   margin-bottom: 24px;
@@ -1044,24 +1046,93 @@ body.stone-page {
   grid-template-columns: minmax(0, 1fr);
 }
 
-.stone-main-photo-wrap {
-  /* 写真の下に出典を置くので縦並び。写真が高さを取り切ると出典が枠から溢れる */
-  display: flex;
-  flex-direction: column;
-  min-height: 430px;
+.stone-gallery {
+  /* 写真の下に出典とサムネイルを置くので縦並び */
+  display: grid;
+  gap: 10px;
+}
+
+.stone-stage {
+  position: relative;
   overflow: hidden;
   border: 1px solid var(--line);
   border-radius: 6px;
   background: var(--panel);
-  box-shadow: 0 18px 40px rgba(48, 52, 56, 0.12);
+  box-shadow: 0 12px 28px rgba(48, 52, 56, 0.12);
 }
 
 .stone-main-photo {
   display: block;
   width: 100%;
-  flex: 1 1 auto;
-  min-height: 430px;
+  aspect-ratio: 1 / 0.86;
   object-fit: cover;
+  /* 指で送るとき、画像そのものがドラッグされてしまうのを止める */
+  user-select: none;
+  -webkit-user-drag: none;
+}
+
+/* 送り矢印。写真の上に重ねるので、下地が明るくても暗くても読めるようにする */
+.stone-nav {
+  position: absolute;
+  top: 50%;
+  display: grid;
+  width: 34px;
+  min-height: 34px;
+  height: 34px;
+  padding: 0;
+  place-items: center;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.86);
+  color: var(--ink);
+  box-shadow: 0 2px 10px rgba(48, 52, 56, 0.28);
+  transform: translateY(-50%);
+}
+
+.stone-nav:hover {
+  background: #fff;
+  color: var(--accent-dark);
+}
+
+.stone-nav:active {
+  transform: translateY(-50%);
+}
+
+.stone-nav-prev {
+  left: 8px;
+}
+
+.stone-nav-next {
+  right: 8px;
+}
+
+.stone-nav svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.4;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.stone-counter {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  margin: 0;
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(48, 52, 56, 0.62);
+  color: #fff;
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.stone-thumbnail-strip {
+  display: flex;
+  gap: 8px;
+  overflow-x: auto;
+  padding-bottom: 2px;
 }
 
 .stone-summary {
@@ -1076,32 +1147,35 @@ body.stone-page {
 
 .stone-category {
   width: fit-content;
-  margin-bottom: 16px;
-  padding-left: 12px;
+  margin-bottom: 10px;
+  padding-left: 10px;
   border-left: 4px solid var(--accent);
   color: var(--accent-dark);
-  font-size: 0.94rem;
+  font-size: 0.84rem;
   font-weight: 800;
 }
 
+/* 名前は目立てば足りる。64pxまで伸ばすと、開いた画面に見出ししか入らない */
 .stone-summary h1 {
-  margin-bottom: 6px;
-  font-size: clamp(2.1rem, 5vw, 4rem);
-  line-height: 1.05;
+  margin-bottom: 4px;
+  font-size: clamp(1.5rem, 2.6vw, 2.05rem);
+  line-height: 1.15;
 }
 
 .stone-english {
-  margin-bottom: 22px;
+  margin-bottom: 14px;
   color: var(--muted);
-  font-size: clamp(1rem, 2vw, 1.28rem);
+  font-size: 0.98rem;
   font-weight: 700;
 }
 
 .stone-short {
+  /* 説明の列は800px近くまで広がる。1行が長いと読みにくいので頭打ちにする */
+  max-width: 42em;
   margin-bottom: 0;
   color: #4f5659;
-  font-size: 1.05rem;
-  line-height: 1.8;
+  font-size: 1rem;
+  line-height: 1.75;
 }
 
 .stone-content-grid {
@@ -1136,7 +1210,6 @@ body.stone-page {
 }
 
 .stone-description-panel,
-.stone-gallery-panel,
 .stone-wide-panel {
   grid-column: 1 / -1;
 }
@@ -1144,14 +1217,20 @@ body.stone-page {
 /* 写真の出典。ライセンス上の表記義務なので、小さくても必ず出す */
 .stone-credit {
   margin: 0;
-  padding: 8px 12px 10px;
   color: var(--muted);
-  font-size: 0.76rem;
+  font-size: 0.74rem;
   line-height: 1.5;
 }
 
 .stone-credit:empty {
   display: none;
+}
+
+/* 何の面を見ているか。出典と同じ行に置くので、色で切り分ける */
+.stone-shot-label {
+  margin-right: 8px;
+  color: var(--ink);
+  font-weight: 700;
 }
 
 .stone-credit a {
@@ -1265,46 +1344,44 @@ body.stone-page {
   background: #d7eef0;
 }
 
-.stone-thumbnail-grid {
-  display: grid;
-  grid-template-columns: repeat(4, minmax(0, 1fr));
-  gap: 12px;
-}
-
 .stone-thumbnail {
-  display: grid;
-  gap: 8px;
+  flex: 0 0 auto;
   min-height: 0;
-  padding: 8px;
+  padding: 3px;
   border: 1px solid var(--line);
   border-radius: 6px;
   background: #f7f8f6;
-  color: var(--ink);
-  text-align: left;
   box-shadow: none;
 }
 
 .stone-thumbnail:hover {
   border-color: rgba(13, 162, 189, 0.48);
   background: #e6f4f4;
-  color: var(--ink);
 }
 
 .stone-thumbnail:active {
   transform: none;
 }
 
+/* 表示中の1枚。縁だけだと分かりにくいので、ほかを少し落として差を付ける */
 .stone-thumbnail.is-active {
   border-color: var(--accent);
-  background: #e6f4f4;
+  box-shadow: 0 0 0 1px var(--accent);
 }
 
 .stone-thumbnail img {
   display: block;
-  width: 100%;
-  aspect-ratio: 4 / 3;
+  width: 58px;
+  height: 50px;
   border-radius: 4px;
   object-fit: cover;
+  opacity: 0.62;
+  transition: opacity 160ms ease;
+}
+
+.stone-thumbnail.is-active img,
+.stone-thumbnail:hover img {
+  opacity: 1;
 }
 
 @media (max-width: 820px) {
@@ -1437,9 +1514,10 @@ body.stone-page {
     margin-bottom: 14px;
   }
 
-  .stone-main-photo-wrap,
-  .stone-main-photo {
-    min-height: 280px;
+  /* 1列になるので、写真は実寸354pxまでで中央に置く */
+  .stone-gallery {
+    justify-self: center;
+    width: min(100%, 354px);
   }
 
   .stone-summary,
@@ -1448,10 +1526,6 @@ body.stone-page {
   }
 
   .stone-summary h1 {
-    font-size: clamp(2rem, 12vw, 3rem);
-  }
-
-  .stone-thumbnail-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    font-size: clamp(1.45rem, 6vw, 1.9rem);
   }
 }

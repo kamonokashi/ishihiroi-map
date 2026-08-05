@@ -80,9 +80,25 @@ function renderStone(stone) {
 
   stoneDetail.innerHTML = `
     <section class="stone-hero">
-      <div class="stone-main-photo-wrap">
-        <img id="mainStonePhoto" class="stone-main-photo" src="${mainImage}" alt="${escapeHtml(stone.name)}\u306e\u8868\u9762\u30a4\u30e1\u30fc\u30b8">
-        <p id="mainStoneCredit" class="stone-credit">${photoCredit(images[0])}</p>
+      <div class="stone-gallery">
+        <div class="stone-stage">
+          <img id="mainStonePhoto" class="stone-main-photo" src="${mainImage}" alt="${escapeHtml(stone.name)}\u306e\u8868\u9762\u30a4\u30e1\u30fc\u30b8">
+          ${images.length > 1 ? `
+            <button class="stone-nav stone-nav-prev" type="button" data-stone-step="-1" aria-label="\u524d\u306e\u5199\u771f">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5l-7 7 7 7"/></svg>
+            </button>
+            <button class="stone-nav stone-nav-next" type="button" data-stone-step="1" aria-label="\u6b21\u306e\u5199\u771f">
+              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7"/></svg>
+            </button>
+            <p id="stoneCounter" class="stone-counter">1 / ${images.length}</p>
+          ` : ""}
+        </div>
+        <p id="mainStoneCredit" class="stone-credit">${shotCaption(images[0], 0)}</p>
+        ${images.length > 1 ? `
+          <div class="stone-thumbnail-strip">
+            ${images.map((image, index) => renderThumbnail(image, stone, index)).join("")}
+          </div>
+        ` : ""}
       </div>
       <div class="stone-summary">
         <p class="stone-category">${escapeHtml(categoryLabel(stone))}</p>
@@ -120,13 +136,6 @@ function renderStone(stone) {
         </div>
       </article>
 
-      <article class="stone-info-panel stone-gallery-panel">
-        <h2>\u5199\u771f\u4e00\u89a7</h2>
-        <div class="stone-thumbnail-grid">
-          ${images.map((image, index) => renderThumbnail(image, stone, index)).join("")}
-        </div>
-      </article>
-
       <article class="stone-info-panel stone-wide-panel">
         <h2>\u898b\u3064\u304b\u308a\u3084\u3059\u3044\u5730\u57df\u30fb\u5730\u8cea\u3068\u306e\u95a2\u4fc2</h2>
         <p>${escapeHtml(stone.likelyPlaces || "")}</p>
@@ -148,29 +157,77 @@ function renderStone(stone) {
 function bindGallery(stone, images) {
   const mainPhoto = document.querySelector("#mainStonePhoto");
   const mainCredit = document.querySelector("#mainStoneCredit");
-  const buttons = document.querySelectorAll("[data-stone-image]");
+  const counter = document.querySelector("#stoneCounter");
+  const gallery = document.querySelector(".stone-gallery");
+  const buttons = [...document.querySelectorAll("[data-stone-image]")];
+  let current = 0;
+
+  const show = (index) => {
+    // \u7aef\u3067\u6b62\u3081\u305a\u306b\u5dfb\u304d\u623b\u3059\u30023\u679a\u3057\u304b\u306a\u3044\u306e\u3067\u3001\u884c\u304d\u6b62\u307e\u308a\u304c\u3042\u308b\u307b\u3046\u304c\u7169\u308f\u3057\u3044
+    current = (index + images.length) % images.length;
+    const image = images[current];
+    mainPhoto.src = imageSrc(image, stone, current);
+    mainPhoto.alt = `${stone.name}\u306e${image.label || "\u8868\u9762"}\u30a4\u30e1\u30fc\u30b8`;
+    // \u5199\u771f\u3092\u5207\u308a\u66ff\u3048\u305f\u3089\u51fa\u5178\u3082\u5fc5\u305a\u5dee\u3057\u66ff\u3048\u308b\u3002\u51fa\u3057\u3063\u3071\u306a\u3057\u306f\u8aa4\u8868\u793a\u306b\u306a\u308b\u3002
+    mainCredit.innerHTML = shotCaption(image, current);
+    if (counter) {
+      counter.textContent = `${current + 1} / ${images.length}`;
+    }
+    buttons.forEach((item, itemIndex) => {
+      item.classList.toggle("is-active", itemIndex === current);
+      item.setAttribute("aria-current", String(itemIndex === current));
+    });
+  };
 
   buttons.forEach((button) => {
-    button.addEventListener("click", () => {
-      const index = Number(button.dataset.stoneImage);
-      const image = images[index];
-      mainPhoto.src = imageSrc(image, stone, index);
-      mainPhoto.alt = `${stone.name}\u306e${image.label || "\u8868\u9762"}\u30a4\u30e1\u30fc\u30b8`;
-      // \u5199\u771f\u3092\u5207\u308a\u66ff\u3048\u305f\u3089\u51fa\u5178\u3082\u5fc5\u305a\u5dee\u3057\u66ff\u3048\u308b\u3002\u51fa\u3057\u3063\u3071\u306a\u3057\u306f\u8aa4\u8868\u793a\u306b\u306a\u308b\u3002
-      mainCredit.innerHTML = photoCredit(image);
-
-      buttons.forEach((item) => item.classList.remove("is-active"));
-      button.classList.add("is-active");
-    });
+    button.addEventListener("click", () => show(Number(button.dataset.stoneImage)));
   });
+
+  document.querySelectorAll("[data-stone-step]").forEach((button) => {
+    button.addEventListener("click", () => show(current + Number(button.dataset.stoneStep)));
+  });
+
+  if (images.length > 1) {
+    gallery.addEventListener("keydown", (event) => {
+      if (event.key === "ArrowLeft") {
+        show(current - 1);
+      } else if (event.key === "ArrowRight") {
+        show(current + 1);
+      } else {
+        return;
+      }
+      event.preventDefault();
+    });
+
+    // \u6307\u3067\u3082\u9001\u308c\u308b\u3088\u3046\u306b\u3059\u308b\u300240px \u306f\u3075\u3064\u3046\u306e\u30bf\u30c3\u30d7\u3067\u306f\u52d5\u304b\u306a\u3044\u5e45
+    let startX = null;
+    const stage = document.querySelector(".stone-stage");
+    stage.addEventListener("pointerdown", (event) => {
+      startX = event.clientX;
+    });
+    stage.addEventListener("pointerup", (event) => {
+      if (startX === null) {
+        return;
+      }
+      const moved = event.clientX - startX;
+      startX = null;
+      if (Math.abs(moved) >= 40) {
+        show(current + (moved < 0 ? 1 : -1));
+      }
+    });
+    stage.addEventListener("pointercancel", () => {
+      startX = null;
+    });
+  }
+
+  show(0);
 }
 
 function renderThumbnail(image, stone, index) {
-  const activeClass = index === 0 ? " is-active" : "";
   const label = image.label || `\u5199\u771f${index + 1}`;
   return `
-    <button class="stone-thumbnail${activeClass}" type="button" data-stone-image="${index}" aria-label="${escapeHtml(label)}\u3092\u8868\u793a">
-      <img src="${imageSrc(image, stone, index)}" alt="${escapeHtml(label)}">
+    <button class="stone-thumbnail" type="button" data-stone-image="${index}" aria-label="${escapeHtml(label)}\u3092\u8868\u793a" title="${escapeHtml(label)}">
+      <img src="${imageSrc(image, stone, index)}" alt="" loading="lazy">
     </button>
   `;
 }
@@ -178,6 +235,16 @@ function renderThumbnail(image, stone, index) {
 function categoryLabel(stone) {
   const category = stone.category || "\u672a\u5206\u985e";
   return stone.subCategory ? `${category} / ${stone.subCategory}` : category;
+}
+
+// 表示中の1枚の説明。何の面を見ているかと、出典を1行にまとめる。
+// 写真が未収録のコマは模様で代用しているので、写真と思われないよう断りを出す。
+function shotCaption(image, index) {
+  const label = escapeHtml((image && image.label) || `写真${index + 1}`);
+  const rest = image && image.src
+    ? photoCredit(image)
+    : "模様はイメージです（この面の写真は未収録）";
+  return `<span class="stone-shot-label">${label}</span>${rest}`;
 }
 
 // 写真の出典表示。ライセンスによっては表記が義務なので、
