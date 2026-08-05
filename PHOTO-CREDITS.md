@@ -13,6 +13,7 @@
 | デイサイト | 白っぽい灰色 | 産総研地質調査総合センター | [政府標準利用規約(第2.0版)](https://www.gsj.jp/license/license.html) | [リンク](https://gbank.gsj.jp/musee/#R51453) |
 | 安山岩 | 灰色の表面 | 産総研地質調査総合センター | [政府標準利用規約(第2.0版)](https://www.gsj.jp/license/license.html) | [リンク](https://gbank.gsj.jp/musee/#R60663) |
 | 玄武岩 | 黒っぽい面 | 産総研地質調査総合センター | [政府標準利用規約(第2.0版)](https://www.gsj.jp/license/license.html) | [リンク](https://gbank.gsj.jp/musee/#R50194) |
+| 黒曜石 | 黒い光沢面 | 産総研地質調査総合センター | [政府標準利用規約(第2.0版)](https://www.gsj.jp/license/license.html) | [リンク](https://gbank.gsj.jp/musee/#D1901) |
 | 凝灰岩 | 白っぽい凝灰岩風 | 産総研地質調査総合センター | [政府標準利用規約(第2.0版)](https://www.gsj.jp/license/license.html) | [リンク](https://gbank.gsj.jp/musee/#R60211) |
 | 軽石 | 穴だらけの面 | 産総研地質調査総合センター | [政府標準利用規約(第2.0版)](https://www.gsj.jp/license/license.html) | [リンク](https://gbank.gsj.jp/musee/#R60953) |
 | 溶結凝灰岩 | レンズ模様 | 産総研地質調査総合センター | [政府標準利用規約(第2.0版)](https://www.gsj.jp/license/license.html) | [リンク](https://gbank.gsj.jp/musee/#R60901) |
@@ -34,3 +35,4 @@
 | 大理石 | 白い面 | 産総研地質調査総合センター | [政府標準利用規約(第2.0版)](https://www.gsj.jp/license/license.html) | [リンク](https://gbank.gsj.jp/musee/#R78388) |
 | 蛇紋岩 | 暗緑色の面 | 産総研地質調査総合センター | [政府標準利用規約(第2.0版)](https://www.gsj.jp/license/license.html) | [リンク](https://gbank.gsj.jp/musee/#R60922) |
 | マイロナイト | 流れる縞 | 産総研地質調査総合センター | [政府標準利用規約(第2.0版)](https://www.gsj.jp/license/license.html) | [リンク](https://gbank.gsj.jp/musee/#R60638) |
+| 脈石英 | 白い塊 | 産総研地質調査総合センター | [政府標準利用規約(第2.0版)](https://www.gsj.jp/license/license.html) | [リンク](https://gbank.gsj.jp/musee/#D7651-1) |

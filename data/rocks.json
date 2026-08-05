@@ -42,7 +42,7 @@
         "license": "政府標準利用規約(第2.0版)",
         "licenseUrl": "https://www.gsj.jp/license/license.html",
         "sourceUrl": "https://gbank.gsj.jp/musee/#R40352",
-        "modified": true
+        "modified": false
       },
       {
         "label": "白っぽい粒",
@@ -128,7 +128,7 @@
         "license": "政府標準利用規約(第2.0版)",
         "licenseUrl": "https://www.gsj.jp/license/license.html",
         "sourceUrl": "https://gbank.gsj.jp/musee/#R40286",
-        "modified": true
+        "modified": false
       },
       {
         "label": "黒い粒",
@@ -209,7 +209,7 @@
         "license": "政府標準利用規約(第2.0版)",
         "licenseUrl": "https://www.gsj.jp/license/license.html",
         "sourceUrl": "https://gbank.gsj.jp/musee/#R40292",
-        "modified": true
+        "modified": false
       },
       {
         "label": "灰色の面",
@@ -290,7 +290,7 @@
         "license": "政府標準利用規約(第2.0版)",
         "licenseUrl": "https://www.gsj.jp/license/license.html",
         "sourceUrl": "https://gbank.gsj.jp/musee/#R40308",
-        "modified": true
+        "modified": false
       },
       {
         "label": "粗い粒",
@@ -375,7 +375,7 @@
         "license": "政府標準利用規約(第2.0版)",
         "licenseUrl": "https://www.gsj.jp/license/license.html",
         "sourceUrl": "https://gbank.gsj.jp/musee/#R56924",
-        "modified": true
+        "modified": false
       },
       {
         "label": "粒の見える面",
@@ -456,7 +456,7 @@
         "license": "政府標準利用規約(第2.0版)",
         "licenseUrl": "https://www.gsj.jp/license/license.html",
         "sourceUrl": "https://gbank.gsj.jp/musee/#R59715",
-        "modified": true
+        "modified": false
       },
       {
         "label": "ガラス質風",
@@ -542,7 +542,7 @@
         "license": "政府標準利用規約(第2.0版)",
         "licenseUrl": "https://www.gsj.jp/license/license.html",
         "sourceUrl": "https://gbank.gsj.jp/musee/#R51453",
-        "modified": true
+        "modified": false
       },
       {
         "label": "細かい地",
@@ -692,7 +692,7 @@
         "license": "政府標準利用規約(第2.0版)",
         "licenseUrl": "https://www.gsj.jp/license/license.html",
         "sourceUrl": "https://gbank.gsj.jp/musee/#R60663",
-        "modified": true
+        "modified": false
       },
       {
         "label": "細かな地",
@@ -778,7 +778,7 @@
         "license": "政府標準利用規約(第2.0版)",
         "licenseUrl": "https://www.gsj.jp/license/license.html",
         "sourceUrl": "https://gbank.gsj.jp/musee/#R50194",
-        "modified": true
+        "modified": false
       },
       {
         "label": "細かい粒",
@@ -851,13 +851,18 @@
     "images": [
       {
         "label": "黒い光沢面",
-        "src": "",
+        "src": "photos/obsidian.jpg",
         "palette": [
           "#2a2a2e",
           "#0c0c0e",
           "#5c5c64"
         ],
-        "seed": 4
+        "seed": 4,
+        "credit": "産総研地質調査総合センター",
+        "license": "政府標準利用規約(第2.0版)",
+        "licenseUrl": "https://www.gsj.jp/license/license.html",
+        "sourceUrl": "https://gbank.gsj.jp/musee/#D1901",
+        "modified": false
       },
       {
         "label": "貝殻状の割れ口",
@@ -940,7 +945,7 @@
         "license": "政府標準利用規約(第2.0版)",
         "licenseUrl": "https://www.gsj.jp/license/license.html",
         "sourceUrl": "https://gbank.gsj.jp/musee/#R60211",
-        "modified": true
+        "modified": false
       },
       {
         "label": "灰色の火山灰質",
@@ -1026,7 +1031,7 @@
         "license": "政府標準利用規約(第2.0版)",
         "licenseUrl": "https://www.gsj.jp/license/license.html",
         "sourceUrl": "https://gbank.gsj.jp/musee/#R60953",
-        "modified": true
+        "modified": false
       },
       {
         "label": "灰色の軽石",
@@ -1108,7 +1113,7 @@
         "license": "政府標準利用規約(第2.0版)",
         "licenseUrl": "https://www.gsj.jp/license/license.html",
         "sourceUrl": "https://gbank.gsj.jp/musee/#R60901",
-        "modified": true
+        "modified": false
       },
       {
         "label": "硬く緻密な面",
@@ -1190,7 +1195,7 @@
         "license": "政府標準利用規約(第2.0版)",
         "licenseUrl": "https://www.gsj.jp/license/license.html",
         "sourceUrl": "https://gbank.gsj.jp/musee/#R51429",
-        "modified": true
+        "modified": false
       },
       {
         "label": "茶色の面",
@@ -1276,7 +1281,7 @@
         "license": "政府標準利用規約(第2.0版)",
         "licenseUrl": "https://www.gsj.jp/license/license.html",
         "sourceUrl": "https://gbank.gsj.jp/musee/#R51937",
-        "modified": true
+        "modified": false
       },
       {
         "label": "灰色の面",
@@ -1362,7 +1367,7 @@
         "license": "政府標準利用規約(第2.0版)",
         "licenseUrl": "https://www.gsj.jp/license/license.html",
         "sourceUrl": "https://gbank.gsj.jp/musee/#R60385",
-        "modified": true
+        "modified": false
       },
       {
         "label": "粒の断面",
@@ -1441,7 +1446,7 @@
         "license": "政府標準利用規約(第2.0版)",
         "licenseUrl": "https://www.gsj.jp/license/license.html",
         "sourceUrl": "https://gbank.gsj.jp/musee/#R61767",
-        "modified": true
+        "modified": false
       },
       {
         "label": "灰色の石灰岩風",
@@ -1522,7 +1527,7 @@
         "license": "政府標準利用規約(第2.0版)",
         "licenseUrl": "https://www.gsj.jp/license/license.html",
         "sourceUrl": "https://gbank.gsj.jp/musee/#R61303",
-        "modified": true
+        "modified": false
       },
       {
         "label": "灰色の面",
@@ -1609,7 +1614,7 @@
         "license": "政府標準利用規約(第2.0版)",
         "licenseUrl": "https://www.gsj.jp/license/license.html",
         "sourceUrl": "https://gbank.gsj.jp/musee/#R77482",
-        "modified": true
+        "modified": false
       },
       {
         "label": "黒っぽい面",
@@ -1691,7 +1696,7 @@
         "license": "政府標準利用規約(第2.0版)",
         "licenseUrl": "https://www.gsj.jp/license/license.html",
         "sourceUrl": "https://gbank.gsj.jp/musee/#R40307",
-        "modified": true
+        "modified": false
       },
       {
         "label": "はがれた面",
@@ -1773,7 +1778,7 @@
         "license": "政府標準利用規約(第2.0版)",
         "licenseUrl": "https://www.gsj.jp/license/license.html",
         "sourceUrl": "https://gbank.gsj.jp/musee/#R57581",
-        "modified": true
+        "modified": false
       },
       {
         "label": "絹の光沢",
@@ -1859,7 +1864,7 @@
         "license": "政府標準利用規約(第2.0版)",
         "licenseUrl": "https://www.gsj.jp/license/license.html",
         "sourceUrl": "https://gbank.gsj.jp/musee/#R61004",
-        "modified": true
+        "modified": false
       },
       {
         "label": "片理面",
@@ -1940,7 +1945,7 @@
         "license": "政府標準利用規約(第2.0版)",
         "licenseUrl": "https://www.gsj.jp/license/license.html",
         "sourceUrl": "https://gbank.gsj.jp/musee/#R60912",
-        "modified": true
+        "modified": false
       },
       {
         "label": "細かい縞",
@@ -2022,7 +2027,7 @@
         "license": "政府標準利用規約(第2.0版)",
         "licenseUrl": "https://www.gsj.jp/license/license.html",
         "sourceUrl": "https://gbank.gsj.jp/musee/#R40314",
-        "modified": true
+        "modified": false
       },
       {
         "label": "曲がった縞",
@@ -2107,7 +2112,7 @@
         "license": "政府標準利用規約(第2.0版)",
         "licenseUrl": "https://www.gsj.jp/license/license.html",
         "sourceUrl": "https://gbank.gsj.jp/musee/#R60758",
-        "modified": true
+        "modified": false
       },
       {
         "label": "はがれた面",
@@ -2188,7 +2193,7 @@
         "license": "政府標準利用規約(第2.0版)",
         "licenseUrl": "https://www.gsj.jp/license/license.html",
         "sourceUrl": "https://gbank.gsj.jp/musee/#R61740",
-        "modified": true
+        "modified": false
       },
       {
         "label": "黒っぽい面",
@@ -2270,7 +2275,7 @@
         "license": "政府標準利用規約(第2.0版)",
         "licenseUrl": "https://www.gsj.jp/license/license.html",
         "sourceUrl": "https://gbank.gsj.jp/musee/#R61434",
-        "modified": true
+        "modified": false
       },
       {
         "label": "角ばった割れ口",
@@ -2357,7 +2362,7 @@
         "license": "政府標準利用規約(第2.0版)",
         "licenseUrl": "https://www.gsj.jp/license/license.html",
         "sourceUrl": "https://gbank.gsj.jp/musee/#R40320",
-        "modified": true
+        "modified": false
       },
       {
         "label": "針状の鉱物",
@@ -2437,7 +2442,7 @@
         "license": "政府標準利用規約(第2.0版)",
         "licenseUrl": "https://www.gsj.jp/license/license.html",
         "sourceUrl": "https://gbank.gsj.jp/musee/#R78388",
-        "modified": true
+        "modified": false
       },
       {
         "label": "きらめく粒",
@@ -2524,7 +2529,7 @@
         "license": "政府標準利用規約(第2.0版)",
         "licenseUrl": "https://www.gsj.jp/license/license.html",
         "sourceUrl": "https://gbank.gsj.jp/musee/#R60922",
-        "modified": true
+        "modified": false
       },
       {
         "label": "黒緑色",
@@ -2607,7 +2612,7 @@
         "license": "政府標準利用規約(第2.0版)",
         "licenseUrl": "https://www.gsj.jp/license/license.html",
         "sourceUrl": "https://gbank.gsj.jp/musee/#R60638",
-        "modified": true
+        "modified": false
       },
       {
         "label": "目のような粒",
@@ -2676,13 +2681,18 @@
     "images": [
       {
         "label": "白い塊",
-        "src": "",
+        "src": "photos/vein-quartz.jpg",
         "palette": [
           "#f2f0ea",
           "#c9c5bb",
           "#ffffff"
         ],
-        "seed": 3
+        "seed": 3,
+        "credit": "産総研地質調査総合センター",
+        "license": "政府標準利用規約(第2.0版)",
+        "licenseUrl": "https://www.gsj.jp/license/license.html",
+        "sourceUrl": "https://gbank.gsj.jp/musee/#D7651-1",
+        "modified": false
       },
       {
         "label": "ガラス質の割れ口",
