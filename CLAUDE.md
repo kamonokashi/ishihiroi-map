@@ -16,6 +16,7 @@
 
 - `index.html` / `script.js` — 地図画面。地質取得と石カード表示
 - `stone.html` / `stone.js` — 石の詳細ページ（`?id=` で切り替え）
+- `mineral.html` / `mineral.js` — 鉱物の詳細ページ（`?id=` で切り替え）。石と同じ作りだが写真がないので見出しは1列
 - `styles.css` — 全体のスタイル
 - `data/lithology-map.json` — 岩相(symbol接尾辞) → 石 の対応表。**生成物なので手で編集しない**
 - `data/legend-index.json` — 凡例の色 → [symbol接尾辞, 時代コード]。**生成物**。地質図タイルの画素から地質を逆引きするために使う
@@ -23,6 +24,8 @@
   - `identification` / `confusedWith` / `fieldTests` が現場での同定用。写真がなくても石を判別できるようにするための情報で、詳細ページの最上段に置いている
   - `confusedWith[].name` にはカタログ外のもの（コンクリート、スラグ、方解石など）も入る。取り違えの実態に合わせるため、`rocks.json` の `name` に限定しない
 - `data/minerals.json` — 鉱物のカタログ。母岩と変成帯から候補を出す
+  - `identification` / `confusedWith` / `fieldTests` は石と同じ意味で、`mineral.html` の最上段に置いている
+  - `hosts` の石 `id` は `rocks.json` に存在させる（詳細ページで母岩へのリンクになる）
 - `data/bundle.js` — 上4つを1つにまとめたもの。**生成物**。`file://` で開くと `fetch` が使えないので、そのときだけこちらから読む
 - `tools/build-lithology-map.mjs` — 生成物3つ（lithology-map / legend-index / bundle）を作るスクリプト
 - `api/geology.php` — CORS 対策のフォールバック用プロキシ

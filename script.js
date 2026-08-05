@@ -1496,6 +1496,7 @@ function renderMinerals(found) {
             <p class="mineral-note">${escapeHtml(mineral.shortDescription || "")}</p>
             <div class="tags">${(mineral.features || []).map((feature) => `<span class="tag">${escapeHtml(feature)}</span>`).join("")}</div>
             ${mineral.fromZone ? '<p class="mineral-source">この地質の変成帯が、その名前のとおりこの鉱物を含みます</p>' : ""}
+            <a class="secondary-button mineral-detail-link" href="mineral.html?id=${encodeURIComponent(mineral.id)}">${text.details}</a>
           </li>
         `).join("")}
       </ul>

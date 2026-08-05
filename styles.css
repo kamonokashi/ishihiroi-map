@@ -860,6 +860,15 @@ h3 {
   line-height: 1.5;
 }
 
+.mineral-detail-link {
+  margin-top: 10px;
+}
+
+.mineral-detail-link:focus-visible {
+  outline: 3px solid rgba(46, 125, 91, 0.32);
+  outline-offset: 3px;
+}
+
 /* 上流域の地質一覧 */
 .catchment-list {
   display: grid;
@@ -1028,6 +1037,11 @@ body.stone-page {
   gap: 24px;
   align-items: stretch;
   margin-bottom: 24px;
+}
+
+/* 鉱物には写真がないので、見出しだけで1列に伸ばす */
+.mineral-hero {
+  grid-template-columns: minmax(0, 1fr);
 }
 
 .stone-main-photo-wrap {
@@ -1238,6 +1252,17 @@ body.stone-page {
 .stone-mineral {
   border-color: rgba(13, 162, 189, 0.26);
   background: #e6f4f4;
+}
+
+/* 鉱物ページから母岩の詳細へ飛ぶ。押せることが分かるように色と下線を付ける */
+.stone-mineral-link {
+  color: var(--accent-dark);
+  text-decoration: underline;
+}
+
+.stone-mineral-link:hover {
+  border-color: rgba(13, 162, 189, 0.55);
+  background: #d7eef0;
 }
 
 .stone-thumbnail-grid {
