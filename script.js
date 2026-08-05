@@ -1430,13 +1430,13 @@ function mainMinerals(rock) {
 }
 
 // 写真の出典表示。CC BY などは表記が義務なので、写真を出す場所には必ず添える。
+// カードは幅がないので出典元だけ。ライセンスと改変の明示は詳細ページの photoCredit() が出す。
 function rockPhotoCredit(rock) {
   const image = rock.images?.[0];
-  if (!image?.src) {
+  if (!image?.src || !image.credit) {
     return "";
   }
-  const parts = [image.credit, image.license].filter(Boolean);
-  return parts.length > 0 ? `<p class="rock-credit">${escapeHtml(parts.join(" / "))}</p>` : "";
+  return `<p class="rock-credit">出典：${escapeHtml(image.credit)}</p>`;
 }
 
 function rockImageSrc(rock) {

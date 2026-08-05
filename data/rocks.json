@@ -31,13 +31,18 @@
     "images": [
       {
         "label": "ゴマ塩模様",
-        "src": "",
+        "src": "photos/granite.jpg",
         "palette": [
           "#d8d3ca",
           "#5d5952",
           "#f2efe8"
         ],
-        "seed": 7
+        "seed": 7,
+        "credit": "産総研地質調査総合センター",
+        "license": "政府標準利用規約(第2.0版)",
+        "licenseUrl": "https://www.gsj.jp/license/license.html",
+        "sourceUrl": "https://gbank.gsj.jp/musee/#R40352",
+        "modified": true
       },
       {
         "label": "白っぽい粒",
@@ -112,13 +117,18 @@
     "images": [
       {
         "label": "白と黒のまだら",
-        "src": "",
+        "src": "photos/granodiorite.jpg",
         "palette": [
           "#c9c6bd",
           "#6b675e",
           "#e8e5dc"
         ],
-        "seed": 9
+        "seed": 9,
+        "credit": "産総研地質調査総合センター",
+        "license": "政府標準利用規約(第2.0版)",
+        "licenseUrl": "https://www.gsj.jp/license/license.html",
+        "sourceUrl": "https://gbank.gsj.jp/musee/#R40286",
+        "modified": true
       },
       {
         "label": "黒い粒",
@@ -188,13 +198,18 @@
     "images": [
       {
         "label": "白黒のまだら",
-        "src": "",
+        "src": "photos/diorite.jpg",
         "palette": [
           "#a8a7a0",
           "#4a4c48",
           "#d8d7cf"
         ],
-        "seed": 6
+        "seed": 6,
+        "credit": "産総研地質調査総合センター",
+        "license": "政府標準利用規約(第2.0版)",
+        "licenseUrl": "https://www.gsj.jp/license/license.html",
+        "sourceUrl": "https://gbank.gsj.jp/musee/#R40292",
+        "modified": true
       },
       {
         "label": "灰色の面",
@@ -264,13 +279,18 @@
     "images": [
       {
         "label": "黒っぽい面",
-        "src": "",
+        "src": "photos/gabbro.jpg",
         "palette": [
           "#4b4d49",
           "#22251f",
           "#8d8c82"
         ],
-        "seed": 4
+        "seed": 4,
+        "credit": "産総研地質調査総合センター",
+        "license": "政府標準利用規約(第2.0版)",
+        "licenseUrl": "https://www.gsj.jp/license/license.html",
+        "sourceUrl": "https://gbank.gsj.jp/musee/#R40308",
+        "modified": true
       },
       {
         "label": "粗い粒",
@@ -344,13 +364,18 @@
     "images": [
       {
         "label": "オリーブ色",
-        "src": "",
+        "src": "photos/peridotite.jpg",
         "palette": [
           "#6b7444",
           "#33391f",
           "#a8b177"
         ],
-        "seed": 10
+        "seed": 10,
+        "credit": "産総研地質調査総合センター",
+        "license": "政府標準利用規約(第2.0版)",
+        "licenseUrl": "https://www.gsj.jp/license/license.html",
+        "sourceUrl": "https://gbank.gsj.jp/musee/#R56924",
+        "modified": true
       },
       {
         "label": "粒の見える面",
@@ -420,13 +445,18 @@
     "images": [
       {
         "label": "淡い灰色",
-        "src": "",
+        "src": "photos/rhyolite.jpg",
         "palette": [
           "#d7d3c9",
           "#a8a9a4",
           "#f4efe4"
         ],
-        "seed": 6
+        "seed": 6,
+        "credit": "産総研地質調査総合センター",
+        "license": "政府標準利用規約(第2.0版)",
+        "licenseUrl": "https://www.gsj.jp/license/license.html",
+        "sourceUrl": "https://gbank.gsj.jp/musee/#R59715",
+        "modified": true
       },
       {
         "label": "ガラス質風",
@@ -501,13 +531,18 @@
     "images": [
       {
         "label": "白っぽい灰色",
-        "src": "",
+        "src": "photos/dacite.jpg",
         "palette": [
           "#b8b6ad",
           "#7c7a72",
           "#e0ded4"
         ],
-        "seed": 7
+        "seed": 7,
+        "credit": "産総研地質調査総合センター",
+        "license": "政府標準利用規約(第2.0版)",
+        "licenseUrl": "https://www.gsj.jp/license/license.html",
+        "sourceUrl": "https://gbank.gsj.jp/musee/#R51453",
+        "modified": true
       },
       {
         "label": "細かい地",
@@ -646,13 +681,18 @@
     "images": [
       {
         "label": "灰色の表面",
-        "src": "",
+        "src": "photos/andesite.jpg",
         "palette": [
           "#848987",
           "#565d5d",
           "#c4c7bd"
         ],
-        "seed": 8
+        "seed": 8,
+        "credit": "産総研地質調査総合センター",
+        "license": "政府標準利用規約(第2.0版)",
+        "licenseUrl": "https://www.gsj.jp/license/license.html",
+        "sourceUrl": "https://gbank.gsj.jp/musee/#R60663",
+        "modified": true
       },
       {
         "label": "細かな地",
@@ -727,13 +767,18 @@
     "images": [
       {
         "label": "黒っぽい面",
-        "src": "",
+        "src": "photos/basalt.jpg",
         "palette": [
           "#333a3b",
           "#111719",
           "#677071"
         ],
-        "seed": 5
+        "seed": 5,
+        "credit": "産総研地質調査総合センター",
+        "license": "政府標準利用規約(第2.0版)",
+        "licenseUrl": "https://www.gsj.jp/license/license.html",
+        "sourceUrl": "https://gbank.gsj.jp/musee/#R50194",
+        "modified": true
       },
       {
         "label": "細かい粒",
@@ -884,13 +929,18 @@
     "images": [
       {
         "label": "白っぽい凝灰岩風",
-        "src": "",
+        "src": "photos/tuff.jpg",
         "palette": [
           "#d9d3bd",
           "#aaa17d",
           "#f4edd8"
         ],
-        "seed": 31
+        "seed": 31,
+        "credit": "産総研地質調査総合センター",
+        "license": "政府標準利用規約(第2.0版)",
+        "licenseUrl": "https://www.gsj.jp/license/license.html",
+        "sourceUrl": "https://gbank.gsj.jp/musee/#R60211",
+        "modified": true
       },
       {
         "label": "灰色の火山灰質",
@@ -965,13 +1015,18 @@
     "images": [
       {
         "label": "穴だらけの面",
-        "src": "",
+        "src": "photos/pumice.jpg",
         "palette": [
           "#e6e1d6",
           "#b5ae9f",
           "#f7f4ec"
         ],
-        "seed": 6
+        "seed": 6,
+        "credit": "産総研地質調査総合センター",
+        "license": "政府標準利用規約(第2.0版)",
+        "licenseUrl": "https://www.gsj.jp/license/license.html",
+        "sourceUrl": "https://gbank.gsj.jp/musee/#R60953",
+        "modified": true
       },
       {
         "label": "灰色の軽石",
@@ -1042,13 +1097,18 @@
     "images": [
       {
         "label": "レンズ模様",
-        "src": "",
+        "src": "photos/welded-tuff.jpg",
         "palette": [
           "#c4b1a4",
           "#7d6a5f",
           "#e6d8cd"
         ],
-        "seed": 8
+        "seed": 8,
+        "credit": "産総研地質調査総合センター",
+        "license": "政府標準利用規約(第2.0版)",
+        "licenseUrl": "https://www.gsj.jp/license/license.html",
+        "sourceUrl": "https://gbank.gsj.jp/musee/#R60901",
+        "modified": true
       },
       {
         "label": "硬く緻密な面",
@@ -1119,13 +1179,18 @@
     "images": [
       {
         "label": "砂粒の質感",
-        "src": "",
+        "src": "photos/sandstone.jpg",
         "palette": [
           "#c99b5d",
           "#8f6f45",
           "#ead1a5"
         ],
-        "seed": 10
+        "seed": 10,
+        "credit": "産総研地質調査総合センター",
+        "license": "政府標準利用規約(第2.0版)",
+        "licenseUrl": "https://www.gsj.jp/license/license.html",
+        "sourceUrl": "https://gbank.gsj.jp/musee/#R51429",
+        "modified": true
       },
       {
         "label": "茶色の面",
@@ -1200,13 +1265,18 @@
     "images": [
       {
         "label": "細かい粒",
-        "src": "",
+        "src": "photos/mudstone.jpg",
         "palette": [
           "#6e6a63",
           "#373b36",
           "#a39b8f"
         ],
-        "seed": 12
+        "seed": 12,
+        "credit": "産総研地質調査総合センター",
+        "license": "政府標準利用規約(第2.0版)",
+        "licenseUrl": "https://www.gsj.jp/license/license.html",
+        "sourceUrl": "https://gbank.gsj.jp/musee/#R51937",
+        "modified": true
       },
       {
         "label": "灰色の面",
@@ -1281,13 +1351,18 @@
     "images": [
       {
         "label": "丸い礫",
-        "src": "",
+        "src": "photos/conglomerate.jpg",
         "palette": [
           "#b9a68c",
           "#6e6047",
           "#ded0b6"
         ],
-        "seed": 5
+        "seed": 5,
+        "credit": "産総研地質調査総合センター",
+        "license": "政府標準利用規約(第2.0版)",
+        "licenseUrl": "https://www.gsj.jp/license/license.html",
+        "sourceUrl": "https://gbank.gsj.jp/musee/#R60385",
+        "modified": true
       },
       {
         "label": "粒の断面",
@@ -1355,13 +1430,18 @@
     "images": [
       {
         "label": "白い面",
-        "src": "",
+        "src": "photos/limestone.jpg",
         "palette": [
           "#e5e1d3",
           "#b8b49f",
           "#faf8ed"
         ],
-        "seed": 15
+        "seed": 15,
+        "credit": "産総研地質調査総合センター",
+        "license": "政府標準利用規約(第2.0版)",
+        "licenseUrl": "https://www.gsj.jp/license/license.html",
+        "sourceUrl": "https://gbank.gsj.jp/musee/#R61767",
+        "modified": true
       },
       {
         "label": "灰色の石灰岩風",
@@ -1431,13 +1511,18 @@
     "images": [
       {
         "label": "赤いチャート風",
-        "src": "",
+        "src": "photos/chert.jpg",
         "palette": [
           "#8e5b5d",
           "#52465a",
           "#d1c2b6"
         ],
-        "seed": 9
+        "seed": 9,
+        "credit": "産総研地質調査総合センター",
+        "license": "政府標準利用規約(第2.0版)",
+        "licenseUrl": "https://www.gsj.jp/license/license.html",
+        "sourceUrl": "https://gbank.gsj.jp/musee/#R61303",
+        "modified": true
       },
       {
         "label": "灰色の面",
@@ -1513,13 +1598,18 @@
     "images": [
       {
         "label": "緑がかった面",
-        "src": "",
+        "src": "photos/greenstone.jpg",
         "palette": [
           "#4e6152",
           "#22322a",
           "#88a08c"
         ],
-        "seed": 6
+        "seed": 6,
+        "credit": "産総研地質調査総合センター",
+        "license": "政府標準利用規約(第2.0版)",
+        "licenseUrl": "https://www.gsj.jp/license/license.html",
+        "sourceUrl": "https://gbank.gsj.jp/musee/#R77482",
+        "modified": true
       },
       {
         "label": "黒っぽい面",
@@ -1590,13 +1680,18 @@
     "images": [
       {
         "label": "片理面",
-        "src": "",
+        "src": "photos/schist.jpg",
         "palette": [
           "#8b8a86",
           "#494845",
           "#c6c5bf"
         ],
-        "seed": 5
+        "seed": 5,
+        "credit": "産総研地質調査総合センター",
+        "license": "政府標準利用規約(第2.0版)",
+        "licenseUrl": "https://www.gsj.jp/license/license.html",
+        "sourceUrl": "https://gbank.gsj.jp/musee/#R40307",
+        "modified": true
       },
       {
         "label": "はがれた面",
@@ -1667,13 +1762,18 @@
     "images": [
       {
         "label": "黒い片理面",
-        "src": "",
+        "src": "photos/pelitic-schist.jpg",
         "palette": [
           "#4a4a4e",
           "#1c1c20",
           "#8a8a90"
         ],
-        "seed": 3
+        "seed": 3,
+        "credit": "産総研地質調査総合センター",
+        "license": "政府標準利用規約(第2.0版)",
+        "licenseUrl": "https://www.gsj.jp/license/license.html",
+        "sourceUrl": "https://gbank.gsj.jp/musee/#R57581",
+        "modified": true
       },
       {
         "label": "絹の光沢",
@@ -1748,13 +1848,18 @@
     "images": [
       {
         "label": "緑の縞",
-        "src": "",
+        "src": "photos/mafic-schist.jpg",
         "palette": [
           "#5c7160",
           "#2b3a30",
           "#9ab29d"
         ],
-        "seed": 4
+        "seed": 4,
+        "credit": "産総研地質調査総合センター",
+        "license": "政府標準利用規約(第2.0版)",
+        "licenseUrl": "https://www.gsj.jp/license/license.html",
+        "sourceUrl": "https://gbank.gsj.jp/musee/#R61004",
+        "modified": true
       },
       {
         "label": "片理面",
@@ -1824,13 +1929,18 @@
     "images": [
       {
         "label": "白っぽい面",
-        "src": "",
+        "src": "photos/siliceous-schist.jpg",
         "palette": [
           "#d3d0c6",
           "#8e8b80",
           "#f1efe6"
         ],
-        "seed": 7
+        "seed": 7,
+        "credit": "産総研地質調査総合センター",
+        "license": "政府標準利用規約(第2.0版)",
+        "licenseUrl": "https://www.gsj.jp/license/license.html",
+        "sourceUrl": "https://gbank.gsj.jp/musee/#R60912",
+        "modified": true
       },
       {
         "label": "細かい縞",
@@ -1901,13 +2011,18 @@
     "images": [
       {
         "label": "白黒の縞",
-        "src": "",
+        "src": "photos/gneiss.jpg",
         "palette": [
           "#c3bfb4",
           "#585549",
           "#e9e6dc"
         ],
-        "seed": 8
+        "seed": 8,
+        "credit": "産総研地質調査総合センター",
+        "license": "政府標準利用規約(第2.0版)",
+        "licenseUrl": "https://www.gsj.jp/license/license.html",
+        "sourceUrl": "https://gbank.gsj.jp/musee/#R40314",
+        "modified": true
       },
       {
         "label": "曲がった縞",
@@ -1981,13 +2096,18 @@
     "images": [
       {
         "label": "絹の光沢",
-        "src": "",
+        "src": "photos/phyllite.jpg",
         "palette": [
           "#7d7d78",
           "#3d3d39",
           "#b6b6ae"
         ],
-        "seed": 6
+        "seed": 6,
+        "credit": "産総研地質調査総合センター",
+        "license": "政府標準利用規約(第2.0版)",
+        "licenseUrl": "https://www.gsj.jp/license/license.html",
+        "sourceUrl": "https://gbank.gsj.jp/musee/#R60758",
+        "modified": true
       },
       {
         "label": "はがれた面",
@@ -2057,13 +2177,18 @@
     "images": [
       {
         "label": "板状の面",
-        "src": "",
+        "src": "photos/slate.jpg",
         "palette": [
           "#5a5f63",
           "#282c2f",
           "#969ba0"
         ],
-        "seed": 4
+        "seed": 4,
+        "credit": "産総研地質調査総合センター",
+        "license": "政府標準利用規約(第2.0版)",
+        "licenseUrl": "https://www.gsj.jp/license/license.html",
+        "sourceUrl": "https://gbank.gsj.jp/musee/#R61740",
+        "modified": true
       },
       {
         "label": "黒っぽい面",
@@ -2134,13 +2259,18 @@
     "images": [
       {
         "label": "緻密な面",
-        "src": "",
+        "src": "photos/hornfels.jpg",
         "palette": [
           "#6d655d",
           "#332e29",
           "#a89f94"
         ],
-        "seed": 9
+        "seed": 9,
+        "credit": "産総研地質調査総合センター",
+        "license": "政府標準利用規約(第2.0版)",
+        "licenseUrl": "https://www.gsj.jp/license/license.html",
+        "sourceUrl": "https://gbank.gsj.jp/musee/#R61434",
+        "modified": true
       },
       {
         "label": "角ばった割れ口",
@@ -2216,13 +2346,18 @@
     "images": [
       {
         "label": "黒緑の面",
-        "src": "",
+        "src": "photos/amphibolite.jpg",
         "palette": [
           "#454f47",
           "#1e2620",
           "#8b958a"
         ],
-        "seed": 5
+        "seed": 5,
+        "credit": "産総研地質調査総合センター",
+        "license": "政府標準利用規約(第2.0版)",
+        "licenseUrl": "https://www.gsj.jp/license/license.html",
+        "sourceUrl": "https://gbank.gsj.jp/musee/#R40320",
+        "modified": true
       },
       {
         "label": "針状の鉱物",
@@ -2291,13 +2426,18 @@
     "images": [
       {
         "label": "白い面",
-        "src": "",
+        "src": "photos/marble.jpg",
         "palette": [
           "#e8e4da",
           "#b5b0a2",
           "#faf8f1"
         ],
-        "seed": 7
+        "seed": 7,
+        "credit": "産総研地質調査総合センター",
+        "license": "政府標準利用規約(第2.0版)",
+        "licenseUrl": "https://www.gsj.jp/license/license.html",
+        "sourceUrl": "https://gbank.gsj.jp/musee/#R78388",
+        "modified": true
       },
       {
         "label": "きらめく粒",
@@ -2373,13 +2513,18 @@
     "images": [
       {
         "label": "暗緑色の面",
-        "src": "",
+        "src": "photos/serpentinite.jpg",
         "palette": [
           "#384f43",
           "#16251e",
           "#6f8a74"
         ],
-        "seed": 32
+        "seed": 32,
+        "credit": "産総研地質調査総合センター",
+        "license": "政府標準利用規約(第2.0版)",
+        "licenseUrl": "https://www.gsj.jp/license/license.html",
+        "sourceUrl": "https://gbank.gsj.jp/musee/#R60922",
+        "modified": true
       },
       {
         "label": "黒緑色",
@@ -2451,13 +2596,18 @@
     "images": [
       {
         "label": "流れる縞",
-        "src": "",
+        "src": "photos/mylonite.jpg",
         "palette": [
           "#a9a599",
           "#5b5850",
           "#d9d5c9"
         ],
-        "seed": 6
+        "seed": 6,
+        "credit": "産総研地質調査総合センター",
+        "license": "政府標準利用規約(第2.0版)",
+        "licenseUrl": "https://www.gsj.jp/license/license.html",
+        "sourceUrl": "https://gbank.gsj.jp/musee/#R60638",
+        "modified": true
       },
       {
         "label": "目のような粒",

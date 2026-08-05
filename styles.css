@@ -978,6 +978,9 @@ body.stone-page {
 }
 
 .stone-main-photo-wrap {
+  /* 写真の下に出典を置くので縦並び。写真が高さを取り切ると出典が枠から溢れる */
+  display: flex;
+  flex-direction: column;
   min-height: 430px;
   overflow: hidden;
   border: 1px solid var(--line);
@@ -989,7 +992,7 @@ body.stone-page {
 .stone-main-photo {
   display: block;
   width: 100%;
-  height: 100%;
+  flex: 1 1 auto;
   min-height: 430px;
   object-fit: cover;
 }
@@ -1073,7 +1076,8 @@ body.stone-page {
 
 /* 写真の出典。ライセンス上の表記義務なので、小さくても必ず出す */
 .stone-credit {
-  margin: 8px 0 0;
+  margin: 0;
+  padding: 8px 12px 10px;
   color: var(--muted);
   font-size: 0.76rem;
   line-height: 1.5;
