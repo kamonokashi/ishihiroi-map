@@ -164,7 +164,7 @@ function renderHosts(hosts, rockCatalog) {
       if (!rock) {
         return "";
       }
-      return `<a class="stone-mineral stone-mineral-link" href="stone.html?id=${encodeURIComponent(id)}">${escapeHtml(rock.name)}</a>`;
+      return `<a class="stone-mineral stone-mineral-link" href="stone.html?id=${encodeURIComponent(id)}" target="_blank" rel="noopener noreferrer">${escapeHtml(rock.name)}</a>`;
     })
     .filter(Boolean)
     .join("") || `<span class="stone-mineral">未登録</span>`;

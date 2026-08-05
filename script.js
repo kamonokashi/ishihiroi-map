@@ -1496,7 +1496,7 @@ function renderMinerals(found) {
             <p class="mineral-note">${escapeHtml(mineral.shortDescription || "")}</p>
             <div class="tags">${(mineral.features || []).map((feature) => `<span class="tag">${escapeHtml(feature)}</span>`).join("")}</div>
             ${mineral.fromZone ? '<p class="mineral-source">この地質の変成帯が、その名前のとおりこの鉱物を含みます</p>' : ""}
-            <a class="secondary-button mineral-detail-link" href="mineral.html?id=${encodeURIComponent(mineral.id)}">${text.details}</a>
+            <a class="secondary-button mineral-detail-link" href="mineral.html?id=${encodeURIComponent(mineral.id)}" target="_blank" rel="noopener noreferrer">${text.details}</a>
           </li>
         `).join("")}
       </ul>
@@ -1511,7 +1511,7 @@ function renderRockCard(rock) {
   // 別の行へ動いてしまう（layoutRockDetails() の注記を参照）。
   return `
     <article class="rock-card rock-card-${escapeHtml(rock.level)}" data-rock="${escapeHtml(rock.id)}">
-      <a class="rock-photo-link" href="${detailUrl}" aria-label="${escapeHtml(rock.name)}${text.details}">
+      <a class="rock-photo-link" href="${detailUrl}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(rock.name)}${text.details}">
         <img class="rock-photo" src="${rockImageSrc(rock)}" alt="${escapeHtml(rock.name)}の表面イメージ" loading="lazy">
       </a>
       ${rockPhotoCredit(rock)}
@@ -1531,7 +1531,7 @@ function renderRockCard(rock) {
       <div class="tags">${tags.map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("")}</div>
       <p class="rock-minerals">${escapeHtml(mainMinerals(rock))}</p>
       <p>${escapeHtml(rock.shortDescription || text.noDetails)}</p>
-      <a class="secondary-button rock-detail-link" href="${detailUrl}">${text.details}</a>
+      <a class="secondary-button rock-detail-link" href="${detailUrl}" target="_blank" rel="noopener noreferrer">${text.details}</a>
     </div>
   `;
 }
