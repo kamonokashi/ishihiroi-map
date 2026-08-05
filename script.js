@@ -464,11 +464,13 @@ async function inspectGeology(latlng) {
     const usedTiers = catchment ? tiers.filter((tier) => tier.step <= 1) : tiers;
     const stillNeedsWidest = needsWidest && !catchment;
 
-    const draw = () => {
+    // keepOpen は候補を足しての描き直しのときだけ。別の地点を調べたときは畳んだ状態から始める
+    const draw = (keepOpen = false) => {
       renderGeology(pointLegend, usedTiers, area, catchment);
       renderRocks(
         estimateRocks(pointLegend, usedTiers, carriedMode, area, catchment),
-        stillNeedsWidest && !widened
+        stillNeedsWidest && !widened,
+        keepOpen
       );
     };
 
@@ -485,7 +487,7 @@ async function inspectGeology(latlng) {
       widened = true;
       if (extra.length > 0) {
         usedTiers.push(...extra);
-        draw();
+        draw(true);
       }
     }
   } catch (error) {
@@ -1332,7 +1334,7 @@ function sourceLabel(source) {
   }[source] || "";
 }
 
-function renderRocks({ rocks, minerals: found = [], note }, stillWidening = false) {
+function renderRocks({ rocks, minerals: found = [], note }, stillWidening = false, keepOpen = false) {
   // 候補が無いときの注記は「下の候補は…」と食い違うので出さない。
   // ただしデータ自体が読めていないときは、その理由をそのまま伝える。
   // 「推定できませんでした」と出すと、原因が地質側にあるように見えてしまう。
@@ -1345,6 +1347,13 @@ function renderRocks({ rocks, minerals: found = [], note }, stillWidening = fals
   const groups = ["likely", "maybe", "rare"]
     .map((level) => ({ level, rocks: rocks.filter((rock) => rock.level === level) }))
     .filter((group) => group.rocks.length > 0);
+
+  // ±55kmの結果が届くと丸ごと描き直す。読んでいる最中に説明が閉じてしまうので、
+  // 開いていた石を控えておいて戻す（開いた順も一緒に持っていく）
+  const wasOpen = keepOpen
+    ? [...rockCards.querySelectorAll(".rock-details:not([hidden])")]
+      .map((detail) => ({ id: detail.dataset.rock, order: detail.dataset.openedAt }))
+    : [];
 
   const noteHtml = note ? `<p class="rock-place-note">${escapeHtml(note)}</p>` : "";
   const wideningHtml = stillWidening
@@ -1369,6 +1378,14 @@ function renderRocks({ rocks, minerals: found = [], note }, stillWidening = fals
       setRockDetailOpen(card, !card.classList.contains("is-expanded"));
       layoutRockDetails();
     });
+  });
+
+  wasOpen.forEach(({ id, order }) => {
+    const card = rockCards.querySelector(`.rock-card[data-rock="${CSS.escape(id)}"]`);
+    if (card) {
+      setRockDetailOpen(card, true);
+      rockDetailOf(card).dataset.openedAt = order;
+    }
   });
 
   layoutRockDetails();
