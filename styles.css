@@ -790,6 +790,9 @@ h3 {
 
 /* 見どころの鉱物 */
 .mineral-section {
+  /* 見出しの色棒は .rock-section-title::before がこの変数で描く。
+     見つかる度の3セクションと違って、ここは石ではないのでアプリの色を使う */
+  --rock-section-accent: var(--color-primary);
   display: grid;
   gap: 14px;
   margin-top: 24px;
@@ -818,7 +821,7 @@ h3 {
 }
 
 .mineral-maybe {
-  border-left-color: rgba(46, 125, 91, 0.45);
+  border-left-color: var(--color-maybe);
 }
 
 .mineral-head {
