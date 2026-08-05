@@ -110,7 +110,7 @@ function renderStone(stone) {
 
     <section class="stone-content-grid">
       <article class="stone-info-panel stone-wide-panel stone-identify-panel">
-        <h2>\u898b\u5206\u3051\u65b9</h2>
+        <h2>${panelIcon("search")}\u898b\u5206\u3051\u65b9</h2>
         <p>${escapeHtml(stone.identification || "")}</p>
         ${renderFieldTests(stone.fieldTests)}
       </article>
@@ -118,32 +118,32 @@ function renderStone(stone) {
       ${renderConfusedWith(stone.confusedWith)}
 
       <article class="stone-info-panel stone-description-panel">
-        <h2>\u57fa\u672c\u60c5\u5831\u30fb\u8aac\u660e</h2>
+        <h2>${panelIcon("book")}\u57fa\u672c\u60c5\u5831\u30fb\u8aac\u660e</h2>
         <p>${escapeHtml(stone.description || "")}</p>
       </article>
 
       <article class="stone-info-panel">
-        <h2>\u7279\u5fb4\u30bf\u30b0</h2>
+        <h2>${panelIcon("tag")}\u7279\u5fb4\u30bf\u30b0</h2>
         <div class="stone-tag-list">
           ${renderList(stone.features, "stone-tag")}
         </div>
       </article>
 
       <article class="stone-info-panel">
-        <h2>\u4e3b\u306a\u9020\u5ca9\u9271\u7269</h2>
+        <h2>${panelIcon("crystal")}\u4e3b\u306a\u9020\u5ca9\u9271\u7269</h2>
         <div class="stone-mineral-list">
           ${renderList(stone.minerals, "stone-mineral")}
         </div>
       </article>
 
       <article class="stone-info-panel stone-wide-panel">
-        <h2>\u898b\u3064\u304b\u308a\u3084\u3059\u3044\u5730\u57df\u30fb\u5730\u8cea\u3068\u306e\u95a2\u4fc2</h2>
+        <h2>${panelIcon("pin")}\u898b\u3064\u304b\u308a\u3084\u3059\u3044\u5730\u57df\u30fb\u5730\u8cea\u3068\u306e\u95a2\u4fc2</h2>
         <p>${escapeHtml(stone.likelyPlaces || "")}</p>
         <p>${escapeHtml(stone.geologyRelation || "")}</p>
       </article>
 
       <article class="stone-info-panel stone-wide-panel">
-        <h2>\u95a2\u9023\u7528\u8a9e</h2>
+        <h2>${panelIcon("link")}\u95a2\u9023\u7528\u8a9e</h2>
         <div class="stone-term-list">
           ${renderList(stone.relatedTerms, "stone-term")}
         </div>
@@ -297,7 +297,7 @@ function renderConfusedWith(pairs) {
 
   return `
     <article class="stone-info-panel stone-wide-panel">
-      <h2>間違えやすい石</h2>
+      <h2>${panelIcon("swap")}間違えやすい石</h2>
       <dl class="stone-confuse-list">
         ${pairs.map((pair) => `
           <dt>${escapeHtml(pair.name)}</dt>

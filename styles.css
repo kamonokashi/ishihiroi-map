@@ -1200,13 +1200,27 @@ body.stone-page {
   font-size: 1rem;
 }
 
-.stone-info-panel h2::before {
-  display: block;
-  width: 4px;
-  height: 1.35em;
-  border-radius: 1px;
-  background: var(--accent);
-  content: "";
+/* 見出しのアイコン。色は全部そろえる。見出しごとに変えると、色が意味を持って
+   いるように見えてしまい、かえって読み取りづらい */
+.stone-panel-icon {
+  display: grid;
+  flex: 0 0 auto;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border-radius: 9px;
+  background: rgba(13, 162, 189, 0.1);
+  color: var(--accent);
+}
+
+.stone-panel-icon svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.7;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .stone-description-panel,

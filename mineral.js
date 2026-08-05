@@ -92,7 +92,7 @@ function renderMineral(mineral, rockCatalog) {
 
     <section class="stone-content-grid">
       <article class="stone-info-panel stone-wide-panel stone-identify-panel">
-        <h2>見分け方</h2>
+        <h2>${panelIcon("search")}見分け方</h2>
         <p>${escapeHtml(mineral.identification || "")}</p>
         ${renderFieldTests(mineral.fieldTests)}
       </article>
@@ -100,14 +100,14 @@ function renderMineral(mineral, rockCatalog) {
       ${renderConfusedWith(mineral.confusedWith)}
 
       <article class="stone-info-panel">
-        <h2>特徴タグ</h2>
+        <h2>${panelIcon("tag")}特徴タグ</h2>
         <div class="stone-tag-list">
           ${renderList(mineral.features, "stone-tag")}
         </div>
       </article>
 
       <article class="stone-info-panel">
-        <h2>入っていることが多い石</h2>
+        <h2>${panelIcon("pebble")}入っていることが多い石</h2>
         <div class="stone-mineral-list">
           ${renderHosts(mineral.hosts, rockCatalog)}
         </div>
@@ -140,7 +140,7 @@ function renderConfusedWith(pairs) {
 
   return `
     <article class="stone-info-panel stone-wide-panel">
-      <h2>間違えやすい鉱物</h2>
+      <h2>${panelIcon("swap")}間違えやすい鉱物</h2>
       <dl class="stone-confuse-list">
         ${pairs.map((pair) => `
           <dt>${escapeHtml(pair.name)}</dt>
@@ -178,7 +178,7 @@ function renderZones(zones) {
 
   return `
     <article class="stone-info-panel stone-wide-panel">
-      <h2>この鉱物が出る変成帯</h2>
+      <h2>${panelIcon("layers")}この鉱物が出る変成帯</h2>
       <p>地質図の岩相にこの名前が入っていれば、その場所の石にこの鉱物が結晶しています。</p>
       <div class="stone-term-list">
         ${zones.map(([name]) => `<span class="stone-term">${escapeHtml(name)}</span>`).join("")}
