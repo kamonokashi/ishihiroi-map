@@ -605,48 +605,21 @@ h3 {
   width: var(--rock-card-size);
 }
 
-/* 開いたカードだけ行いっぱいに広げ、写真を左・説明を右に並べる。
-   閉じているあいだは何も変わらないので、見つかる度でカードの大きさが
-   変わる見た目はそのまま残る。 */
-.rock-card.is-expanded {
-  grid-column: 1 / -1;
-  /* 狭い画面では grid ではなく flex 並びに切り替わるので、幅も指定しておく */
-  width: 100%;
-  grid-template-columns: min(40%, 200px) minmax(0, 1fr);
-  grid-template-areas:
-    "photo  summary"
-    "credit details";
-  grid-template-rows: auto 1fr;
-  /* 広げた先で文字まで小さいままだと開いた意味がない */
-  --rock-name-size: 1.05rem;
-  --rock-detail-size: 0.95rem;
+/* 開いたカードだけ横に2枚ぶん広げる。写真が上・説明が下という形は変えない。
+   幅いっぱいに広げて中身を横並びにすると、カードの形が変わりすぎて
+   「下に開いた」ように見えなくなる。
+   「よく見つかる」はもともと2列で幅があるので何もしない。 */
+.rock-level-maybe .rock-card.is-expanded,
+.rock-level-rare .rock-card.is-expanded {
+  grid-column: span 2;
 }
 
-/* 地図を畳むと .app-shell.map-collapsed .rock-card が固定幅を指定してくる。
-   詳細度で負けるので、同じ強さで上書きし直す */
-.app-shell.map-collapsed .rock-card.is-expanded {
-  width: 100%;
-}
-
-.rock-card.is-expanded .rock-photo-link {
-  grid-area: photo;
-}
-
-.rock-card.is-expanded .rock-credit {
-  grid-area: credit;
-}
-
-.rock-card.is-expanded .rock-card-summary {
-  grid-area: summary;
-  align-self: start;
-}
-
-.rock-card.is-expanded .rock-details {
-  grid-area: details;
-  /* 地図を畳むとパネルが1100px近くなる。1行が長すぎると読みにくいので頭打ちにする */
-  max-width: 34em;
-  border-top: 0;
-  padding-top: 0;
+/* 地図を畳んだときと狭い画面では、グリッドではなく flex 並びになる。
+   grid-column が効かないので、カード2枚ぶんの幅を直接指定する */
+.app-shell.map-collapsed .rock-level-maybe .rock-card.is-expanded,
+.app-shell.map-collapsed .rock-level-rare .rock-card.is-expanded {
+  width: calc(var(--rock-card-size) * 2 + var(--rock-gap));
+  max-width: 100%;
 }
 
 .rock-photo-link {
@@ -1377,6 +1350,12 @@ body.stone-page {
 
   .rock-card {
     width: var(--rock-card-size);
+  }
+
+  .rock-level-maybe .rock-card.is-expanded,
+  .rock-level-rare .rock-card.is-expanded {
+    width: calc(var(--rock-card-size) * 2 + var(--rock-gap));
+    max-width: 100%;
   }
 
   .result-pane {
