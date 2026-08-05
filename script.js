@@ -1354,6 +1354,9 @@ function renderRocks({ rocks, minerals: found = [], note }, stillWidening = fals
       detail.hidden = !expanded;
       button.setAttribute("aria-expanded", String(expanded));
       button.classList.toggle("is-open", expanded);
+      // 開いたカードだけ行いっぱいに広げる。「珍しい」は幅78pxしかなく、
+      // そのままだと説明が1文字ずつ折り返されて読めない。
+      button.closest(".rock-card").classList.toggle("is-expanded", expanded);
     });
   });
 }
