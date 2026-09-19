@@ -1630,3 +1630,497 @@ body.stone-page {
     font-size: clamp(1.45rem, 6vw, 1.9rem);
   }
 }
+
+/* 名前の決まり方（classification.js）。分類の境目を物差しにして、その石の区間だけ色を付ける。
+   目盛りと区間の境は控えめにし、色の付いた区間だけが目に入るようにする */
+.classification-help-button {
+  margin-left: auto;
+  padding: 4px 10px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel);
+  color: var(--accent-dark);
+  font: inherit;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.classification-help-button::before {
+  content: "?";
+  display: inline-grid;
+  place-items: center;
+  width: 1.25em;
+  height: 1.25em;
+  margin-right: 5px;
+  border-radius: 50%;
+  background: var(--accent);
+  color: #fff;
+  font-size: 0.78em;
+}
+
+/* ボタン全体の :hover は背景を濃い青緑にするが、このボタンは文字も同じ色なので溶けてしまう。
+   薄い背景に変えるだけにする */
+.classification-help-button:hover,
+.classification-help-button:focus-visible {
+  border-color: var(--accent);
+  background: #e6f4f4;
+  color: var(--accent-dark);
+}
+
+.classification-scale {
+  margin: 0 0 22px;
+}
+
+.classification-scale figcaption {
+  display: grid;
+  gap: 2px;
+  margin-bottom: 8px;
+}
+
+.classification-title {
+  font-weight: 700;
+}
+
+.classification-basis,
+.classification-source {
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.6;
+}
+
+.classification-basis {
+  margin: 8px 0 0;
+}
+
+/* 図の読み方を1文で言う。見出しと横棒の関係がひと目で分かるように */
+.classification-summary {
+  line-height: 1.7;
+}
+
+/* 横棒の、その石の区間の真上に置く名札 */
+.classification-tag-row {
+  position: relative;
+  height: 1.9em;
+}
+
+.classification-tag {
+  position: absolute;
+  bottom: 5px;
+  padding: 1px 8px;
+  border-radius: 4px;
+  background: var(--accent-dark);
+  color: #fff;
+  font-size: 0.8rem;
+  font-weight: 700;
+  white-space: nowrap;
+  transform: translateX(-50%);
+}
+
+.classification-tag::after {
+  content: "";
+  position: absolute;
+  top: 100%;
+  left: 50%;
+  border: 5px solid transparent;
+  border-top-color: var(--accent-dark);
+  transform: translateX(-50%);
+}
+
+.classification-tag.is-start {
+  transform: translateX(-12px);
+}
+
+.classification-tag.is-start::after {
+  left: 12px;
+}
+
+.classification-tag.is-end {
+  transform: translateX(calc(-100% + 12px));
+}
+
+.classification-tag.is-end::after {
+  left: auto;
+  right: 7px;
+  transform: none;
+}
+
+.classification-bar {
+  position: relative;
+  height: 18px;
+}
+
+/* 区間どうしは2pxのすき間で区切る */
+.classification-segment {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  border-right: 2px solid var(--panel);
+  background: #e4e5e1;
+}
+
+.classification-segment:first-child {
+  border-radius: 4px 0 0 4px;
+}
+
+.classification-segment:last-child {
+  border-right: 0;
+  border-radius: 0 4px 4px 0;
+}
+
+.classification-segment.is-marked {
+  background: var(--accent);
+}
+
+/* アルカリの量で境目が動く区間。色だけに頼らず斜線でも示す */
+.classification-segment.is-boundary {
+  background: repeating-linear-gradient(135deg, #e4e5e1 0 4px, #d2d4ce 4px 8px);
+}
+
+.classification-segment.is-boundary.is-marked {
+  background: repeating-linear-gradient(135deg, var(--accent) 0 4px, #6cc7d8 4px 8px);
+}
+
+.classification-ticks {
+  position: relative;
+  height: 1.3em;
+  margin-top: 3px;
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-variant-numeric: tabular-nums;
+}
+
+.classification-ticks span {
+  position: absolute;
+  transform: translateX(-50%);
+  white-space: nowrap;
+}
+
+.classification-ticks span:first-child {
+  transform: none;
+}
+
+.classification-ticks span.is-end {
+  transform: translateX(-100%);
+}
+
+.classification-legend {
+  display: grid;
+  gap: 4px;
+  margin: 10px 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.9rem;
+}
+
+.classification-legend li {
+  display: grid;
+  grid-template-columns: 12px 8.5em minmax(0, 1fr);
+  align-items: center;
+  gap: 8px;
+  color: var(--muted);
+}
+
+.classification-legend li.is-marked {
+  color: var(--ink);
+  font-weight: 700;
+}
+
+.classification-swatch {
+  width: 12px;
+  height: 12px;
+  border-radius: 3px;
+  background: #e4e5e1;
+}
+
+.classification-swatch.is-boundary {
+  background: repeating-linear-gradient(135deg, #e4e5e1 0 3px, #c4c6bf 3px 6px);
+}
+
+.is-marked > .classification-swatch {
+  background: var(--accent);
+}
+
+.is-marked > .classification-swatch.is-boundary {
+  background: repeating-linear-gradient(135deg, var(--accent) 0 3px, #6cc7d8 3px 6px);
+}
+
+.classification-range {
+  font-variant-numeric: tabular-nums;
+}
+
+.classification-note {
+  margin: 0 0 10px;
+  line-height: 1.8;
+}
+
+.classification-source {
+  margin: 0;
+}
+
+.classification-rock-title {
+  margin: 22px 0 12px;
+  font-size: 1rem;
+}
+
+.classification-rock-title:first-of-type {
+  margin-top: 0;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+.classification-dialog {
+  width: min(560px, calc(100vw - 32px));
+  max-height: calc(100vh - 48px);
+  padding: 22px 24px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--ink);
+  box-shadow: var(--shadow);
+  line-height: 1.8;
+}
+
+.classification-dialog::backdrop {
+  background: rgba(48, 52, 56, 0.4);
+}
+
+.classification-dialog h2 {
+  margin: 0 0 10px;
+  font-size: 1.15rem;
+}
+
+.classification-dialog dt {
+  margin-top: 10px;
+  font-weight: 700;
+}
+
+.classification-dialog dd {
+  margin: 2px 0 0;
+}
+
+.classification-dialog form {
+  margin-top: 16px;
+  text-align: right;
+}
+
+@media (max-width: 640px) {
+  .classification-legend li {
+    grid-template-columns: 12px minmax(0, 1fr);
+    row-gap: 0;
+  }
+
+  .classification-label {
+    grid-column: 2;
+  }
+
+  .classification-dialog {
+    padding: 18px;
+  }
+}
+
+/* 用語へのリンク（classification.js の termLink）。点線の下線で「説明がある言葉」と分かるようにし、
+   ホバーかキーボードで選んだときに短い説明を吹き出しで出す。押すと用語ページが開く */
+.term-link {
+  position: relative;
+  color: var(--accent-dark);
+  text-decoration: underline dotted;
+  text-underline-offset: 3px;
+}
+
+/* 石・鉱物・用語リンクのホバーカード（link-preview.js）。地図画面の石カードに近い見た目にする。
+   カードは押せなくてよい（押すのはリンク自体）ので、ポインターは素通りさせる */
+.link-preview {
+  position: fixed;
+  z-index: 50;
+  width: min(300px, calc(100vw - 24px));
+  padding: 12px 14px;
+  border: 1px solid var(--accent);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--ink);
+  box-shadow: var(--shadow);
+  font-size: 0.9rem;
+  line-height: 1.6;
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+  transition: opacity 0.12s ease;
+}
+
+.link-preview.is-visible {
+  opacity: 1;
+  visibility: visible;
+}
+
+/* どこに置いても入りきらない小さな画面の保険。高さを画面に合わせて抑える */
+.link-preview {
+  max-height: calc(100vh - 24px);
+  overflow: hidden;
+}
+
+/* 横長（link-preview.js が縦長で収まらないときに切り替える）。写真を左、文字を右に並べて背を低くする */
+.link-preview.is-wide {
+  width: min(470px, calc(100vw - 24px));
+}
+
+.link-preview.is-wide.has-visual {
+  display: grid;
+  grid-template-columns: 150px minmax(0, 1fr);
+  column-gap: 14px;
+}
+
+.link-preview.is-wide .link-preview-visual {
+  margin: -12px 0 -12px -14px;
+}
+
+.link-preview.is-wide .link-preview-photo,
+.link-preview.is-wide .link-preview-swatch {
+  width: 100%;
+  height: 128px;
+  margin: 0;
+  border-radius: 7px 0 0 0;
+}
+
+.link-preview.is-wide .link-preview-credit {
+  margin: 4px 0 0 14px !important;
+}
+
+.link-preview.is-wide .link-preview-body {
+  padding: 0;
+}
+
+.link-preview.is-wide .link-preview-more {
+  margin-top: 6px !important;
+}
+
+.link-preview p {
+  margin: 0;
+}
+
+.link-preview-photo,
+.link-preview-swatch {
+  display: block;
+  width: calc(100% + 28px);
+  margin: -12px -14px 8px;
+  border-radius: 7px 7px 0 0;
+  object-fit: cover;
+}
+
+.link-preview-photo {
+  height: 150px;
+  background: #1f2226;
+}
+
+.link-preview-swatch {
+  height: 56px;
+}
+
+.link-preview-credit {
+  margin: -4px 0 8px !important;
+  color: var(--muted);
+  font-size: 0.74rem;
+}
+
+.link-preview-kind {
+  color: var(--accent-dark);
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.link-preview-name {
+  font-size: 1.1rem;
+  font-weight: 700;
+}
+
+.link-preview-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin: 6px 0;
+}
+
+.link-preview-tags span {
+  padding: 2px 8px;
+  border-radius: 999px;
+  background: rgba(171, 167, 157, 0.16);
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.link-preview-text {
+  margin-top: 4px !important;
+  color: var(--muted);
+}
+
+.link-preview-more {
+  margin-top: 8px !important;
+  padding: 5px;
+  border-radius: 5px;
+  background: #e6f4f4;
+  color: var(--accent-dark);
+  font-size: 0.8rem;
+  font-weight: 700;
+  text-align: center;
+}
+
+/* 用語ページ */
+.term-item-list {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  align-items: center;
+  gap: 10px 14px;
+  margin: 12px 0 0;
+}
+
+.term-item-list dd {
+  margin: 0;
+  line-height: 1.7;
+}
+
+.term-after {
+  margin-top: 14px;
+}
+
+.term-source-list {
+  margin: 0;
+  padding-left: 1.2em;
+  color: var(--muted);
+  font-size: 0.88rem;
+  line-height: 1.7;
+}
+
+@media (max-width: 640px) {
+  .term-item-list {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .term-item-list dd {
+    margin-bottom: 10px;
+  }
+
+  .term-item-list dt {
+    justify-self: start;
+  }
+}
+
+/* catalogLink() が作る、石・鉱物・用語の名前のリンク。チップの中でも文中でも、押せることが分かる色と下線にする */
+.catalog-link {
+  color: var(--accent-dark);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.stone-term.catalog-link:hover,
+.stone-mineral.catalog-link:hover {
+  border-color: rgba(13, 162, 189, 0.55);
+  background: #d7eef0;
+}

@@ -97,7 +97,7 @@ function renderMineral(mineral, rockCatalog) {
         ${renderFieldTests(mineral.fieldTests)}
       </article>
 
-      ${renderConfusedWith(mineral.confusedWith)}
+      ${renderConfusedWith(mineral.confusedWith, mineral)}
 
       <article class="stone-info-panel">
         <h2>${panelIcon("tag")}特徴タグ</h2>
@@ -133,7 +133,7 @@ function renderFieldTests(tests) {
 }
 
 // 似ていて取り違えやすい鉱物と、その決め手。
-function renderConfusedWith(pairs) {
+function renderConfusedWith(pairs, mineral) {
   if (!Array.isArray(pairs) || pairs.length === 0) {
     return "";
   }
@@ -143,7 +143,7 @@ function renderConfusedWith(pairs) {
       <h2>${panelIcon("swap")}間違えやすい鉱物</h2>
       <dl class="stone-confuse-list">
         ${pairs.map((pair) => `
-          <dt>${escapeHtml(pair.name)}</dt>
+          <dt>${catalogLink(pair.name, "", { type: "mineral", id: mineral.id })}</dt>
           <dd>${escapeHtml(pair.howToTell)}</dd>
         `).join("")}
       </dl>

@@ -115,7 +115,7 @@ function renderStone(stone) {
         ${renderFieldTests(stone.fieldTests)}
       </article>
 
-      ${renderConfusedWith(stone.confusedWith)}
+      ${renderConfusedWith(stone.confusedWith, stone)}
 
       <article class="stone-info-panel stone-description-panel">
         <h2>${panelIcon("book")}\u57fa\u672c\u60c5\u5831\u30fb\u8aac\u660e</h2>
@@ -130,10 +130,15 @@ function renderStone(stone) {
       </article>
 
       <article class="stone-info-panel">
-        <h2>${panelIcon("crystal")}\u4e3b\u306a\u9020\u5ca9\u9271\u7269</h2>
+        <h2>${panelIcon("crystal")}${stone.category === "\u5806\u7a4d\u5ca9" ? "\u4e3b\u306a\u69cb\u6210\u7269" : "\u4e3b\u306a\u9020\u5ca9\u9271\u7269"}</h2>
         <div class="stone-mineral-list">
-          ${renderList(stone.minerals, "stone-mineral")}
+          ${renderLinkedList(stone.minerals, "stone-mineral", stone)}
         </div>
+      </article>
+
+      <article class="stone-info-panel stone-wide-panel">
+        <h2>${panelIcon("ruler")}\u540d\u524d\u306e\u6c7a\u307e\u308a\u65b9${classificationHelpButton()}</h2>
+        ${classificationPanel(stone.classification, stone.name)}
       </article>
 
       <article class="stone-info-panel stone-wide-panel">
@@ -145,13 +150,14 @@ function renderStone(stone) {
       <article class="stone-info-panel stone-wide-panel">
         <h2>${panelIcon("link")}\u95a2\u9023\u7528\u8a9e</h2>
         <div class="stone-term-list">
-          ${renderList(stone.relatedTerms, "stone-term")}
+          ${renderLinkedList(stone.relatedTerms, "stone-term", stone)}
         </div>
       </article>
     </section>
   `;
 
   bindGallery(stone, images);
+  bindClassificationHelp();
 }
 
 function bindGallery(stone, images) {
@@ -290,7 +296,7 @@ function renderFieldTests(tests) {
 }
 
 // 似ていて取り違えやすい石と、その決め手。
-function renderConfusedWith(pairs) {
+function renderConfusedWith(pairs, stone) {
   if (!Array.isArray(pairs) || pairs.length === 0) {
     return "";
   }
@@ -300,12 +306,20 @@ function renderConfusedWith(pairs) {
       <h2>${panelIcon("swap")}間違えやすい石</h2>
       <dl class="stone-confuse-list">
         ${pairs.map((pair) => `
-          <dt>${escapeHtml(pair.name)}</dt>
+          <dt>${catalogLink(pair.name, "", { type: "stone", id: stone.id })}</dt>
           <dd>${escapeHtml(pair.howToTell)}</dd>
         `).join("")}
       </dl>
     </article>
   `;
+}
+
+// カタログ（石・鉱物・用語）にある名前は詳細ページへのリンクにする（link-preview.js の catalogLink）。
+function renderLinkedList(items, className, stone) {
+  if (!Array.isArray(items) || items.length === 0) {
+    return renderList(items, className);
+  }
+  return items.map((item) => catalogLink(item, className, { type: "stone", id: stone.id })).join("");
 }
 
 function renderList(items, className) {

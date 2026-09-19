@@ -1119,27 +1119,32 @@ function estimateRocks(pointLegend, tiers, carriedMode, area = null, catchment =
   const pointEntry = lithologyEntry(pointLegend);
   const scores = new Map();
 
-  const addRocks = (rocks, factor, source) => {
+  // byLithology は、どの地質から何点もらったか。鉱物の判定で「その地質ではできない鉱物」
+  // （高P/T型の片麻岩に菫青石など）を除くのに使う。
+  const addRocks = (rocks, factor, source, lithology) => {
     rocks.forEach(({ id, weight }) => {
       const score = weight * factor;
       const current = scores.get(id);
       if (!current) {
-        scores.set(id, { id, score, sources: new Set([source]) });
+        scores.set(id, { id, score, sources: new Set([source]), byLithology: new Map([[lithology, score]]) });
         return;
       }
       current.sources.add(source);
       if (score > current.score) {
         current.score = score;
       }
+      if (score > (current.byLithology.get(lithology) || 0)) {
+        current.byLithology.set(lithology, score);
+      }
     });
   };
 
   if (pointEntry) {
     if (pointEntry.kind === "bedrock") {
-      addRocks(pointEntry.rocks, SCORE_AT_POINT, "point");
+      addRocks(pointEntry.rocks, SCORE_AT_POINT, "point", pointEntry.lithology);
     } else {
       // 火山灰や岩屑なだれには、その火山の石そのものが含まれる。
-      addRocks(pointEntry.rocks, SCORE_VOLCANIC_FALL, "point");
+      addRocks(pointEntry.rocks, SCORE_VOLCANIC_FALL, "point", pointEntry.lithology);
     }
   }
 
@@ -1168,7 +1173,7 @@ function estimateRocks(pointLegend, tiers, carriedMode, area = null, catchment =
         factor *= ageDurability(legend);
       }
 
-      addRocks(entry.rocks, factor, carriedMode ? "carried" : "nearby");
+      addRocks(entry.rocks, factor, carriedMode ? "carried" : "nearby", entry.lithology);
     });
   });
 
@@ -1180,14 +1185,16 @@ function estimateRocks(pointLegend, tiers, carriedMode, area = null, catchment =
         return;
       }
       const factor = catchmentBoost(share) * ageDurabilityFor(entry.group, catchment.ages.get(key) ?? 3);
-      addRocks(entry.rocks, factor, "upstream");
+      addRocks(entry.rocks, factor, "upstream", entry.lithology);
     });
   }
 
   // 運ばれてきた石は、硬い岩石ほど途中で壊れずに残る。
   if (carriedMode) {
     scores.forEach((entry) => {
-      entry.score *= DURABILITY[entry.id] ?? 1;
+      const durability = DURABILITY[entry.id] ?? 1;
+      entry.score *= durability;
+      entry.byLithology.forEach((score, lithology) => entry.byLithology.set(lithology, score * durability));
     });
   }
 
@@ -1235,12 +1242,14 @@ function estimateMinerals(rockScores, pointLegend, tiers, carriedMode) {
 
   // 足もとの変成帯はそのまま効かせる。周辺のものは石と同じだけ割り引く。
   // 割り引かないと、28km先の「ざくろ石帯」がこの場所の話として出てしまう。
+  // 地質ごとに分けて照らす。まとめてしまうと、菫青石帯の名前と苦鉄質の岩石名が
+  // 別々の地質から来ていても、同じ地質の話として扱ってしまう。
   const zoneSources = [
     { text: pointLegend?.lithology_ja || "", factor: 1 },
-    ...tiers.map(({ step, legends }) => ({
-      text: legends.map((legend) => legend.lithology_ja || "").join(" "),
+    ...tiers.flatMap(({ step, legends }) => legends.map((legend) => ({
+      text: legend.lithology_ja || "",
       factor: tierFactor(step, carriedMode)
-    }))
+    })))
   ];
 
   return minerals
@@ -1250,14 +1259,19 @@ function estimateMinerals(rockScores, pointLegend, tiers, carriedMode) {
 
       (mineral.hosts || []).forEach(([rockId, weight]) => {
         const host = rockScores.get(rockId);
-        if (host) {
-          score = Math.max(score, host.score * weight);
+        if (!host) {
+          return;
         }
+        host.byLithology.forEach((hostScore, lithology) => {
+          if (mineralFits(mineral, lithology)) {
+            score = Math.max(score, hostScore * weight);
+          }
+        });
       });
 
       (mineral.zones || []).forEach(([keyword, weight]) => {
         zoneSources.forEach((source) => {
-          if (!source.text.includes(keyword)) {
+          if (!source.text.includes(keyword) || !mineralFits(mineral, source.text)) {
             return;
           }
           const zoneScore = weight * source.factor;
@@ -1273,6 +1287,12 @@ function estimateMinerals(rockScores, pointLegend, tiers, carriedMode) {
     .filter((mineral) => mineral.score >= MINERAL_FLOOR)
     .sort((a, b) => b.score - a.score)
     .slice(0, MINERAL_LIMIT);
+}
+
+// minerals.json の notIn。岩相名にその言葉があれば、その地質ではその鉱物はできない。
+// 菫青石・珪線石は泥質の岩石の低圧側でしかできない、など。
+function mineralFits(mineral, lithology) {
+  return !(mineral.notIn || []).some((word) => (lithology || "").includes(word));
 }
 
 function mineralLevel(score) {
@@ -1496,7 +1516,7 @@ function renderMinerals(found) {
             </div>
             <p class="mineral-note">${escapeHtml(mineral.shortDescription || "")}</p>
             <div class="tags">${(mineral.features || []).map((feature) => `<span class="tag">${escapeHtml(feature)}</span>`).join("")}</div>
-            ${mineral.fromZone ? '<p class="mineral-source">この地質の変成帯が、その名前のとおりこの鉱物を含みます</p>' : ""}
+            ${mineral.fromZone ? '<p class="mineral-source">この地質の変成帯の名前は、この鉱物ができる段階まで変成したことを示しています</p>' : ""}
             <a class="secondary-button mineral-detail-link" href="mineral.html?id=${encodeURIComponent(mineral.id)}" target="_blank" rel="noopener noreferrer">${text.details}</a>
           </li>
         `).join("")}
@@ -1530,7 +1550,7 @@ function renderRockCard(rock) {
     </article>
     <div class="rock-details" id="rock-details-${escapeHtml(rock.id)}" data-rock="${escapeHtml(rock.id)}" hidden>
       <div class="tags">${tags.map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("")}</div>
-      <p class="rock-minerals">${escapeHtml(mainMinerals(rock))}</p>
+      <p class="rock-minerals">${mainMinerals(rock)}</p>
       <p>${escapeHtml(rock.shortDescription || text.noDetails)}</p>
       <a class="secondary-button rock-detail-link" href="${detailUrl}" target="_blank" rel="noopener noreferrer">${text.details}</a>
     </div>
@@ -1545,9 +1565,17 @@ function levelDescription(level) {
   }[level] || "";
 }
 
+// 鉱物名は、カタログにあれば鉱物ページへのリンクにする（link-preview.js の catalogLink）。HTML を返す。
 function mainMinerals(rock) {
   const minerals = rock.minerals || [];
-  return minerals.length > 0 ? `主な鉱物：${minerals.join("・")}` : "主な鉱物：未登録";
+  const label = rock.category === "堆積岩" ? "主な構成物" : "主な鉱物";
+  if (minerals.length === 0) {
+    return `${label}：未登録`;
+  }
+  const names = typeof catalogLink === "function"
+    ? minerals.map((name) => catalogLink(name))
+    : minerals.map(escapeHtml);
+  return `${label}：${names.join("・")}`;
 }
 
 // 写真の出典表示。CC BY などは表記が義務なので、写真を出す場所には必ず添える。

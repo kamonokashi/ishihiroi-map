@@ -20,7 +20,7 @@ const GROUP_NOTES = {
   "付加体": "海のプレートが陸の下に沈み込むとき、海底の岩石や、海溝にたまった砂や泥がはぎ取られて陸側に押し付けられたものです。日本列島の土台の大部分がこれでできています。海の底でできたチャートや緑色岩と、陸から来た砂岩・泥岩が一緒に見つかるのが特徴です。",
   "堆積岩": "砂や泥、生き物の殻などが積もって、長い時間をかけて固まった岩石です。",
   "火成岩": "マグマが冷えて固まった岩石です。地表や地表近くで急に冷えたもの（火山岩）は粒が細かく、地下深くでゆっくり冷えたもの（深成岩）は粒が粗くなります。",
-  "変成岩": "もとの岩石が、地下の熱や圧力を受けて、溶けないまま鉱物が作り変えられた岩石です。どんな熱と圧力を受けたかで、名前に「○○帯」「○○相」が付きます。",
+  "変成岩": "もとの岩石が、地下の熱や圧力を受けて、溶けないまま鉱物が作り変えられた岩石です。どのくらいの熱と圧力を受けたかを、名前の「○○帯」「○○相」で表しています。",
   "その他": "岩石ではなく、人の手が入った土地などです。"
 };
 
@@ -58,16 +58,16 @@ const TERMS = [
   [/片麻岩/, "片麻岩", "白っぽい鉱物と黒っぽい鉱物が、粗い縞模様に分かれた変成岩です。"],
   // 「緑色片岩相」「青色片岩亜相」は変成相の名前で、岩石が片岩だという意味ではない。
   [/片岩(?![相亜])/, "片岩", "鉱物が一方向に並び、薄くはがれやすい変成岩です。"],
-  [/ぶどう石アクチノ閃石亜相/, "ぶどう石アクチノ閃石亜相", "変成の程度がとても低い段階です。もとの岩石の見た目がほとんど残っています。"],
-  [/緑色片岩相|緑片岩相/, "緑色片岩相", "やや低い温度の変成です。緑泥石や緑れん石など緑色の鉱物ができて、岩石が緑がかります。"],
-  [/ローソン石青色片岩亜相/, "ローソン石青色片岩亜相", "温度が低いのに圧力がとても高い条件です。プレートが沈み込む深いところでしかできません。"],
+  [/ぶどう石アクチノ閃石亜相/, "ぶどう石アクチノ閃石亜相", "変成の程度が低い段階です。もとの岩石のつくりが残っていることが多くあります。"],
+  [/緑色片岩相|緑片岩相/, "緑色片岩相", "やや低い温度の変成です。玄武岩などがもとの岩石だと、緑泥石や緑れん石など緑色の鉱物ができて緑がかります。"],
+  [/ローソン石青色片岩亜相/, "ローソン石青色片岩亜相", "温度が低いのに圧力が高い条件です。冷たいプレートが沈み込む場所に特有の条件です。"],
   [/エクロジャイト相/, "エクロジャイト相", "地下数十km以上に相当する、とても高い圧力を経験した岩石です。それがのちに地表まで上がってきています。"],
-  [/角閃岩相/, "角閃岩相", "中くらいから高めの温度の変成です。角閃石と斜長石が主な鉱物になります。"],
+  [/角閃岩相/, "角閃岩相", "中くらいから高めの温度の変成です。玄武岩などがもとの岩石だと、角閃石と斜長石が主な鉱物になります。"],
   [/グラニュライト相/, "グラニュライト相", "とても高い温度の変成です。地殻の深いところでできます。"],
   [/輝石ホルンフェルス相/, "輝石ホルンフェルス相", "マグマのすぐそばで、とても高い温度に焼かれた段階です。"],
   [/緑泥石帯/, "緑泥石帯", "変成の温度が低い段階です。緑泥石ができる程度で、もとの岩石の性質が残りやすくなっています。"],
-  [/黒雲母帯/, "黒雲母帯", "緑泥石帯より温度が上がり、黒雲母ができた段階です。頭のアルバイト・オリゴクレースは、一緒にできる斜長石の種類です。"],
-  [/ざくろ石帯/, "ざくろ石帯", "さらに温度が上がり、ざくろ石ができた段階です。"],
+  [/黒雲母帯/, "黒雲母帯", "黒雲母ができる温度まで上がった段階です。頭にアルバイト・オリゴクレースが付くものは、一緒にできる斜長石の種類を表していて、オリゴクレースのほうが温度が高い段階です。"],
+  [/ざくろ石帯/, "ざくろ石帯", "ざくろ石ができる温度まで上がった段階です。"],
   [/菫青石帯/, "菫青石帯", "低P/T型の変成で温度が高くなり、菫青石ができた段階です。"],
   [/珪線石カリ長石帯/, "珪線石カリ長石帯", "低P/T型の変成でいちばん温度が高い段階のひとつです。珪線石とカリ長石ができています。"],
   [/斜方輝石帯/, "斜方輝石帯", "とても温度が高く、斜方輝石ができた段階です。"]
@@ -76,8 +76,8 @@ const TERMS = [
 // 付加体・火成岩の「海洋」「島弧・大陸」は、グループによって指すものが違う。
 const SETTING_TERMS = {
   "付加体": [
-    [/海洋/, "海洋", "海のプレートの上でできた岩石です。海底火山の玄武岩、プランクトンの殻が積もったチャート、海山のサンゴ礁などの石灰岩がこれにあたります。"],
-    [/島弧・大陸/, "島弧・大陸", "陸から川で運ばれた砂や泥が、海溝にたまったものです。"]
+    [/海洋/, "海洋", "海のプレートの上や、その中でできた岩石です。海底火山の玄武岩、プランクトンの殻が積もったチャート、海山のサンゴ礁などの石灰岩がこれにあたります。"],
+    [/島弧・大陸/, "島弧・大陸", "島弧や大陸の側でできた岩石です。砂岩や泥岩なら、陸から川で運ばれた砂や泥が海溝にたまったものです。"]
   ],
   "火成岩": [
     [/海洋/, "海洋", "海のプレートをつくるマグマからできた岩石です。"],
@@ -125,6 +125,7 @@ async function renderLithologyPage() {
     }
 
     renderLithology(id, entry, details[id], new Map(rocks.map((rock) => [rock.id, rock])), minerals);
+    bindClassificationHelp();
   } catch (error) {
     console.info("data/lithology-map.json could not be loaded.", error);
     lithologyDetail.innerHTML = `
@@ -183,6 +184,7 @@ function renderLithology(id, entry, detail, rockCatalog, minerals) {
 
     <section class="stone-content-grid">
       ${renderRocks(entry, rockCatalog)}
+      ${renderClassification(entry, rockCatalog)}
       ${renderMinerals(entry, rockCatalog, minerals)}
       ${renderTerms(entry)}
       ${renderAges(detail)}
@@ -235,6 +237,33 @@ function renderRocks(entry, rockCatalog) {
   `;
 }
 
+// 「この地質そのもの」の岩石の、名前の決まり方の物差し。変成岩の地質では出さない。
+// 変成岩の対応表には、もとの岩石（斑れい岩・チャートなど）がそのまま入っていて、
+// その物差しを出すと、変成で鉱物が入れ替わったあとの実物と食い違うため。
+function renderClassification(entry, rockCatalog) {
+  if (entry.kind !== "bedrock" || entry.group === "変成岩") {
+    return "";
+  }
+
+  const rocks = (entry.rocks || [])
+    .filter(({ id, weight }) => weight >= ROCK_ROLES[0].min && rockCatalog.get(id)?.classification?.scales?.length)
+    .map(({ id }) => rockCatalog.get(id));
+
+  if (rocks.length === 0) {
+    return "";
+  }
+
+  return `
+    <article class="stone-info-panel stone-wide-panel">
+      <h2>${panelIcon("ruler")}おもな岩石の名前の決まり方${classificationHelpButton()}</h2>
+      ${rocks.map((rock) => `
+        <h3 class="classification-rock-title">${rockLink(rock.id, rockCatalog)}</h3>
+        ${classificationPanel(rock.classification, rock.name)}
+      `).join("")}
+    </article>
+  `;
+}
+
 function rockLink(id, rockCatalog) {
   const rock = rockCatalog.get(id);
   return `<a class="stone-mineral stone-mineral-link" href="stone.html?id=${encodeURIComponent(id)}" target="_blank" rel="noopener noreferrer">${escapeHtml(rock.name)}</a>`;
@@ -249,18 +278,24 @@ function renderMinerals(entry, rockCatalog, minerals) {
       let score = 0;
       let reason = "";
 
+      // 高P/T型の片麻岩に菫青石、のように、その地質ではできない鉱物は出さない。
+      if (!mineralFits(mineral, entry.lithology)) {
+        return { mineral, score: 0, reason };
+      }
+
       (mineral.hosts || []).forEach(([rockId, weight]) => {
         const hostScore = (rockWeights.get(rockId) || 0) * weight;
         if (hostScore > score && rockCatalog.has(rockId)) {
           score = hostScore;
-          reason = `${rockCatalog.get(rockId).name}に入っていることが多い`;
+          const rockName = rockCatalog.get(rockId).name;
+          reason = weight >= MINERAL_LIKELY ? `${rockName}によく入っている` : `${rockName}に入っていることがある`;
         }
       });
 
       (mineral.zones || []).forEach(([keyword, weight]) => {
         if (entry.lithology.includes(keyword) && weight > score) {
           score = weight;
-          reason = `「${keyword}」はこの鉱物ができている変成帯`;
+          reason = `「${keyword}」は、この鉱物ができる段階まで変成したことを示す名前`;
         }
       });
 
@@ -288,6 +323,11 @@ function renderMinerals(entry, rockCatalog, minerals) {
       </ul>
     </article>
   `;
+}
+
+// minerals.json の notIn。岩相名にその言葉があれば、その鉱物はできない（地図画面の script.js と同じ）。
+function mineralFits(mineral, lithology) {
+  return !(mineral.notIn || []).some((word) => lithology.includes(word));
 }
 
 function mineralLevelLabel(score) {

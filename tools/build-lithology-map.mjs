@@ -18,9 +18,11 @@
 import { readFile, writeFile } from "node:fs/promises";
 import { fileURLToPath } from "node:url";
 import { dirname, join } from "node:path";
+import { runInNewContext } from "node:vm";
 
 const LEGEND_URL = "https://gbank.gsj.jp/seamless/v2/api/1.3/legend.json";
-const DATA_DIR = join(dirname(fileURLToPath(import.meta.url)), "..", "data");
+const ROOT_DIR = join(dirname(fileURLToPath(import.meta.url)), "..");
+const DATA_DIR = join(ROOT_DIR, "data");
 const OUT_PATH = join(DATA_DIR, "lithology-map.json");
 const INDEX_PATH = join(DATA_DIR, "legend-index.json");
 const DETAIL_PATH = join(DATA_DIR, "lithology-detail.json");
@@ -126,7 +128,8 @@ const metamorphicRules = [
   [/^変成砂岩/, [["sandstone", P]]],
   [/^大理石/, [["marble", P]]],
   [/マイロナイト/, [["mylonite", P]]],
-  [/^泥質片岩・泥質グラノフェルス・泥質片麻岩/, [["pelitic-schist", P], ["gneiss", S], ["hornfels", M]]],
+  // 広域変成岩のグラノフェルスは、はがれにくいだけでホルンフェルス（接触変成岩）ではない。
+  [/^泥質片岩・泥質グラノフェルス・泥質片麻岩/, [["pelitic-schist", P], ["gneiss", S]]],
   [/^珪質片岩・珪質グラノフェルス・珪質片麻岩/, [["siliceous-schist", P], ["gneiss", S], ["chert", M]]],
   [/^石灰質片岩・石灰質グラノフェルス・石灰質片麻岩/, [["marble", P], ["schist", S]]],
   [/^泥質片岩/, [["pelitic-schist", P]]],
@@ -138,13 +141,14 @@ const metamorphicRules = [
   [/^石灰質片岩/, [["marble", P], ["schist", S]]],
   [/^粘板岩/, [["slate", P]]],
   [/千枚岩/, [["phyllite", P]]],
-  [/^苦鉄質片麻岩・角閃岩|^苦鉄質片麻岩・苦鉄質グラノフェルス|^苦鉄質片麻岩/, [["gneiss", P], ["amphibolite", S]]],
+  [/^苦鉄質片麻岩・角閃岩/, [["gneiss", P], ["amphibolite", P]]],
+  [/^苦鉄質片麻岩・苦鉄質グラノフェルス|^苦鉄質片麻岩/, [["gneiss", P], ["amphibolite", S]]],
   [/^花崗岩質片麻岩/, [["gneiss", P], ["granite", S]]],
   [/^斑れい岩質片麻岩・閃緑岩質片麻岩/, [["gneiss", P], ["gabbro", M], ["diorite", M]]],
   [/^石灰質片麻岩・石灰質グラノフェルス/, [["marble", P], ["gneiss", S]]],
   [/^超苦鉄質片麻岩・超苦鉄質グラノフェルス/, [["peridotite", P], ["serpentinite", S]]],
   [/^泥質片麻岩/, [["gneiss", P], ["pelitic-schist", M]]],
-  [/^砂質片麻岩|^珪質片麻岩|^珪長質片麻岩/, [["gneiss", P]]],
+  [/^砂質グラノフェルス・砂質片麻岩|^砂質片麻岩|^珪質片麻岩|^珪長質片麻岩/, [["gneiss", P]]],
   [/^超苦鉄質グラノフェルス/, [["peridotite", P], ["hornfels", S]]],
   [/^石灰質グラノフェルス/, [["marble", P], ["hornfels", S]]],
   [/^苦鉄質グラノフェルス/, [["hornfels", P], ["amphibolite", M]]],
@@ -340,6 +344,74 @@ function checkPhotoCredits(rocks) {
   }
 }
 
+// 名前の決まり方（classification）の検査。物差しの定義は classification.js にあり、
+// rocks.json から存在しない物差しや区間を指すと、詳細ページで図が欠ける。
+async function checkClassification(rocks) {
+  const code = await readFile(join(ROOT_DIR, "classification.js"), "utf8");
+  const { CLASSIFICATION_SCALES: scales, CLASSIFICATION_SOURCES: sources } = runInNewContext(`${code}
+({ CLASSIFICATION_SCALES, CLASSIFICATION_SOURCES })`);
+  const problems = [];
+
+  Object.entries(scales).forEach(([id, scale]) => {
+    if (!sources[scale.source]) {
+      problems.push(`物差し ${id}: 出典 ${scale.source} が CLASSIFICATION_SOURCES にない`);
+    }
+    scale.segments.forEach((segment, index) => {
+      const next = scale.segments[index + 1];
+      if (!(segment.from < segment.to) || (next && next.from !== segment.to)) {
+        problems.push(`物差し ${id} の ${segment.label}: 区間が逆転しているか、次の区間とつながっていない`);
+      }
+    });
+  });
+
+  rocks.forEach((rock) => {
+    (rock.classification?.scales || []).forEach(({ id, highlight = [] }) => {
+      const scale = scales[id];
+      if (!scale) {
+        problems.push(`${rock.id}: 物差し ${id} が classification.js にない`);
+        return;
+      }
+      const keys = new Set(scale.segments.map((segment) => segment.key));
+      highlight.filter((key) => !keys.has(key)).forEach((key) => {
+        problems.push(`${rock.id}: 物差し ${id} に区間 ${key} がない`);
+      });
+    });
+  });
+
+  if (problems.length > 0) {
+    console.error("\n名前の決まり方のデータに誤りがあります。修正するまでビルドを中止します。");
+    problems.forEach((problem) => console.error("  - " + problem));
+    process.exit(1);
+  }
+}
+
+// 用語ページ（terms.json）から石・鉱物・用語へのリンク先が実在するか。
+// 欠けると、リンクを押した先が「見つかりませんでした」になる。
+function checkTermLinks(terms, rocks, minerals) {
+  const ids = {
+    stone: new Set(rocks.map((rock) => rock.id)),
+    mineral: new Set(minerals.map((mineral) => mineral.id)),
+    term: new Set(terms.map((term) => term.id))
+  };
+  const problems = [];
+
+  terms.forEach((term) => {
+    (term.sections || []).forEach((section) => {
+      (section.items || []).forEach((item) => {
+        if (item.link && !ids[item.link.type]?.has(item.link.id)) {
+          problems.push(`${term.id} の ${item.name}: リンク先 ${item.link.type}/${item.link.id} がない`);
+        }
+      });
+    });
+  });
+
+  if (problems.length > 0) {
+    console.error("\n用語ページのリンク先がありません。修正するまでビルドを中止します。");
+    problems.forEach((problem) => console.error("  - " + problem));
+    process.exit(1);
+  }
+}
+
 // 出典一覧を自動生成する。手で書くと必ずずれるので rocks.json から作る。
 function buildCreditList(rocks) {
   const lines = [
@@ -445,14 +517,17 @@ await writeFile(DETAIL_PATH, `${JSON.stringify(sortedDetail, null, 0)}\n`, "utf8
 // これがないと、index.html をダブルクリックしただけでは石が一つも出ない。
 const rocks = JSON.parse(await readFile(join(DATA_DIR, "rocks.json"), "utf8"));
 const minerals = JSON.parse(await readFile(join(DATA_DIR, "minerals.json"), "utf8"));
+const terms = JSON.parse(await readFile(join(DATA_DIR, "terms.json"), "utf8"));
 
 checkPhotoCredits(rocks);
+await checkClassification(rocks);
+checkTermLinks(terms, rocks, minerals);
 await writeFile(CREDITS_PATH, buildCreditList(rocks), "utf8");
 
 const bundle = [
   "// 自動生成。tools/build-lithology-map.mjs が data/*.json から作ります。",
   "// file:// で開いたときの読み込み元です。直接編集しないでください。",
-  `window.ISHIHIROI_DATA = ${JSON.stringify({ rocks, lithology: sorted, legendIndex: sortedIndex, minerals })};`,
+  `window.ISHIHIROI_DATA = ${JSON.stringify({ rocks, lithology: sorted, legendIndex: sortedIndex, minerals, terms })};`,
   ""
 ].join("\n");
 await writeFile(BUNDLE_PATH, bundle, "utf8");

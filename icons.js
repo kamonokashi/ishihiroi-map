@@ -30,7 +30,10 @@ const PANEL_ICONS = {
   pebble: '<path d="M20 12.4l-5.4 7-8-1.4-2.6-6.4 5-6.8 7.8 1.4z"/><path d="M12 9.6l2.4 2.4-2.4 2.4-2.4-2.4z"/>',
 
   // 変成帯 — 重なった地層
-  layers: '<path d="M12 3.2l8.5 4.6-8.5 4.6-8.5-4.6z"/><path d="M3.5 12.2l8.5 4.6 8.5-4.6"/><path d="M3.5 16.4l8.5 4.4 8.5-4.4"/>'
+  layers: '<path d="M12 3.2l8.5 4.6-8.5 4.6-8.5-4.6z"/><path d="M3.5 12.2l8.5 4.6 8.5-4.6"/><path d="M3.5 16.4l8.5 4.4 8.5-4.4"/>',
+
+  // 名前の決まり方 — 目盛りの付いた物差し
+  ruler: '<rect x="3" y="8" width="18" height="8" rx="1.2"/><path d="M7 8v3"/><path d="M11 8v4.5"/><path d="M15 8v3"/><path d="M19 8v4.5"/>'
 };
 
 function panelIcon(name) {
