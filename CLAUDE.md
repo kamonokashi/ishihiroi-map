@@ -17,6 +17,10 @@
 - `index.html` / `script.js` — 地図画面。地質取得と石カード表示
 - `stone.html` / `stone.js` — 石の詳細ページ（`?id=` で切り替え）
 - `mineral.html` / `mineral.js` — 鉱物の詳細ページ（`?id=` で切り替え）。石と同じ作りだが写真がないので見出しは1列
+- `lithology.html` / `lithology.js` — 地質（岩相）の詳細ページ（`?id=` に symbol 接尾辞）。地図画面「地質を見る」のカードと上流域の一覧からリンクする
+  - 拾えそうな石は `lithology-map.json` の weight を「この地質そのもの／一緒に出ることが多い／混じることがある」に言い換えて出す
+  - 見どころの鉱物は `estimateMinerals()` と同じ2通り（母岩・変成帯の名前）で、周辺の割り引きなしに計算する
+  - 「名前の読み方」は岩相名に出てくる用語（高P/T型、緑泥石帯、海洋 など）の説明。`TERMS` に正規表現で持っている。「海洋」「島弧・大陸」は付加体と火成岩で意味が違うので `SETTING_TERMS` に分けている
 - `styles.css` — 全体のスタイル
 - `data/lithology-map.json` — 岩相(symbol接尾辞) → 石 の対応表。**生成物なので手で編集しない**
 - `data/legend-index.json` — 凡例の色 → [symbol接尾辞, 時代コード]。**生成物**。地質図タイルの画素から地質を逆引きするために使う
@@ -26,8 +30,10 @@
 - `data/minerals.json` — 鉱物のカタログ。母岩と変成帯から候補を出す
   - `identification` / `confusedWith` / `fieldTests` は石と同じ意味で、`mineral.html` の最上段に置いている
   - `hosts` の石 `id` は `rocks.json` に存在させる（詳細ページで母岩へのリンクになる）
-- `data/bundle.js` — 上4つを1つにまとめたもの。**生成物**。`file://` で開くと `fetch` が使えないので、そのときだけこちらから読む
-- `tools/build-lithology-map.mjs` — 生成物3つ（lithology-map / legend-index / bundle）を作るスクリプト
+- `data/lithology-detail.json` — 岩相 → 英名と、地質図に出てくる時代・色（古い順）。**生成物**。岩相の詳細ページだけが使う
+- `data/bundle.js` — rocks / lithology-map / legend-index / minerals を1つにまとめたもの。**生成物**。`file://` で開くと `fetch` が使えないので、そのときだけこちらから読む
+- `data/lithology-detail-bundle.js` — `lithology-detail.json` の `file://` 用。**生成物**。`bundle.js` と同じくらい大きく、`bundle.js` は地図画面が毎回読むので分けてある
+- `tools/build-lithology-map.mjs` — 生成物（lithology-map / legend-index / lithology-detail / 2つの bundle / PHOTO-CREDITS.md）を作るスクリプト
 - `api/geology.php` — CORS 対策のフォールバック用プロキシ
 - `local-server.cjs` — Node だけで動く確認用サーバー
 

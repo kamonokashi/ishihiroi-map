@@ -3,19 +3,20 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>鉱物の詳細 - いしひろいマップ</title>
+    <title>地質の詳細 - いしひろいマップ</title>
     <link rel="stylesheet" href="styles.css?v=20260916-01">
     <script defer src="data/bundle.js?v=20260916-01"></script>
+    <script defer src="data/lithology-detail-bundle.js?v=20260916-01"></script>
     <script defer src="icons.js?v=20260916-01"></script>
-    <script defer src="mineral.js?v=20260916-01"></script>
+    <script defer src="lithology.js?v=20260916-01"></script>
   </head>
   <body class="stone-page">
     <header class="stone-header">
       <button id="backButton" class="stone-back-button" type="button">← 地図に戻る</button>
     </header>
 
-    <main id="mineralDetail" class="stone-detail" aria-live="polite">
-      <p class="stone-loading">鉱物の情報を読み込んでいます。</p>
+    <main id="lithologyDetail" class="stone-detail" aria-live="polite">
+      <p class="stone-loading">地質の情報を読み込んでいます。</p>
     </main>
   </body>
 </html>

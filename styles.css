@@ -911,6 +911,10 @@ h3 {
   line-height: 1.6;
 }
 
+.geology-detail-link {
+  margin-top: 10px;
+}
+
 /* 地質図の記号。石を拾うのには要らないので畳んでおく */
 .geology-symbol {
   margin: 10px 0 0;
@@ -1356,6 +1360,89 @@ body.stone-page {
 .stone-mineral-link:hover {
   border-color: rgba(13, 162, 189, 0.55);
   background: #d7eef0;
+}
+
+/* 岩相の詳細ページ。石を「この地質そのもの／一緒に出る／混じる」の段に分ける */
+.lithology-rock-groups {
+  display: grid;
+  gap: 14px;
+  margin: 0 0 14px;
+}
+
+.lithology-rock-groups dt {
+  margin-bottom: 8px;
+  color: var(--ink);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.lithology-rock-groups dd {
+  margin: 0;
+}
+
+.stone-info-panel .lithology-note {
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+  line-height: 1.7;
+}
+
+/* 用語の説明は「間違えやすい」の対とは違うので、↔ を付けない */
+.lithology-term-list dt::before {
+  content: none;
+}
+
+.lithology-mineral-list {
+  display: grid;
+  gap: 10px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.lithology-mineral-list li {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 10px;
+}
+
+.lithology-mineral-level {
+  color: var(--accent-dark);
+  font-size: 0.84rem;
+  font-weight: 700;
+}
+
+.lithology-mineral-reason {
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.lithology-age-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 320px), 1fr));
+  gap: 8px 18px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  color: #4f5659;
+  font-size: 0.9rem;
+}
+
+.lithology-age-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  line-height: 1.5;
+}
+
+.lithology-age-swatch {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 18px;
+  margin-top: 1px;
+  border: 1px solid rgba(48, 52, 56, 0.18);
+  border-radius: 3px;
 }
 
 .stone-thumbnail {

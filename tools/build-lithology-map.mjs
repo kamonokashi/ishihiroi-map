@@ -5,6 +5,7 @@
 // 出力:
 //   data/lithology-map.json  岩相(symbol接尾辞) → 石
 //   data/legend-index.json   凡例の色 → [symbol接尾辞, 時代コード]
+//   data/lithology-detail.json 岩相(symbol接尾辞) → 英名と、地質図に出てくる時代・色
 //
 // V2の凡例は2416件あるが、岩相(lithology_ja)は610種類しかなく、symbolから
 // 時代プレフィックスを除いた接尾辞(K22_pbg_a → pbg_a)と1対1で対応する。
@@ -22,6 +23,8 @@ const LEGEND_URL = "https://gbank.gsj.jp/seamless/v2/api/1.3/legend.json";
 const DATA_DIR = join(dirname(fileURLToPath(import.meta.url)), "..", "data");
 const OUT_PATH = join(DATA_DIR, "lithology-map.json");
 const INDEX_PATH = join(DATA_DIR, "legend-index.json");
+const DETAIL_PATH = join(DATA_DIR, "lithology-detail.json");
+const DETAIL_BUNDLE_PATH = join(DATA_DIR, "lithology-detail-bundle.js");
 const BUNDLE_PATH = join(DATA_DIR, "bundle.js");
 const CREDITS_PATH = join(DATA_DIR, "..", "PHOTO-CREDITS.md");
 
@@ -41,6 +44,50 @@ function ageCode(formationAge) {
   if (/古生代|原生代|太古代|先カンブリア/.test(age)) return AGE_PALEOZOIC_OR_OLDER;
   // 「新生代」とだけ書かれている場合は新第三紀相当とみなす。
   return /新生代/.test(age) ? AGE_NEOGENE : AGE_MESOZOIC;
+}
+
+// 詳細ページで時代を古い順に並べるための順位。紀より細かい世があればそちらを使う。
+const AGE_UNITS = [
+  "先カンブリア", "原生代", "カンブリア紀", "オルドビス紀", "シルル紀", "デボン紀", "石炭紀",
+  "ペルム紀", "三畳紀", "ジュラ紀", "白亜紀", "古第三紀", "暁新世", "始新世", "漸新世",
+  "新第三紀", "中新世", "鮮新世", "第四紀", "更新世", "完新世"
+];
+const COARSE_UNITS = new Set(["古第三紀", "新第三紀", "第四紀"]);
+// 紀・世が同じとき（「前期白亜紀 アルビアン期〜」と「前期白亜紀 バランジニアン期〜」）に使う。
+const AGE_STAGES = [
+  "シスウラリアン", "グアダルピアン", "ローピンジアン",
+  "インドゥアン", "オレネキアン", "アニシアン", "ラディニアン", "カーニアン", "ノーリアン", "レーティアン",
+  "ヘッタンギアン", "シネムーリアン", "プリンスバッキアン", "トアルシアン", "アーレニアン", "バッジョシアン",
+  "バトニアン", "カロビアン", "オックスフォーディアン", "キンメリッジアン", "チトニアン",
+  "ベリアシアン", "バランジニアン", "オーテリビアン", "バレミアン", "アプチアン", "アルビアン",
+  "セノマニアン", "チューロニアン", "コニアシアン", "サントニアン", "カンパニアン", "マーストリヒチアン",
+  "ダニアン", "セランディアン", "サネティアン", "イプレシアン", "ルテシアン", "バートニアン",
+  "プリアボニアン", "ルペリアン", "チャッティアン",
+  "アキタニアン", "バーディガリアン", "ランギアン", "サーラバリアン", "トートニアン", "メッシニアン",
+  "ザンクリアン", "ピアセンジアン", "ジェラシアン", "カラブリアン", "チバニアン"
+];
+
+function stageRank(formationAge) {
+  const age = formationAge || "";
+  const first = AGE_STAGES
+    .map((stage, order) => ({ order, at: age.indexOf(stage) }))
+    .filter(({ at }) => at >= 0)
+    .sort((a, b) => a.at - b.at)[0];
+  return first ? first.order : -1;
+}
+const SUB_UNITS = { "前期": 0, "中期": 1, "後期": 2 };
+
+function ageRank(formationAge) {
+  const age = formationAge || "";
+  const found = AGE_UNITS
+    .map((unit, order) => ({ unit, order, at: age.indexOf(unit) }))
+    .filter(({ at }) => at >= 0);
+  const fine = found.filter(({ unit }) => !COARSE_UNITS.has(unit));
+  const first = (fine.length > 0 ? fine : found).sort((a, b) => a.at - b.at)[0];
+  if (!first) {
+    return Number.MAX_SAFE_INTEGER;
+  }
+  return first.order * 3 + (SUB_UNITS[age.slice(first.at - 2, first.at)] ?? 0);
 }
 
 // weight: その岩相の場所で、その石がどれくらい主役か
@@ -331,6 +378,9 @@ const legends = await response.json();
 
 const table = {};
 const colorIndex = {};
+// 岩相の詳細ページ用。同じ岩相でも時代ごとに凡例が分かれていて、色も違う。
+// 地図画面は使わないので、lithology-map.json を重くしないよう別ファイルにする。
+const detail = {};
 const stats = { bedrock: 0, loose: 0, artificial: 0, empty: 0 };
 let colorCollisions = 0;
 
@@ -345,6 +395,9 @@ for (const legend of legends) {
     }
     colorIndex[color] = [key, ageCode(legend.formationAge_ja)];
   }
+
+  detail[key] ??= { english: legend.lithology_en || "", ages: [] };
+  detail[key].ages.push([legend.formationAge_ja || "", color]);
 
   if (table[key]) {
     continue;
@@ -377,6 +430,17 @@ await writeFile(OUT_PATH, `${JSON.stringify(sorted, null, 0)}\n`, "utf8");
 const sortedIndex = Object.fromEntries(Object.keys(colorIndex).sort().map((key) => [key, colorIndex[key]]));
 await writeFile(INDEX_PATH, `${JSON.stringify(sortedIndex, null, 0)}\n`, "utf8");
 
+// 古い時代から並べる。凡例の並びは時代順になっていないので、始まりの紀・世、期の順で並べ、
+// それでも決まらなければもとの並びを使う。
+const sortedDetail = Object.fromEntries(Object.keys(sorted).map((key) => {
+  const ages = detail[key].ages
+    .map((age, index) => ({ age, index, rank: ageRank(age[0]), stage: stageRank(age[0]) }))
+    .sort((a, b) => a.rank - b.rank || a.stage - b.stage || a.index - b.index)
+    .map(({ age }) => age);
+  return [key, { ...detail[key], ages }];
+}));
+await writeFile(DETAIL_PATH, `${JSON.stringify(sortedDetail, null, 0)}\n`, "utf8");
+
 // file:// で開いたときは fetch が使えないので、同じ内容を <script> で読める形にも出す。
 // これがないと、index.html をダブルクリックしただけでは石が一つも出ない。
 const rocks = JSON.parse(await readFile(join(DATA_DIR, "rocks.json"), "utf8"));
@@ -392,6 +456,17 @@ const bundle = [
   ""
 ].join("\n");
 await writeFile(BUNDLE_PATH, bundle, "utf8");
+
+// 岩相の詳細は bundle.js と同じくらいの大きさがある。bundle.js は地図画面が
+// サーバー経由でも毎回読むので、そこに入れると地図が重くなる。岩相ページだけが読む。
+const detailBundle = [
+  "// 自動生成。tools/build-lithology-map.mjs が data/lithology-detail.json から作ります。",
+  "// file:// で開いたときの読み込み元です。直接編集しないでください。",
+  "window.ISHIHIROI_DATA = window.ISHIHIROI_DATA || {};",
+  `window.ISHIHIROI_DATA.lithologyDetail = ${JSON.stringify(sortedDetail)};`,
+  ""
+].join("\n");
+await writeFile(DETAIL_BUNDLE_PATH, detailBundle, "utf8");
 
 console.log("岩相の総数:", Object.keys(sorted).length);
 console.log("内訳:", stats);

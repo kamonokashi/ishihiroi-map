@@ -86,6 +86,7 @@ const text = {
   rare: "珍しい",
   candidate: "候補",
   details: "詳細を見る",
+  lithologyDetails: "この地質について",
   noDetails: "簡易情報は未登録です。",
   currentFailed: "現在地を取得できませんでした。地図をクリックして場所を選んでください。",
   currentUnsupported: "このブラウザでは現在地を取得できません。",
@@ -1640,6 +1641,10 @@ function renderGeology(pointLegend, tiers, area = null, catchment = null) {
   geologyList.innerHTML = sections.join("");
 }
 
+function lithologyUrl(key) {
+  return `lithology.html?id=${encodeURIComponent(key)}`;
+}
+
 function shareOf(area, legend) {
   return area?.shares.get(legendKey(legend)) || 0;
 }
@@ -1661,10 +1666,10 @@ function renderCatchment(catchment) {
     <article class="geology-card geology-card-point">
       <p class="geology-meta">この地点に流れ込む範囲の地質です。ここにある岩石が石として運ばれてきます。</p>
       <ul class="catchment-list">
-        ${rows.map(({ share, entry }) => `
+        ${rows.map(({ key, share, entry }) => `
           <li>
             <span class="catchment-share">${Math.round(share * 100)}%</span>
-            <span class="catchment-lithology">${escapeHtml(entry.lithology)}</span>
+            <a class="catchment-lithology" href="${lithologyUrl(key)}" target="_blank" rel="noopener noreferrer">${escapeHtml(entry.lithology)}</a>
           </li>
         `).join("")}
       </ul>
@@ -1691,6 +1696,7 @@ function geologyCard(legend, isPoint, area) {
       <p class="geology-meta">${escapeHtml(legend.lithology_ja || text.lithologyUnavailable)}</p>
       <p class="geology-meta">${escapeHtml(legend.formationAge_ja || text.ageUnavailable)}</p>
       ${rockNames.length > 0 ? `<p class="geology-rocks">対応する石：${escapeHtml(rockNames.join("・"))}</p>` : ""}
+      ${entry ? `<a class="secondary-button geology-detail-link" href="${lithologyUrl(legendKey(legend))}" target="_blank" rel="noopener noreferrer">${text.lithologyDetails}</a>` : ""}
       <!-- 記号は石を拾うのに要らないが、対応表の突き合わせには要る。畳んで残す -->
       <details class="geology-symbol">
         <summary>地質図の記号</summary>
