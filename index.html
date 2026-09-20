@@ -7,22 +7,44 @@
     <link
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-    <link rel="stylesheet" href="styles.css?v=20260919-09">
+    <link rel="stylesheet" href="styles.css?v=20260920-18">
     <script
       defer
       src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <!-- file:// で開いたとき用の石データ。サーバー経由なら data/*.json のほうが使われます。 -->
-    <script defer src="data/bundle.js?v=20260919-09"></script>
-    <script defer src="link-preview.js?v=20260919-09"></script>
-    <script defer src="script.js?v=20260919-09"></script>
+    <script defer src="data/bundle.js?v=20260919-10"></script>
+    <script defer src="menu.js?v=20260920-18"></script>
+    <script defer src="link-preview.js?v=20260920-17"></script>
+    <script defer src="script.js?v=20260920-04"></script>
   </head>
-  <body>
+  <!-- 地図の検索結果ではホバーの説明カードを出さない（カードは詳細ページだけのもの） -->
+  <body data-link-preview="off">
     <header class="app-header">
       <div>
         <p class="eyebrow">&#22320;&#36074;&#22259;&#12363;&#12425;&#30707;&#12434;&#25506;&#12377;&#12503;&#12525;&#12488;&#12479;&#12452;&#12503;</p>
         <h1>&#12356;&#12375;&#12402;&#12429;&#12356;&#12510;&#12483;&#12503;</h1>
       </div>
     </header>
+
+    <!-- ボタンはヘッダーの外に出して画面に固定する。ヘッダーの中に置くと、ヘッダーが重なり順の
+         入れ物になり、ボタンだけを引き出しより前に出せない（押すと引き出しの下に隠れてしまう） -->
+    <div class="app-menu">
+      <button id="menuButton" class="menu-button" type="button" aria-label="メニューを開く" aria-expanded="false" aria-controls="appMenu">
+        <span class="menu-bars" aria-hidden="true"><i></i><i></i><i></i></span>
+      </button>
+    </div>
+
+    <!-- 右から出てくる引き出し。地図より手前に出すのでヘッダーの外に置く -->
+    <div id="menuBackdrop" class="app-menu-backdrop"></div>
+    <nav id="appMenu" class="app-menu-drawer" aria-label="メニュー">
+      <a class="app-menu-item" href="glossary.html">
+        <span class="app-menu-item-text">
+          <span class="app-menu-title">用語集</span>
+          <span class="app-menu-note">石・鉱物・地質の言葉をさがす</span>
+        </span>
+        <svg class="app-menu-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7"/></svg>
+      </a>
+    </nav>
 
     <main class="app-shell" id="appShell">
       <section class="map-pane" aria-label="&#22320;&#22259;">

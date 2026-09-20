@@ -984,7 +984,16 @@ html.stone-root,
 body.stone-page {
   min-height: 100%;
   height: auto;
+}
+
+/* スクロールするのは html だけにする。body まで overflow: auto にすると body もスクロール枠になり、
+   上のバーや用語集の索引の position: sticky が body に張り付いて、画面に残らなくなる */
+html.stone-root {
   overflow: auto;
+}
+
+body.stone-page {
+  overflow: visible;
 }
 
 .stone-header {
@@ -993,26 +1002,40 @@ body.stone-page {
   z-index: 10;
   display: flex;
   align-items: center;
-  min-height: 66px;
-  padding: 12px clamp(16px, 4vw, 44px);
+  min-height: 60px;
+  padding: 10px clamp(8px, 2vw, 28px);
   border-bottom: 1px solid var(--line);
   background: rgba(244, 245, 243, 0.92);
   backdrop-filter: blur(12px);
 }
 
+/* 戻る先は直前のページ。矢印だけで伝わるので、文字と枠は持たせない（名前は aria-label と title） */
 .stone-back-button {
-  min-height: 38px;
-  padding: 0 14px;
-  border: 1px solid var(--line);
-  border-radius: 5px;
-  background: var(--panel);
+  display: grid;
+  place-items: center;
+  width: 40px;
+  height: 40px;
+  min-height: 40px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
   color: var(--ink);
-  box-shadow: 0 4px 12px rgba(48, 52, 56, 0.06);
+}
+
+.stone-back-button svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
 }
 
 .stone-back-button:hover {
-  background: #e6f4f4;
-  color: var(--accent-dark);
+  background: rgba(48, 52, 56, 0.07);
+  color: var(--ink);
 }
 
 .stone-detail {
@@ -2123,4 +2146,897 @@ body.stone-page {
 .stone-mineral.catalog-link:hover {
   border-color: rgba(13, 162, 189, 0.55);
   background: #d7eef0;
+}
+
+/* 地図画面の右上のメニュー（menu.js）。押すと右から引き出しが出る */
+.app-header {
+  position: relative;
+  z-index: 1100;
+}
+
+/* 引き出しはヘッダーも含めて覆う。閉じるボタンは引き出しの中に置く（ヘッダーを前に出すと、
+   ヘッダーの帯が引き出しの上に乗ってしまう） */
+/* ボタンは画面に固定して、引き出しより前に出す。ヘッダーの中に置くと、ヘッダーが重なり順の
+   入れ物になり、ボタンだけを引き出しより前に出せない */
+.app-menu {
+  position: fixed;
+  top: 21px;
+  right: clamp(16px, 3vw, 36px);
+  z-index: 2200;
+}
+
+/* 枠線も文字も持たない丸ボタン。開くと3本線が×に変わる */
+.menu-button {
+  display: grid;
+  place-items: center;
+  width: 44px;
+  height: 44px;
+  min-height: 44px;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--ink);
+}
+
+.menu-button:hover {
+  background: rgba(48, 52, 56, 0.07);
+}
+
+.menu-bars {
+  display: grid;
+  gap: 5px;
+  width: 22px;
+}
+
+.menu-bars i {
+  display: block;
+  height: 2px;
+  border-radius: 2px;
+  background: currentColor;
+  transition: transform 220ms ease, opacity 160ms ease;
+}
+
+.menu-open .menu-bars i:nth-child(1) {
+  transform: translateY(7px) rotate(45deg);
+}
+
+.menu-open .menu-bars i:nth-child(2) {
+  opacity: 0;
+}
+
+.menu-open .menu-bars i:nth-child(3) {
+  transform: translateY(-7px) rotate(-45deg);
+}
+
+.app-menu-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 1900;
+  background: rgba(30, 34, 38, 0.32);
+  opacity: 0;
+  visibility: hidden;
+  transition: opacity 220ms ease, visibility 220ms;
+}
+
+.menu-open .app-menu-backdrop {
+  opacity: 1;
+  visibility: visible;
+}
+
+.app-menu-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2000;
+  width: min(330px, 86vw);
+  padding: 76px 22px 22px;
+  background: var(--panel);
+  box-shadow: -18px 0 44px rgba(30, 34, 38, 0.16);
+  transform: translateX(100%);
+  visibility: hidden;
+  transition: transform 260ms cubic-bezier(0.32, 0.72, 0, 1), visibility 260ms;
+}
+
+.menu-open .app-menu-drawer {
+  transform: none;
+  visibility: visible;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .menu-bars i,
+  .app-menu-backdrop,
+  .app-menu-drawer {
+    transition: none;
+  }
+}
+
+.app-menu-item {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 12px;
+  border-radius: 10px;
+  color: var(--ink);
+  text-decoration: none;
+  transition: background 160ms ease;
+}
+
+.app-menu-item:hover,
+.app-menu-item:focus-visible {
+  background: #eef6f7;
+}
+
+.app-menu-item-text {
+  display: grid;
+  gap: 3px;
+  min-width: 0;
+}
+
+.app-menu-title {
+  font-size: 1.16rem;
+  font-weight: 700;
+}
+
+.app-menu-note {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.app-menu-arrow {
+  width: 18px;
+  height: 18px;
+  margin-left: auto;
+  flex: 0 0 auto;
+  fill: none;
+  stroke: var(--muted);
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 160ms ease;
+}
+
+.app-menu-item:hover .app-menu-arrow,
+.app-menu-item:focus-visible .app-menu-arrow {
+  stroke: var(--accent);
+  transform: translateX(3px);
+}
+
+/* 820px 以下ではヘッダーが縦並びになる（地図の高さもそれに合わせて計算している）。
+   メニューのボタンだけは右上に置いたままにする */
+@media (max-width: 820px) {
+  /* 狭い画面はヘッダーが縦に高くなるが、ボタンは画面に固定なので上に置いたままでよい */
+  .app-menu {
+    top: 16px;
+  }
+}
+
+/* ===== 用語集（glossary.html） =====
+   詳細ページのカードを並べるのではなく、辞書の索引の見た目にする。
+   1件1行の密な並びにして、広い画面では段組みに流し込む。説明はホバーのカード（link-preview.js）に任せる。 */
+a.stone-back-button {
+  display: inline-flex;
+  align-items: center;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+/* 1件の中身は最大273px。列がそれより大幅に広いと、行の右側が空いて見える */
+.glossary {
+  width: min(920px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 26px 0 60px;
+}
+
+.glossary-head h1 {
+  margin-bottom: 2px;
+  font-size: 1.3rem;
+}
+
+.glossary-sub {
+  margin-bottom: 14px;
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+/* 検索欄がこのページの主役。幅いっぱいの大きめの入力にする */
+.glossary-search-box {
+  position: relative;
+  display: flex;
+  align-items: center;
+  max-width: 420px;
+}
+
+.glossary-search-icon {
+  position: absolute;
+  left: 14px;
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: var(--muted);
+  stroke-width: 2;
+  stroke-linecap: round;
+  pointer-events: none;
+}
+
+.glossary-search {
+  width: 100%;
+  min-height: 44px;
+  padding: 0 16px 0 42px;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel);
+  color: var(--ink);
+  font-size: 0.98rem;
+  box-shadow: none;
+}
+
+.glossary-search:focus {
+  border-color: var(--accent);
+  outline: 2px solid rgba(13, 162, 189, 0.22);
+  outline-offset: 1px;
+}
+
+.glossary-search::-webkit-search-cancel-button {
+  cursor: pointer;
+}
+
+.glossary-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-top: 14px;
+}
+
+/* hidden 属性より display: flex が強いので、隠す指定を明示しておく */
+.glossary-filters[hidden] {
+  display: none;
+}
+
+.glossary-sub-filters {
+  margin-top: 8px;
+  padding-left: 12px;
+  border-left: 3px solid var(--line);
+}
+
+.glossary-chip {
+  min-height: 34px;
+  padding: 0 14px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(171, 167, 157, 0.16);
+  color: var(--ink);
+  font-size: 0.9rem;
+}
+
+.glossary-chip:hover {
+  background: #e6f4f4;
+  color: var(--accent-dark);
+}
+
+.glossary-chip[aria-pressed="true"] {
+  background: var(--accent-dark);
+  color: #fff;
+}
+
+/* 五十音の帯と件数。スクロールしても上に残す */
+.glossary-rail {
+  position: sticky;
+  top: 60px;
+  z-index: 5;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 16px;
+  margin-top: 20px;
+  padding: 8px 0;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg);
+}
+
+.glossary-index {
+  display: flex;
+  flex-wrap: nowrap;
+  gap: 2px;
+  overflow-x: auto;
+}
+
+.glossary-index-link {
+  flex: 0 0 auto;
+  display: inline-grid;
+  place-items: center;
+  min-width: 30px;
+  height: 30px;
+  border-radius: 999px;
+  color: var(--accent-dark);
+  font-size: 0.95rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.glossary-index-link:hover {
+  background: #e6f4f4;
+}
+
+.glossary-index-link.is-empty {
+  color: #c9cbc4;
+}
+
+.glossary-count {
+  margin: 0;
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 0.84rem;
+}
+
+.glossary-loading,
+.glossary-empty {
+  margin: 28px 0 0;
+  color: var(--muted);
+}
+
+/* 「か」のような大きな仮名を左に置いた区切り */
+.glossary-group {
+  margin-top: 26px;
+}
+
+.glossary-row {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  margin: 0 0 10px;
+  padding-bottom: 6px;
+  border-bottom: 2px solid var(--line);
+  scroll-margin-top: 110px;
+}
+
+.glossary-row-kana {
+  color: var(--accent-dark);
+  font-size: 1.5rem;
+  font-weight: 800;
+  line-height: 1;
+}
+
+.glossary-row-label {
+  color: var(--muted);
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+.glossary-row-count {
+  margin-left: auto;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 400;
+}
+
+/* 段組みに流し込む。1件が段をまたがないようにする */
+.glossary-items {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  columns: 1;
+  column-gap: 26px;
+}
+
+.glossary-items li {
+  break-inside: avoid;
+}
+
+/* 種類・名前・読みを左から詰めて置く。読みを右端まで押しやると、あいだが大きく空いて見える */
+.glossary-item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+  padding: 7px 8px;
+  border-radius: 5px;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.glossary-item:hover,
+.glossary-item:focus-visible {
+  background: #e6f4f4;
+}
+
+.glossary-kind {
+  flex: 0 0 auto;
+  padding: 1px 6px;
+  border-radius: 3px;
+  font-size: 0.7rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+.glossary-kind-stone {
+  background: #e0f1f4;
+  color: var(--accent-dark);
+}
+
+.glossary-kind-mineral {
+  background: #ece6f5;
+  color: #5b3f86;
+}
+
+.glossary-kind-geology {
+  background: #f2ecdf;
+  color: #7a5518;
+}
+
+.glossary-kind-term {
+  background: #eaebe8;
+  color: #4b504a;
+}
+
+.glossary-name {
+  font-weight: 700;
+  overflow-wrap: anywhere;
+}
+
+/* 読みは名前のすぐ右。行が狭いときは読みから先に省略する */
+.glossary-reading {
+  flex: 0 1 auto;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.glossary-item:hover .glossary-name,
+.glossary-item:focus-visible .glossary-name {
+  color: var(--accent-dark);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.glossary-reading {
+  color: var(--muted);
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+@media (min-width: 720px) {
+  .glossary-items {
+    columns: 2;
+  }
+}
+
+@media (min-width: 1000px) {
+  .glossary-items {
+    columns: 3;
+  }
+}
+
+/* 画面が広いときは列を増やす。列を広げるのではなく本数で埋める */
+@media (min-width: 1280px) {
+  .glossary {
+    width: min(1200px, calc(100% - 32px));
+  }
+
+  .glossary-items {
+    columns: 4;
+  }
+}
+
+/* ===== 詳細ページの組み方（読みやすさ） =====
+   日本語は1行35〜45字くらいが読みやすい。以前は本文の枠が1180pxまで広がり、1行が70字を超えていた。
+   石のページは「左に本文・右に写真と要点」の2段組み、写真のないページは1段で幅を狭める。 */
+
+.detail-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas:
+    "title"
+    "aside"
+    "main";
+  gap: 20px;
+}
+
+.detail-title {
+  grid-area: title;
+}
+
+.detail-title h1 {
+  margin-bottom: 4px;
+  font-size: clamp(1.8rem, 3vw, 2.4rem);
+  line-height: 1.2;
+}
+
+.detail-lead {
+  max-width: 36em;
+  margin: 0;
+  color: #3f4549;
+  font-size: 1.08rem;
+  line-height: 1.8;
+}
+
+.detail-aside {
+  grid-area: aside;
+  display: grid;
+  align-content: start;
+  gap: 16px;
+}
+
+.detail-main {
+  grid-area: main;
+  display: grid;
+  align-content: start;
+  gap: 20px;
+  min-width: 0;
+}
+
+/* 目次から飛んだとき、見出しが上のバーの下に隠れないように */
+.detail-main > article {
+  scroll-margin-top: 80px;
+}
+
+/* 図鑑の「データ欄」。分類・特徴・主な鉱物を、ラベルと中身の2列で並べる */
+.detail-facts {
+  display: grid;
+  grid-template-columns: 5.8em minmax(0, 1fr);
+  gap: 12px 12px;
+  margin: 0;
+  padding: 16px 18px;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel);
+}
+
+.detail-facts dt {
+  padding-top: 3px;
+  color: var(--muted);
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.detail-facts dd {
+  margin: 0;
+  font-size: 0.94rem;
+  line-height: 1.7;
+}
+
+.detail-facts .stone-tag-list,
+.detail-facts .stone-mineral-list {
+  gap: 6px;
+}
+
+.detail-facts .stone-tag,
+.detail-facts .stone-mineral {
+  min-height: 28px;
+  padding: 3px 9px;
+  font-size: 0.86rem;
+}
+
+.detail-toc {
+  display: none;
+  padding: 14px 18px;
+  border-left: 3px solid var(--accent);
+  border-radius: 0 6px 6px 0;
+  background: var(--panel);
+}
+
+.detail-toc-title {
+  margin: 0 0 6px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+.detail-toc ol {
+  display: grid;
+  gap: 2px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.detail-toc a {
+  display: block;
+  padding: 4px 8px;
+  border-radius: 4px;
+  color: var(--accent-dark);
+  font-size: 0.92rem;
+  font-weight: 700;
+  text-decoration: none;
+}
+
+.detail-toc a:hover,
+.detail-toc a:focus-visible {
+  background: #e6f4f4;
+}
+
+/* 本文の文字。少し大きく、行間を広く、色を濃くして読みやすくする（石以外のページも同じ） */
+.stone-info-panel p,
+.stone-confuse-list dd,
+.stone-test-list,
+.term-item-list dd {
+  color: #3f4549;
+  font-size: 1.02rem;
+  line-height: 1.9;
+}
+
+.stone-info-panel h2 {
+  font-size: 1.1rem;
+}
+
+.detail-main .stone-info-panel {
+  padding: 24px 26px;
+}
+
+@media (min-width: 1000px) {
+  /* 本文の列は 700px（1行40字前後）。右の列は写真の実寸（354px）に合わせる */
+  .detail-layout {
+    grid-template-columns: minmax(0, 700px) 340px;
+    grid-template-areas:
+      "title aside"
+      "main aside";
+    justify-content: center;
+    align-items: start;
+    column-gap: 36px;
+    row-gap: 24px;
+  }
+
+  /* 右の列は本文と同じ高さまで伸ばし、その中で目次だけをスクロールに付いてこさせる */
+  .detail-aside {
+    align-self: stretch;
+  }
+
+  .detail-toc {
+    display: block;
+    position: sticky;
+    top: 80px;
+  }
+}
+
+/* 写真のないページ（鉱物・岩相・用語・用語集）は1段のまま幅を狭め、1行を短くする */
+.stone-detail.is-narrow {
+  width: min(760px, calc(100% - 32px));
+}
+
+@media (max-width: 640px) {
+  .detail-main .stone-info-panel {
+    padding: 20px 18px;
+  }
+
+  .detail-facts {
+    grid-template-columns: 1fr;
+    gap: 4px;
+  }
+
+  .detail-facts dd {
+    margin-bottom: 8px;
+  }
+}
+
+/* 間違えやすい石・鉱物（link-preview.js の confusedItem）。左に相手の石の写真、右に名前と見分け方 */
+.confuse-list {
+  display: grid;
+  gap: 16px;
+}
+
+.confuse-item {
+  display: grid;
+  grid-template-columns: 104px minmax(0, 1fr);
+  gap: 14px;
+  align-items: start;
+}
+
+.confuse-item.no-thumb {
+  grid-template-columns: minmax(0, 1fr);
+}
+
+.confuse-thumb {
+  display: block;
+  overflow: hidden;
+  aspect-ratio: 1 / 0.86;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: #1f2226;
+}
+
+.confuse-thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 160ms ease;
+}
+
+.confuse-thumb:hover img {
+  transform: scale(1.04);
+}
+
+.confuse-thumb.is-empty {
+  display: grid;
+  place-items: center;
+  background: #f1f2ef;
+  color: #9a9e97;
+  font-size: 0.76rem;
+  font-weight: 700;
+}
+
+.stone-info-panel .confuse-name {
+  margin: 0 0 2px;
+  color: var(--ink);
+  font-size: 1.02rem;
+  font-weight: 700;
+}
+
+.stone-info-panel .confuse-text {
+  margin: 0;
+}
+
+.stone-info-panel .confuse-credit {
+  margin: 4px 0 0;
+  color: var(--muted);
+  font-size: 0.74rem;
+  line-height: 1.5;
+}
+
+@media (max-width: 640px) {
+  .confuse-item {
+    grid-template-columns: 76px minmax(0, 1fr);
+    gap: 12px;
+  }
+}
+
+/* ===== 岩相・用語ページ（石のページと同じ .detail-layout の2段組み） ===== */
+
+/* 岩相名は「苦鉄質片麻岩・角閃岩 高P/T型広域変成岩 アルバイト黒雲母帯」のように長いので一回り小さく */
+.detail-title h1.lithology-title {
+  font-size: clamp(1.4rem, 2.4vw, 1.9rem);
+  line-height: 1.35;
+  overflow-wrap: anywhere;
+}
+
+.detail-facts-note {
+  display: block;
+  margin-top: 4px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  line-height: 1.6;
+}
+
+.lithology-code {
+  display: inline-block;
+  padding: 2px 8px;
+  border: 1px solid var(--line);
+  border-radius: 4px;
+  background: #f7f8f6;
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.detail-facts .lithology-age-list {
+  display: grid;
+  gap: 6px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  font-size: 0.86rem;
+  line-height: 1.5;
+}
+
+.detail-facts .lithology-age-list li {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  gap: 8px;
+  align-items: start;
+}
+
+.detail-facts .lithology-age-swatch {
+  width: 22px;
+  height: 16px;
+  margin-top: 2px;
+  border: 1px solid rgba(48, 52, 56, 0.2);
+  border-radius: 3px;
+}
+
+.detail-toc-more {
+  display: block;
+  margin-top: 10px;
+  padding-top: 10px;
+  border-top: 1px solid var(--line);
+  color: var(--accent-dark);
+  font-size: 0.86rem;
+  font-weight: 700;
+}
+
+/* 拾えそうな石の写真タイル（link-preview.js の stoneTile） */
+.stone-info-panel .lithology-role {
+  margin: 18px 0 10px;
+  color: var(--muted);
+  font-size: 0.9rem;
+}
+
+.stone-info-panel .lithology-role:first-of-type {
+  margin-top: 0;
+}
+
+.stone-tiles {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 12px;
+}
+
+.stone-tile {
+  display: grid;
+  align-content: start;
+  gap: 6px;
+  padding-bottom: 8px;
+  overflow: hidden;
+  border: 1px solid var(--line);
+  border-radius: 6px;
+  background: var(--panel);
+  color: var(--ink);
+  text-decoration: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.stone-tile:hover,
+.stone-tile:focus-visible {
+  border-color: var(--accent);
+  box-shadow: 0 6px 16px rgba(48, 52, 56, 0.1);
+}
+
+.stone-tile img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 1 / 0.86;
+  object-fit: cover;
+  background: #1f2226;
+}
+
+.stone-tile-name {
+  padding: 0 10px;
+  color: var(--accent-dark);
+  font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.stone-tile-credit {
+  padding: 0 10px;
+  color: var(--muted);
+  font-size: 0.7rem;
+  line-height: 1.4;
+}
+
+@media (max-width: 640px) {
+  .stone-tiles {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* 要点欄のうち、中身が長い項目は横幅いっぱいに使う（岩相ページの「時代と地図の色」） */
+.detail-facts .facts-wide {
+  grid-column: 1 / -1;
+}
+
+.detail-facts dd.facts-wide {
+  margin-top: -6px;
+}
+
+.lithology-age-name {
+  display: block;
+}
+
+.lithology-age-era {
+  margin-right: 5px;
+  color: var(--muted);
+  font-size: 0.78em;
+}
+
+.lithology-age-more {
+  margin-top: 6px;
+}
+
+.lithology-age-more summary {
+  color: var(--accent-dark);
+  font-size: 0.84rem;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.lithology-age-more .lithology-age-list {
+  margin-top: 6px;
 }

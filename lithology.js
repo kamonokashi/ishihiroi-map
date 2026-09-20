@@ -124,6 +124,8 @@ async function renderLithologyPage() {
       return;
     }
 
+    registerCatalog("rocks", rocks);
+    registerCatalog("minerals", minerals);
     renderLithology(id, entry, details[id], new Map(rocks.map((rock) => [rock.id, rock])), minerals);
     bindClassificationHelp();
   } catch (error) {
@@ -172,32 +174,51 @@ function renderLithology(id, entry, detail, rockCatalog, minerals) {
     ? GROUP_NOTES[entry.group]
     : LOOSE_NOTES[kindKey];
 
+  const sections = [
+    ["rocks", "拾えそうな石", renderRocks(entry, rockCatalog)],
+    ["minerals", "見どころの鉱物", renderMinerals(entry, rockCatalog, minerals)],
+    ["terms", "名前の読み方", renderTerms(entry)],
+    ["classification", "おもな岩石の名前の決まり方", renderClassification(entry, rockCatalog)]
+  ].filter(([, , html]) => html);
+
+  // 石のページと同じ2段組み。左に読む本文、右に区分・記号・時代などの要点と目次。
   lithologyDetail.innerHTML = `
-    <section class="stone-hero mineral-hero">
-      <div class="stone-summary">
+    <div class="detail-layout">
+      <header class="detail-title">
         <p class="stone-category">地質・${escapeHtml(entry.group || "区分なし")}</p>
-        <h1>${escapeHtml(entry.lithology)}</h1>
+        <h1 class="lithology-title">${escapeHtml(entry.lithology)}</h1>
         <p class="stone-english">${escapeHtml(detail?.english || "")}</p>
-        <p class="stone-short">${escapeHtml(lead || "")}</p>
+        <p class="detail-lead">${escapeHtml(lead || "")}</p>
+      </header>
+
+      <aside class="detail-aside" aria-label="要点">
+        <dl class="detail-facts">
+          <dt>区分</dt>
+          <dd>${catalogLink(entry.group || "区分なし")}${entry.kind === "bedrock" ? "" : "（固まっていない堆積物）"}</dd>
+          <dt>地質図の記号</dt>
+          <dd>
+            <code class="lithology-code">${escapeHtml(id)}</code>
+            <span class="detail-facts-note">シームレス地質図V2の凡例記号から、頭の時代の記号（K22_ など）を除いたもの</span>
+          </dd>
+          ${renderAges(detail)}
+        </dl>
+
+        <nav class="detail-toc" aria-label="このページの内容">
+          <p class="detail-toc-title">このページの内容</p>
+          <ol>
+            ${sections.map(([anchor, label]) => `<li><a href="#${anchor}">${label}</a></li>`).join("")}
+          </ol>
+        </nav>
+      </aside>
+
+      <div class="detail-main">
+        ${sections.map(([, , html]) => html).join("")}
       </div>
-    </section>
-
-    <section class="stone-content-grid">
-      ${renderRocks(entry, rockCatalog)}
-      ${renderClassification(entry, rockCatalog)}
-      ${renderMinerals(entry, rockCatalog, minerals)}
-      ${renderTerms(entry)}
-      ${renderAges(detail)}
-
-      <article class="stone-info-panel stone-wide-panel">
-        <h2>${panelIcon("tag")}地質図の記号</h2>
-        <p>20万分の1日本シームレス地質図V2の凡例記号のうち、時代を除いた部分です。時代ごとに <code>K22_${escapeHtml(id)}</code> のように頭に時代の記号が付きます。</p>
-        <div class="stone-term-list"><span class="stone-term">${escapeHtml(id)}</span></div>
-      </article>
-    </section>
+    </div>
   `;
 }
 
+// 拾えそうな石は、写真のタイルで並べる（link-preview.js の stoneTile。写真は石のページと同じもの）。
 function renderRocks(entry, rockCatalog) {
   const rocks = (entry.rocks || []).filter(({ id }) => rockCatalog.has(id));
 
@@ -207,7 +228,7 @@ function renderRocks(entry, rockCatalog) {
       ? "この地質に対応する石はまだ登録されていません。"
       : "ここにある石は、ほかの場所から運ばれてきたものです。地図でこの場所を調べると、上流や周辺の地質から拾えそうな石を推定します。";
     return `
-      <article class="stone-info-panel stone-wide-panel">
+      <article id="rocks" class="stone-info-panel">
         <h2>${panelIcon("pebble")}拾えそうな石</h2>
         <p>${reason}</p>
       </article>
@@ -222,16 +243,14 @@ function renderRocks(entry, rockCatalog) {
     .filter(({ rocks: list }) => list.length > 0);
 
   return `
-    <article class="stone-info-panel stone-wide-panel">
+    <article id="rocks" class="stone-info-panel">
       <h2>${panelIcon("pebble")}拾えそうな石</h2>
-      <dl class="lithology-rock-groups">
-        ${groups.map(({ role, rocks: list }) => `
-          <dt>${escapeHtml(role.label)}</dt>
-          <dd class="stone-mineral-list">
-            ${list.map(({ id }) => rockLink(id, rockCatalog)).join("")}
-          </dd>
-        `).join("")}
-      </dl>
+      ${groups.map(({ role, rocks: list }) => `
+        <h3 class="lithology-role">${escapeHtml(role.label)}</h3>
+        <div class="stone-tiles">
+          ${list.map(({ id }) => stoneTile(rockCatalog.get(id))).join("")}
+        </div>
+      `).join("")}
       ${entry.kind === "bedrock" ? '<p class="lithology-note">石英脈やホルンフェルスのように、幅が狭くて地質図には描かれないものの、石拾いではよく手に取るものも含めています。</p>' : ""}
     </article>
   `;
@@ -254,7 +273,7 @@ function renderClassification(entry, rockCatalog) {
   }
 
   return `
-    <article class="stone-info-panel stone-wide-panel">
+    <article id="classification" class="stone-info-panel">
       <h2>${panelIcon("ruler")}おもな岩石の名前の決まり方${classificationHelpButton()}</h2>
       ${rocks.map((rock) => `
         <h3 class="classification-rock-title">${rockLink(rock.id, rockCatalog)}</h3>
@@ -310,7 +329,7 @@ function renderMinerals(entry, rockCatalog, minerals) {
   }
 
   return `
-    <article class="stone-info-panel stone-wide-panel">
+    <article id="minerals" class="stone-info-panel">
       <h2>${panelIcon("crystal")}見どころの鉱物</h2>
       <ul class="lithology-mineral-list">
         ${found.map(({ mineral, score, reason }) => `
@@ -346,7 +365,7 @@ function renderTerms(entry) {
   }
 
   return `
-    <article class="stone-info-panel stone-wide-panel">
+    <article id="terms" class="stone-info-panel">
       <h2>${panelIcon("book")}名前の読み方</h2>
       <dl class="stone-confuse-list lithology-term-list">
         ${terms.map(([, name, meaning]) => `
@@ -358,25 +377,53 @@ function renderTerms(entry) {
   `;
 }
 
-// 同じ岩相でも、時代ごとに別の凡例になっていて地図の色も違う。
+// 同じ岩相でも、時代ごとに別の凡例になっていて地図の色も違う。右の要点欄に古い順で並べる。
+// 時代名は「古生代 後期オルドビス紀〜前期デボン紀」のように長い。右の列は狭いので、
+// この項目だけ横幅いっぱいに使い、「古生代」などの代は小さく前に置いて紀・期を読みやすくする。
+// チャートのように26件ある岩相もあるので、多いときは5件だけ出してあとは畳む。
+const AGE_ERAS = /^(先カンブリア時代|太古代|原生代|古生代|中生代|新生代)\s*/;
+const AGE_VISIBLE = 5;
+
 function renderAges(detail) {
   if (!detail || !Array.isArray(detail.ages) || detail.ages.length === 0) {
     return "";
   }
 
+  const shown = detail.ages.slice(0, AGE_VISIBLE);
+  const rest = detail.ages.slice(AGE_VISIBLE);
+
   return `
-    <article class="stone-info-panel stone-wide-panel">
-      <h2>${panelIcon("layers")}できた時代と地図の色</h2>
-      <p>同じ種類の地質でも、できた時代ごとに地図の色が分かれています。古い順に並べています。</p>
-      <ul class="lithology-age-list">
-        ${detail.ages.map(([age, color]) => `
+    <dt class="facts-wide">時代と地図の色</dt>
+    <dd class="facts-wide">
+      ${ageList(shown)}
+      ${rest.length > 0 ? `
+        <details class="lithology-age-more">
+          <summary>ほか${rest.length}件を見る</summary>
+          ${ageList(rest)}
+        </details>
+      ` : ""}
+      <span class="detail-facts-note">同じ種類でも、できた時代ごとに地図の色が違います（古い順）</span>
+    </dd>
+  `;
+}
+
+function ageList(ages) {
+  return `
+    <ul class="lithology-age-list">
+      ${ages.map(([age, color]) => {
+        const text = age || "時代情報なし";
+        const era = text.match(AGE_ERAS)?.[1] || "";
+        return `
           <li>
             <span class="lithology-age-swatch" style="background:#${escapeHtml(color)}"></span>
-            <span>${escapeHtml(age || "時代情報なし")}</span>
+            <span class="lithology-age-name">
+              ${era ? `<span class="lithology-age-era">${escapeHtml(era)}</span>` : ""}
+              ${escapeHtml(text.replace(AGE_ERAS, ""))}
+            </span>
           </li>
-        `).join("")}
-      </ul>
-    </article>
+        `;
+      }).join("")}
+    </ul>
   `;
 }
 

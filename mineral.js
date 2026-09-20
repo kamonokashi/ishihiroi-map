@@ -38,6 +38,8 @@ async function renderMineralPage() {
       return;
     }
 
+    registerCatalog("rocks", rocks);
+    registerCatalog("minerals", minerals);
     renderMineral(mineral, new Map(rocks.map((rock) => [rock.id, rock])));
   } catch (error) {
     console.info("data/minerals.json could not be loaded.", error);
@@ -141,12 +143,9 @@ function renderConfusedWith(pairs, mineral) {
   return `
     <article class="stone-info-panel stone-wide-panel">
       <h2>${panelIcon("swap")}間違えやすい鉱物</h2>
-      <dl class="stone-confuse-list">
-        ${pairs.map((pair) => `
-          <dt>${catalogLink(pair.name, "", { type: "mineral", id: mineral.id })}</dt>
-          <dd>${escapeHtml(pair.howToTell)}</dd>
-        `).join("")}
-      </dl>
+      <div class="confuse-list">
+        ${pairs.map((pair) => confusedItem(pair, { type: "mineral", id: mineral.id }, false)).join("")}
+      </div>
     </article>
   `;
 }

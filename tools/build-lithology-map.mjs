@@ -412,6 +412,24 @@ function checkTermLinks(terms, rocks, minerals) {
   }
 }
 
+// 用語集（glossary.html）は reading の五十音順に並べる。読みが無い・ひらがなでないと、
+// 「その他」の行に落ちたり並びが崩れたりする。
+function checkReadings(catalogs) {
+  const problems = [];
+  Object.entries(catalogs).forEach(([file, items]) => {
+    items.forEach((item) => {
+      if (!/^[ぁ-ゖー]+$/.test(item.reading || "")) {
+        problems.push(`${file}.json の ${item.id}: reading が無いか、ひらがなでない（${item.reading || "なし"}）`);
+      }
+    });
+  });
+  if (problems.length > 0) {
+    console.error("\n読みのデータに誤りがあります。修正するまでビルドを中止します。");
+    problems.forEach((problem) => console.error("  - " + problem));
+    process.exit(1);
+  }
+}
+
 // 出典一覧を自動生成する。手で書くと必ずずれるので rocks.json から作る。
 function buildCreditList(rocks) {
   const lines = [
@@ -522,6 +540,7 @@ const terms = JSON.parse(await readFile(join(DATA_DIR, "terms.json"), "utf8"));
 checkPhotoCredits(rocks);
 await checkClassification(rocks);
 checkTermLinks(terms, rocks, minerals);
+checkReadings({ rocks, minerals, terms });
 await writeFile(CREDITS_PATH, buildCreditList(rocks), "utf8");
 
 const bundle = [

@@ -27,6 +27,8 @@ async function renderStonePage() {
 
   try {
     const rocks = await loadRocks();
+    // 間違えやすい石の写真やリンクのカードも、このページが読んだデータから作る（link-preview.js）
+    registerCatalog("rocks", rocks);
     const stone = rocks.find((rock) => rock.id === id);
 
     if (!stone) {
@@ -75,85 +77,104 @@ function renderMissingStone() {
 
 function renderStone(stone) {
   const images = Array.isArray(stone.images) && stone.images.length > 0 ? stone.images : [{}];
-  const mainImage = imageSrc(images[0], stone, 0);
+  const mainImage = stoneImageSrc(images[0], stone, 0);
   document.title = `${stone.name} - \u3044\u3057\u3072\u308d\u3044\u30de\u30c3\u30d7`;
 
+  const confused = renderConfusedWith(stone.confusedWith, stone);
+  // 右の列の目次。欄がない石（間違えやすい石が未登録など）は飛ばす。
+  const toc = [
+    ["identify", "見分け方"],
+    confused ? ["confused", "間違えやすい石"] : null,
+    ["description", "説明"],
+    ["classification", "名前の決まり方"],
+    ["places", "見つかる場所"],
+    ["related", "関連用語"]
+  ].filter(Boolean);
+
+  // 広い画面では、左に読む本文、右に写真と要点（図鑑の「データ欄」）を置く2段組み。
+  // 本文の列は1行40字前後に収まる幅にしてある。1行が長いと次の行の頭を探しにくいため。
+  // 狭い画面では 名前 → 写真と要点 → 本文 の順に1列で並ぶ（.detail-layout の grid-template-areas）。
   stoneDetail.innerHTML = `
-    <section class="stone-hero">
-      <div class="stone-gallery">
-        <div class="stone-stage">
-          <img id="mainStonePhoto" class="stone-main-photo" src="${mainImage}" alt="${escapeHtml(stone.name)}\u306e\u8868\u9762\u30a4\u30e1\u30fc\u30b8">
-          ${images.length > 1 ? `
-            <button class="stone-nav stone-nav-prev" type="button" data-stone-step="-1" aria-label="\u524d\u306e\u5199\u771f">
-              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5l-7 7 7 7"/></svg>
-            </button>
-            <button class="stone-nav stone-nav-next" type="button" data-stone-step="1" aria-label="\u6b21\u306e\u5199\u771f">
-              <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7"/></svg>
-            </button>
-            <p id="stoneCounter" class="stone-counter">1 / ${images.length}</p>
-          ` : ""}
-        </div>
-        <p id="mainStoneCredit" class="stone-credit">${shotCaption(images[0], 0)}</p>
-        ${images.length > 1 ? `
-          <div class="stone-thumbnail-strip">
-            ${images.map((image, index) => renderThumbnail(image, stone, index)).join("")}
-          </div>
-        ` : ""}
-      </div>
-      <div class="stone-summary">
+    <div class="detail-layout">
+      <header class="detail-title">
         <p class="stone-category">${escapeHtml(categoryLabel(stone))}</p>
         <h1>${escapeHtml(stone.name)}</h1>
         <p class="stone-english">${escapeHtml(stone.english || "")}</p>
-        <p class="stone-short">${escapeHtml(stone.shortDescription || "")}</p>
+        <p class="detail-lead">${escapeHtml(stone.shortDescription || "")}</p>
+      </header>
+
+      <aside class="detail-aside" aria-label="写真と要点">
+        <div class="stone-gallery">
+          <div class="stone-stage">
+            <img id="mainStonePhoto" class="stone-main-photo" src="${mainImage}" alt="${escapeHtml(stone.name)}の表面イメージ">
+            ${images.length > 1 ? `
+              <button class="stone-nav stone-nav-prev" type="button" data-stone-step="-1" aria-label="前の写真">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 5l-7 7 7 7"/></svg>
+              </button>
+              <button class="stone-nav stone-nav-next" type="button" data-stone-step="1" aria-label="次の写真">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7"/></svg>
+              </button>
+              <p id="stoneCounter" class="stone-counter">1 / ${images.length}</p>
+            ` : ""}
+          </div>
+          <p id="mainStoneCredit" class="stone-credit">${shotCaption(images[0], 0)}</p>
+          ${images.length > 1 ? `
+            <div class="stone-thumbnail-strip">
+              ${images.map((image, index) => renderThumbnail(image, stone, index)).join("")}
+            </div>
+          ` : ""}
+        </div>
+
+        <dl class="detail-facts">
+          <dt>分類</dt>
+          <dd>${categoryLinks(stone)}</dd>
+          <dt>特徴</dt>
+          <dd class="stone-tag-list">${renderList(stone.features, "stone-tag")}</dd>
+          <dt>${stone.category === "堆積岩" ? "主な構成物" : "主な造岩鉱物"}</dt>
+          <dd class="stone-mineral-list">${renderLinkedList(stone.minerals, "stone-mineral", stone)}</dd>
+        </dl>
+
+        <nav class="detail-toc" aria-label="このページの内容">
+          <p class="detail-toc-title">このページの内容</p>
+          <ol>
+            ${toc.map(([id, label]) => `<li><a href="#${id}">${label}</a></li>`).join("")}
+          </ol>
+        </nav>
+      </aside>
+
+      <div class="detail-main">
+        <article id="identify" class="stone-info-panel stone-identify-panel">
+          <h2>${panelIcon("search")}見分け方</h2>
+          <p>${escapeHtml(stone.identification || "")}</p>
+          ${renderFieldTests(stone.fieldTests)}
+        </article>
+
+        ${confused}
+
+        <article id="description" class="stone-info-panel">
+          <h2>${panelIcon("book")}説明</h2>
+          <p>${escapeHtml(stone.description || "")}</p>
+        </article>
+
+        <article id="classification" class="stone-info-panel">
+          <h2>${panelIcon("ruler")}名前の決まり方${classificationHelpButton()}</h2>
+          ${classificationPanel(stone.classification, stone.name)}
+        </article>
+
+        <article id="places" class="stone-info-panel">
+          <h2>${panelIcon("pin")}見つかりやすい場所・地質との関係</h2>
+          <p>${escapeHtml(stone.likelyPlaces || "")}</p>
+          <p>${escapeHtml(stone.geologyRelation || "")}</p>
+        </article>
+
+        <article id="related" class="stone-info-panel">
+          <h2>${panelIcon("link")}関連用語</h2>
+          <div class="stone-term-list">
+            ${renderLinkedList(stone.relatedTerms, "stone-term", stone)}
+          </div>
+        </article>
       </div>
-    </section>
-
-    <section class="stone-content-grid">
-      <article class="stone-info-panel stone-wide-panel stone-identify-panel">
-        <h2>${panelIcon("search")}\u898b\u5206\u3051\u65b9</h2>
-        <p>${escapeHtml(stone.identification || "")}</p>
-        ${renderFieldTests(stone.fieldTests)}
-      </article>
-
-      ${renderConfusedWith(stone.confusedWith, stone)}
-
-      <article class="stone-info-panel stone-description-panel">
-        <h2>${panelIcon("book")}\u57fa\u672c\u60c5\u5831\u30fb\u8aac\u660e</h2>
-        <p>${escapeHtml(stone.description || "")}</p>
-      </article>
-
-      <article class="stone-info-panel">
-        <h2>${panelIcon("tag")}\u7279\u5fb4\u30bf\u30b0</h2>
-        <div class="stone-tag-list">
-          ${renderList(stone.features, "stone-tag")}
-        </div>
-      </article>
-
-      <article class="stone-info-panel">
-        <h2>${panelIcon("crystal")}${stone.category === "\u5806\u7a4d\u5ca9" ? "\u4e3b\u306a\u69cb\u6210\u7269" : "\u4e3b\u306a\u9020\u5ca9\u9271\u7269"}</h2>
-        <div class="stone-mineral-list">
-          ${renderLinkedList(stone.minerals, "stone-mineral", stone)}
-        </div>
-      </article>
-
-      <article class="stone-info-panel stone-wide-panel">
-        <h2>${panelIcon("ruler")}\u540d\u524d\u306e\u6c7a\u307e\u308a\u65b9${classificationHelpButton()}</h2>
-        ${classificationPanel(stone.classification, stone.name)}
-      </article>
-
-      <article class="stone-info-panel stone-wide-panel">
-        <h2>${panelIcon("pin")}\u898b\u3064\u304b\u308a\u3084\u3059\u3044\u5730\u57df\u30fb\u5730\u8cea\u3068\u306e\u95a2\u4fc2</h2>
-        <p>${escapeHtml(stone.likelyPlaces || "")}</p>
-        <p>${escapeHtml(stone.geologyRelation || "")}</p>
-      </article>
-
-      <article class="stone-info-panel stone-wide-panel">
-        <h2>${panelIcon("link")}\u95a2\u9023\u7528\u8a9e</h2>
-        <div class="stone-term-list">
-          ${renderLinkedList(stone.relatedTerms, "stone-term", stone)}
-        </div>
-      </article>
-    </section>
+    </div>
   `;
 
   bindGallery(stone, images);
@@ -172,7 +193,7 @@ function bindGallery(stone, images) {
     // \u7aef\u3067\u6b62\u3081\u305a\u306b\u5dfb\u304d\u623b\u3059\u30023\u679a\u3057\u304b\u306a\u3044\u306e\u3067\u3001\u884c\u304d\u6b62\u307e\u308a\u304c\u3042\u308b\u307b\u3046\u304c\u7169\u308f\u3057\u3044
     current = (index + images.length) % images.length;
     const image = images[current];
-    mainPhoto.src = imageSrc(image, stone, current);
+    mainPhoto.src = stoneImageSrc(image, stone, current);
     mainPhoto.alt = `${stone.name}\u306e${image.label || "\u8868\u9762"}\u30a4\u30e1\u30fc\u30b8`;
     // \u5199\u771f\u3092\u5207\u308a\u66ff\u3048\u305f\u3089\u51fa\u5178\u3082\u5fc5\u305a\u5dee\u3057\u66ff\u3048\u308b\u3002\u51fa\u3057\u3063\u3071\u306a\u3057\u306f\u8aa4\u8868\u793a\u306b\u306a\u308b\u3002
     mainCredit.innerHTML = shotCaption(image, current);
@@ -233,7 +254,7 @@ function renderThumbnail(image, stone, index) {
   const label = image.label || `\u5199\u771f${index + 1}`;
   return `
     <button class="stone-thumbnail" type="button" data-stone-image="${index}" aria-label="${escapeHtml(label)}\u3092\u8868\u793a" title="${escapeHtml(label)}">
-      <img src="${imageSrc(image, stone, index)}" alt="" loading="lazy">
+      <img src="${stoneImageSrc(image, stone, index)}" alt="" loading="lazy">
     </button>
   `;
 }
@@ -302,19 +323,24 @@ function renderConfusedWith(pairs, stone) {
   }
 
   return `
-    <article class="stone-info-panel stone-wide-panel">
+    <article id="confused" class="stone-info-panel">
       <h2>${panelIcon("swap")}間違えやすい石</h2>
-      <dl class="stone-confuse-list">
-        ${pairs.map((pair) => `
-          <dt>${catalogLink(pair.name, "", { type: "stone", id: stone.id })}</dt>
-          <dd>${escapeHtml(pair.howToTell)}</dd>
-        `).join("")}
-      </dl>
+      <div class="confuse-list">
+        ${pairs.map((pair) => confusedItem(pair, { type: "stone", id: stone.id }, true)).join("")}
+      </div>
     </article>
   `;
 }
 
 // カタログ（石・鉱物・用語）にある名前は詳細ページへのリンクにする（link-preview.js の catalogLink）。
+// 「火成岩 / 深成岩」の分類を、用語ページがある言葉だけリンクにする。
+function categoryLinks(stone) {
+  return [stone.category, stone.subCategory]
+    .filter(Boolean)
+    .map((name) => catalogLink(name, "", { type: "stone", id: stone.id }))
+    .join(" / ");
+}
+
 function renderLinkedList(items, className, stone) {
   if (!Array.isArray(items) || items.length === 0) {
     return renderList(items, className);
@@ -328,52 +354,6 @@ function renderList(items, className) {
   }
 
   return items.map((item) => `<span class="${className}">${escapeHtml(item)}</span>`).join("");
-}
-
-function imageSrc(image, stone, index) {
-  if (image && image.src) {
-    return image.src;
-  }
-
-  const palette = image && Array.isArray(image.palette)
-    ? image.palette
-    : ["#d7d2c9", "#7e7468", "#f3f0ea"];
-  const seed = image && image.seed ? image.seed : stone.id.length + index;
-
-  const svg = `
-    <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 620">
-      <defs>
-        <linearGradient id="base" x1="0" x2="1" y1="0" y2="1">
-          <stop offset="0" stop-color="${palette[0]}"/>
-          <stop offset="0.56" stop-color="${palette[1]}"/>
-          <stop offset="1" stop-color="${palette[2]}"/>
-        </linearGradient>
-        <filter id="texture">
-          <feTurbulence type="fractalNoise" baseFrequency="0.76" numOctaves="4" seed="${seed}"/>
-          <feColorMatrix type="saturate" values="0.28"/>
-          <feBlend mode="multiply" in2="SourceGraphic"/>
-        </filter>
-      </defs>
-      <rect width="900" height="620" fill="url(#base)"/>
-      <g filter="url(#texture)" opacity="0.42">
-        <rect width="900" height="620" fill="${palette[0]}"/>
-      </g>
-      <g opacity="0.34" fill="${palette[2]}">
-        <circle cx="132" cy="112" r="44"/>
-        <circle cx="352" cy="212" r="28"/>
-        <circle cx="658" cy="148" r="38"/>
-        <circle cx="742" cy="418" r="62"/>
-        <circle cx="238" cy="474" r="34"/>
-      </g>
-      <g opacity="0.22" fill="${palette[1]}">
-        <circle cx="216" cy="250" r="20"/>
-        <circle cx="516" cy="386" r="24"/>
-        <circle cx="612" cy="286" r="17"/>
-      </g>
-    </svg>
-  `;
-
-  return `data:image/svg+xml,${encodeURIComponent(svg)}`;
 }
 
 function escapeHtml(value) {

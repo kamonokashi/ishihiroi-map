@@ -2,6 +2,7 @@
   {
     "id": "granite",
     "name": "花崗岩",
+    "reading": "かこうがん",
     "english": "Granite",
     "category": "火成岩",
     "subCategory": "深成岩",
@@ -105,6 +106,7 @@
   {
     "id": "granodiorite",
     "name": "花崗閃緑岩",
+    "reading": "かこうせんりょくがん",
     "english": "Granodiorite",
     "category": "火成岩",
     "subCategory": "深成岩",
@@ -204,6 +206,7 @@
   {
     "id": "diorite",
     "name": "閃緑岩",
+    "reading": "せんりょくがん",
     "english": "Diorite",
     "category": "火成岩",
     "subCategory": "深成岩",
@@ -308,6 +311,7 @@
   {
     "id": "gabbro",
     "name": "斑れい岩",
+    "reading": "はんれいがん",
     "english": "Gabbro",
     "category": "火成岩",
     "subCategory": "深成岩",
@@ -422,6 +426,7 @@
   {
     "id": "peridotite",
     "name": "かんらん岩",
+    "reading": "かんらんがん",
     "english": "Peridotite",
     "category": "火成岩",
     "subCategory": "深成岩（超苦鉄質岩）",
@@ -521,6 +526,7 @@
   {
     "id": "rhyolite",
     "name": "流紋岩",
+    "reading": "りゅうもんがん",
     "english": "Rhyolite",
     "category": "火成岩",
     "subCategory": "火山岩",
@@ -618,6 +624,7 @@
   {
     "id": "dacite",
     "name": "デイサイト",
+    "reading": "でいさいと",
     "english": "Dacite",
     "category": "火成岩",
     "subCategory": "火山岩",
@@ -712,6 +719,7 @@
   {
     "id": "trachyte",
     "name": "粗面岩",
+    "reading": "そめんがん",
     "english": "Trachyte",
     "category": "火成岩",
     "subCategory": "火山岩",
@@ -785,6 +793,7 @@
   {
     "id": "andesite",
     "name": "安山岩",
+    "reading": "あんざんがん",
     "english": "Andesite",
     "category": "火成岩",
     "subCategory": "火山岩",
@@ -882,6 +891,7 @@
   {
     "id": "basalt",
     "name": "玄武岩",
+    "reading": "げんぶがん",
     "english": "Basalt",
     "category": "火成岩",
     "subCategory": "火山岩",
@@ -979,6 +989,7 @@
   {
     "id": "obsidian",
     "name": "黒曜石",
+    "reading": "こくようせき",
     "english": "Obsidian",
     "category": "火成岩",
     "subCategory": "火山岩（火山ガラス）",
@@ -1064,6 +1075,7 @@
   {
     "id": "tuff",
     "name": "凝灰岩",
+    "reading": "ぎょうかいがん",
     "english": "Tuff",
     "category": "堆積岩",
     "subCategory": "火山砕屑岩",
@@ -1161,6 +1173,7 @@
   {
     "id": "pumice",
     "name": "軽石",
+    "reading": "かるいし",
     "english": "Pumice",
     "category": "火成岩",
     "subCategory": "火山砕屑岩",
@@ -1248,6 +1261,7 @@
   {
     "id": "welded-tuff",
     "name": "溶結凝灰岩",
+    "reading": "ようけつぎょうかいがん",
     "english": "Welded tuff",
     "category": "火成岩",
     "subCategory": "火山砕屑岩",
@@ -1333,6 +1347,7 @@
   {
     "id": "sandstone",
     "name": "砂岩",
+    "reading": "さがん",
     "english": "Sandstone",
     "category": "堆積岩",
     "subCategory": "砕屑岩",
@@ -1430,6 +1445,7 @@
   {
     "id": "mudstone",
     "name": "泥岩",
+    "reading": "でいがん",
     "english": "Mudstone",
     "category": "堆積岩",
     "subCategory": "砕屑岩",
@@ -1529,6 +1545,7 @@
   {
     "id": "conglomerate",
     "name": "礫岩",
+    "reading": "れきがん",
     "english": "Conglomerate",
     "category": "堆積岩",
     "subCategory": "砕屑岩",
@@ -1624,6 +1641,7 @@
   {
     "id": "limestone",
     "name": "石灰岩",
+    "reading": "せっかいがん",
     "english": "Limestone",
     "category": "堆積岩",
     "subCategory": "化学・生物起源の堆積岩",
@@ -1708,6 +1726,7 @@
   {
     "id": "chert",
     "name": "チャート",
+    "reading": "ちゃーと",
     "english": "Chert",
     "category": "堆積岩",
     "subCategory": "化学・生物起源の堆積岩",
@@ -1797,6 +1816,7 @@
   {
     "id": "greenstone",
     "name": "緑色岩",
+    "reading": "りょくしょくがん",
     "english": "Greenstone",
     "category": "変成岩",
     "subCategory": "海洋底玄武岩起源の変成岩",
@@ -1883,6 +1903,7 @@
   {
     "id": "schist",
     "name": "結晶片岩",
+    "reading": "けっしょうへんがん",
     "english": "Schist",
     "category": "変成岩",
     "subCategory": "結晶片岩",
@@ -1969,6 +1990,7 @@
   {
     "id": "pelitic-schist",
     "name": "黒色片岩",
+    "reading": "こくしょくへんがん",
     "english": "Pelitic schist",
     "category": "変成岩",
     "subCategory": "泥質岩起源の結晶片岩",
@@ -2059,6 +2081,7 @@
   {
     "id": "mafic-schist",
     "name": "緑色片岩",
+    "reading": "りょくしょくへんがん",
     "english": "Mafic schist",
     "category": "変成岩",
     "subCategory": "苦鉄質岩起源の結晶片岩",
@@ -2145,6 +2168,7 @@
   {
     "id": "siliceous-schist",
     "name": "石英片岩",
+    "reading": "せきえいへんがん",
     "english": "Siliceous schist",
     "category": "変成岩",
     "subCategory": "珪質岩起源の結晶片岩",
@@ -2230,6 +2254,7 @@
   {
     "id": "gneiss",
     "name": "片麻岩",
+    "reading": "へんまがん",
     "english": "Gneiss",
     "category": "変成岩",
     "subCategory": "広域変成岩",
@@ -2320,6 +2345,7 @@
   {
     "id": "phyllite",
     "name": "千枚岩",
+    "reading": "せんまいがん",
     "english": "Phyllite",
     "category": "変成岩",
     "subCategory": "広域変成岩",
@@ -2405,6 +2431,7 @@
   {
     "id": "slate",
     "name": "粘板岩",
+    "reading": "ねんばんがん",
     "english": "Slate",
     "category": "変成岩",
     "subCategory": "低変成度の変成岩",
@@ -2490,6 +2517,7 @@
   {
     "id": "hornfels",
     "name": "ホルンフェルス",
+    "reading": "ほるんふぇるす",
     "english": "Hornfels",
     "category": "変成岩",
     "subCategory": "接触変成岩",
@@ -2581,6 +2609,7 @@
   {
     "id": "amphibolite",
     "name": "角閃岩",
+    "reading": "かくせんがん",
     "english": "Amphibolite",
     "category": "変成岩",
     "subCategory": "広域変成岩",
@@ -2667,6 +2696,7 @@
   {
     "id": "marble",
     "name": "大理石",
+    "reading": "だいりせき",
     "english": "Marble",
     "category": "変成岩",
     "subCategory": "石灰岩起源の変成岩",
@@ -2756,6 +2786,7 @@
   {
     "id": "serpentinite",
     "name": "蛇紋岩",
+    "reading": "じゃもんがん",
     "english": "Serpentinite",
     "category": "変成岩",
     "subCategory": "超苦鉄質岩起源の変成岩",
@@ -2843,6 +2874,7 @@
   {
     "id": "mylonite",
     "name": "マイロナイト",
+    "reading": "まいろないと",
     "english": "Mylonite",
     "category": "変成岩",
     "subCategory": "変位変成岩",
@@ -2929,6 +2961,7 @@
   {
     "id": "vein-quartz",
     "name": "脈石英",
+    "reading": "みゃくせきえい",
     "english": "Vein quartz",
     "category": "その他",
     "subCategory": "鉱脈起源の石",

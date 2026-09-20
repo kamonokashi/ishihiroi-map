@@ -285,6 +285,11 @@ async function loadData() {
     legendIndex = colors;
     minerals = mineralList;
     catalogReady = true;
+    // 地図カードの鉱物名リンクや説明カードも、ここで読んだデータから作る（link-preview.js）
+    if (typeof registerCatalog === "function") {
+      registerCatalog("rocks", rocks);
+      registerCatalog("minerals", mineralList);
+    }
     console.info(
       `石カタログ ${rockCatalog.size}件 / 岩相対応表 ${Object.keys(lithology).length}件` +
       `${colors ? ` / 色の索引 ${Object.keys(colors).length}件` : ""}` +
