@@ -7,7 +7,7 @@
     <link
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-    <link rel="stylesheet" href="styles.css?v=20260920-18">
+    <link rel="stylesheet" href="styles.css?v=20260920-21">
     <script
       defer
       src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -15,15 +15,23 @@
     <script defer src="data/bundle.js?v=20260919-10"></script>
     <script defer src="menu.js?v=20260920-18"></script>
     <script defer src="link-preview.js?v=20260920-17"></script>
-    <script defer src="script.js?v=20260920-04"></script>
+    <script defer src="script.js?v=20260920-21"></script>
   </head>
   <!-- 地図の検索結果ではホバーの説明カードを出さない（カードは詳細ページだけのもの） -->
   <body data-link-preview="off">
     <header class="app-header">
-      <div>
-        <p class="eyebrow">&#22320;&#36074;&#22259;&#12363;&#12425;&#30707;&#12434;&#25506;&#12377;&#12503;&#12525;&#12488;&#12479;&#12452;&#12503;</p>
-        <h1>&#12356;&#12375;&#12402;&#12429;&#12356;&#12510;&#12483;&#12503;</h1>
-      </div>
+      <a class="app-brand" href="index.html">
+        <span class="app-logo" aria-hidden="true">
+          <svg viewBox="0 0 24 24" focusable="false">
+            <path d="M20 12.4l-5.4 7-8-1.4-2.6-6.4 5-6.8 7.8 1.4z"/>
+            <path d="M12 9.6l2.4 2.4-2.4 2.4-2.4-2.4z"/>
+          </svg>
+        </span>
+        <span class="app-brand-text">
+          <span class="app-brand-name">いしひろいマップ</span>
+          <span class="app-brand-tagline">地質図から石を探す</span>
+        </span>
+      </a>
     </header>
 
     <!-- ボタンはヘッダーの外に出して画面に固定する。ヘッダーの中に置くと、ヘッダーが重なり順の
@@ -49,16 +57,21 @@
     <main class="app-shell" id="appShell">
       <section class="map-pane" aria-label="&#22320;&#22259;">
         <div id="map">
-          <div class="map-selected-place">
-            <strong>&#36984;&#25246;&#22320;&#28857;</strong>
-            <span id="selectedPoint">&#22320;&#22259;&#12434;&#12463;&#12522;&#12483;&#12463;&#12377;&#12427;&#12363;&#12289;&#29694;&#22312;&#22320;&#12539;&#26908;&#32034;&#12391;&#22580;&#25152;&#12434;&#36984;&#12435;&#12391;&#12367;&#12384;&#12373;&#12356;&#12290;</span>
-          </div>
-          <div class="map-tools">
-            <button id="locateButton" class="locate-button" type="button" aria-label="&#29694;&#22312;&#22320;" title="&#29694;&#22312;&#22320;">&#128205;&#29694;&#22312;&#22320;</button>
-            <form id="searchForm" class="search-form">
-              <input id="searchInput" type="search" placeholder="&#20989;&#39208;&#12289;&#31569;&#27874;&#23665;&#12394;&#12393;" autocomplete="off">
-              <button type="submit">&#26908;&#32034;</button>
+          <!-- 地図の上に浮かせる操作まわり。ひとつのまとまりにして、丸いバーにする -->
+          <div class="map-overlay">
+            <form id="searchForm" class="map-search">
+              <button id="locateButton" class="map-round-button" type="button" aria-label="現在地から探す" title="現在地から探す">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="3.4"/><path d="M12 2.5v3"/><path d="M12 18.5v3"/><path d="M21.5 12h-3"/><path d="M5.5 12h-3"/><circle cx="12" cy="12" r="7.6"/></svg>
+              </button>
+              <input id="searchInput" type="search" placeholder="場所をさがす（函館、筑波山など）" autocomplete="off">
+              <button class="map-round-button is-submit" type="submit" aria-label="検索" title="検索">
+                <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="6.4"/><path d="M15.8 15.8L20.5 20.5"/></svg>
+              </button>
             </form>
+            <p class="map-place">
+              <span class="map-place-label">選択地点</span>
+              <span id="selectedPoint">地図をクリックするか、現在地・検索で場所を選んでください。</span>
+            </p>
           </div>
         </div>
         <div id="inspectPopupOverlay" class="map-inspect-popup" hidden></div>

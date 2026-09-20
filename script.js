@@ -213,7 +213,8 @@ function addGeologyControl() {
 }
 
 function bindUi() {
-  [".map-selected-place", ".map-tools", ".map-collapse-button", ".map-restore-button"].forEach((selector) => {
+  // 地図の上に重ねた操作は、押しても地図のクリック（地点選択）にしない
+  [".map-overlay", ".map-collapse-button", ".map-restore-button"].forEach((selector) => {
     const element = document.querySelector(selector);
     if (element) {
       L.DomEvent.disableClickPropagation(element);

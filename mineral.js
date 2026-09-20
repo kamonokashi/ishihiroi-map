@@ -82,41 +82,51 @@ function renderMissingMineral() {
 function renderMineral(mineral, rockCatalog) {
   document.title = `${mineral.name} - いしひろいマップ`;
 
-  mineralDetail.innerHTML = `
-    <section class="stone-hero mineral-hero">
-      <div class="stone-summary">
-        <p class="stone-category">鉱物</p>
-        <h1>${escapeHtml(mineral.name)}</h1>
-        <p class="stone-english">${escapeHtml(mineral.english || "")}</p>
-        <p class="stone-short">${escapeHtml(mineral.shortDescription || "")}</p>
-      </div>
-    </section>
-
-    <section class="stone-content-grid">
-      <article class="stone-info-panel stone-wide-panel stone-identify-panel">
+  const self = { type: "mineral", id: mineral.id };
+  const sections = [
+    ["identify", "見分け方", `
+      <article id="identify" class="stone-info-panel stone-identify-panel">
         <h2>${panelIcon("search")}見分け方</h2>
         <p>${escapeHtml(mineral.identification || "")}</p>
         ${renderFieldTests(mineral.fieldTests)}
       </article>
+    `],
+    ["confused", "間違えやすい鉱物", renderConfusedWith(mineral.confusedWith, mineral)],
+    ["hosts", "入っている石", renderHosts(mineral.hosts, rockCatalog)],
+    ["zones", "出る変成帯", renderZones(mineral.zones)]
+  ].filter(([, , html]) => html);
 
-      ${renderConfusedWith(mineral.confusedWith, mineral)}
+  // 石・岩相・用語のページと同じ2段組み。左に読む本文、右に要点と目次。
+  mineralDetail.innerHTML = `
+    <div class="detail-layout">
+      <header class="detail-title">
+        <p class="stone-category">鉱物</p>
+        <h1>${escapeHtml(mineral.name)}</h1>
+        <p class="stone-english">${escapeHtml(mineral.english || "")}</p>
+        <p class="detail-lead">${escapeHtml(mineral.shortDescription || "")}</p>
+      </header>
 
-      <article class="stone-info-panel">
-        <h2>${panelIcon("tag")}特徴タグ</h2>
-        <div class="stone-tag-list">
-          ${renderList(mineral.features, "stone-tag")}
-        </div>
-      </article>
+      <aside class="detail-aside" aria-label="要点">
+        <dl class="detail-facts">
+          <dt>読み</dt>
+          <dd>${escapeHtml(mineral.reading || "")}</dd>
+          <dt>特徴</dt>
+          <dd class="stone-tag-list">${renderList(mineral.features, "stone-tag")}</dd>
+        </dl>
 
-      <article class="stone-info-panel">
-        <h2>${panelIcon("pebble")}入っていることが多い石</h2>
-        <div class="stone-mineral-list">
-          ${renderHosts(mineral.hosts, rockCatalog)}
-        </div>
-      </article>
+        <nav class="detail-toc" aria-label="このページの内容">
+          <p class="detail-toc-title">このページの内容</p>
+          <ol>
+            ${sections.map(([anchor, label]) => `<li><a href="#${anchor}">${label}</a></li>`).join("")}
+          </ol>
+          <a class="detail-toc-more" href="glossary.html?kind=mineral">用語集でほかの鉱物を見る</a>
+        </nav>
+      </aside>
 
-      ${renderZones(mineral.zones)}
-    </section>
+      <div class="detail-main">
+        ${sections.map(([, , html]) => html).join("")}
+      </div>
+    </div>
   `;
 }
 
@@ -141,7 +151,7 @@ function renderConfusedWith(pairs, mineral) {
   }
 
   return `
-    <article class="stone-info-panel stone-wide-panel">
+    <article id="confused" class="stone-info-panel">
       <h2>${panelIcon("swap")}間違えやすい鉱物</h2>
       <div class="confuse-list">
         ${pairs.map((pair) => confusedItem(pair, { type: "mineral", id: mineral.id }, false)).join("")}
@@ -150,23 +160,25 @@ function renderConfusedWith(pairs, mineral) {
   `;
 }
 
-// 母岩。入っている割合が高い順に並べ、カタログにある石は詳細へ飛ばす。
+// 母岩。入っている割合が高い順に、写真のタイルで並べる（link-preview.js の stoneTile）。
 function renderHosts(hosts, rockCatalog) {
-  if (!Array.isArray(hosts) || hosts.length === 0) {
-    return `<span class="stone-mineral">この鉱物は特定の石ではなく、変成帯を手がかりに探します</span>`;
+  const rocks = [...(hosts || [])]
+    .sort((a, b) => (b[1] || 0) - (a[1] || 0))
+    .map(([id]) => rockCatalog.get(id))
+    .filter(Boolean);
+
+  if (rocks.length === 0) {
+    return "";
   }
 
-  return [...hosts]
-    .sort((a, b) => (b[1] || 0) - (a[1] || 0))
-    .map(([id]) => {
-      const rock = rockCatalog.get(id);
-      if (!rock) {
-        return "";
-      }
-      return `<a class="stone-mineral stone-mineral-link" href="stone.html?id=${encodeURIComponent(id)}" target="_blank" rel="noopener noreferrer">${escapeHtml(rock.name)}</a>`;
-    })
-    .filter(Boolean)
-    .join("") || `<span class="stone-mineral">未登録</span>`;
+  return `
+    <article id="hosts" class="stone-info-panel">
+      <h2>${panelIcon("pebble")}入っていることが多い石</h2>
+      <div class="stone-tiles">
+        ${rocks.map((rock) => stoneTile(rock)).join("")}
+      </div>
+    </article>
+  `;
 }
 
 // 変成帯の名前は、そこに何が結晶しているかを直接示している。
@@ -176,7 +188,7 @@ function renderZones(zones) {
   }
 
   return `
-    <article class="stone-info-panel stone-wide-panel">
+    <article id="zones" class="stone-info-panel">
       <h2>${panelIcon("layers")}この鉱物が出る変成帯</h2>
       <p>地質図の岩相にこの名前が入っていれば、その場所の石にこの鉱物が結晶しています。</p>
       <div class="stone-term-list">

@@ -67,16 +67,73 @@ button:disabled {
   cursor: not-allowed;
 }
 
+/* 地図画面の帯。高さを詰めて、ロゴマークと名前だけにする（太い帯に文字が置いてあるだけだと間が持たない） */
 .app-header {
-  min-height: 86px;
+  height: 64px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
   gap: 20px;
-  padding: 16px clamp(16px, 3vw, 36px);
+  padding: 0 clamp(14px, 3vw, 28px);
   border-bottom: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.84);
+  background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(12px);
+}
+
+.app-brand {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.app-logo {
+  display: grid;
+  place-items: center;
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  background: linear-gradient(140deg, var(--accent) 0%, var(--accent-dark) 100%);
+  color: #fff;
+  box-shadow: 0 4px 10px rgba(13, 162, 189, 0.3);
+}
+
+.app-logo svg {
+  width: 20px;
+  height: 20px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linejoin: round;
+}
+
+.app-brand-text {
+  display: flex;
+  align-items: baseline;
+  gap: 10px;
+  min-width: 0;
+}
+
+.app-brand-name {
+  font-size: 1.14rem;
+  font-weight: 800;
+  letter-spacing: 0.01em;
+  white-space: nowrap;
+}
+
+/* 説明は細い区切り線のうしろに小さく。狭い画面では隠す */
+.app-brand-tagline {
+  padding-left: 11px;
+  border-left: 1px solid var(--line);
+  color: var(--muted);
+  font-size: 0.78rem;
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .app-brand-tagline {
+    display: none;
+  }
 }
 
 .eyebrow {
@@ -123,7 +180,7 @@ h3 {
 
 .app-shell {
   position: relative;
-  height: calc(100vh - 86px);
+  height: calc(100vh - 64px);
   display: grid;
   grid-template-columns: minmax(0, 55%) minmax(430px, 45%);
   overflow: hidden;
@@ -344,85 +401,127 @@ h3 {
 }
 
 /* 地点のポップアップ(3000)より前面に置く。操作できなくなるのを防ぐ。 */
-.map-tools {
-  position: absolute;
-  z-index: 3300;
-  top: 84px;
-  left: 16px;
-  right: clamp(150px, 22vw, 190px);
-  display: flex;
-  align-items: flex-start;
-  gap: 14px;
-  pointer-events: none;
-}
-
-.map-tools > * {
-  pointer-events: auto;
-}
-
-.map-selected-place {
+/* 地図の上の操作まわり。検索バーと選択地点をひとつのまとまりにして、丸い形でそろえる */
+.map-overlay {
   position: absolute;
   z-index: 3300;
   top: 14px;
-  left: 16px;
+  left: 14px;
   right: clamp(150px, 22vw, 190px);
   display: grid;
-  grid-template-columns: auto minmax(0, 1fr);
-  align-items: center;
+  justify-items: start;
   gap: 8px;
-  min-height: 58px;
-  padding: 8px 12px;
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 10px 24px rgba(48, 52, 56, 0.12);
-  pointer-events: auto;
+  pointer-events: none;
 }
 
-.map-selected-place span {
-  display: -webkit-box;
+.map-overlay > * {
+  pointer-events: auto;
+  max-width: 100%;
+}
+
+.map-search {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  width: min(460px, 100%);
+  padding: 5px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 10px 26px rgba(48, 52, 56, 0.16);
+  backdrop-filter: blur(8px);
+}
+
+.map-search input {
+  flex: 1 1 auto;
+  min-width: 0;
+  min-height: 38px;
+  padding: 0 6px;
+  border: 0;
+  background: transparent;
+  color: var(--ink);
+  font-size: 0.95rem;
+}
+
+.map-search input:focus {
+  outline: none;
+}
+
+.map-search:focus-within {
+  box-shadow: 0 10px 26px rgba(48, 52, 56, 0.16), 0 0 0 2px rgba(13, 162, 189, 0.35);
+}
+
+.map-round-button {
+  display: grid;
+  place-items: center;
+  width: 38px;
+  height: 38px;
+  min-height: 38px;
+  flex: 0 0 auto;
+  padding: 0;
+  border: 0;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--muted);
+  box-shadow: none;
+}
+
+.map-round-button svg {
+  width: 19px;
+  height: 19px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.9;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+.map-round-button:hover {
+  background: rgba(48, 52, 56, 0.07);
+  color: var(--ink);
+}
+
+.map-round-button.is-submit {
+  background: var(--accent);
+  color: #fff;
+}
+
+.map-round-button.is-submit:hover {
+  background: var(--accent-dark);
+  color: #fff;
+}
+
+/* 選択地点は1行の細い帯。長い住所は末尾を省略する */
+.map-place {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin: 0;
+  padding: 6px 14px 6px 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 6px 18px rgba(48, 52, 56, 0.12);
+  font-size: 0.86rem;
+}
+
+.map-place-label {
+  flex: 0 0 auto;
+  padding: 2px 9px;
+  border-radius: 999px;
+  background: #e6f4f4;
+  color: var(--accent-dark);
+  font-size: 0.74rem;
+  font-weight: 700;
+}
+
+.map-place span:last-child {
   min-width: 0;
   overflow: hidden;
   color: var(--muted);
-  font-size: 0.9rem;
-  line-height: 1.35;
-  -webkit-box-orient: vertical;
-  -webkit-line-clamp: 2;
-}
-
-.map-tools button,
-.search-form button {
-  padding: 0 15px;
-  box-shadow: 0 10px 24px rgba(13, 162, 189, 0.2);
-}
-
-.map-tools .locate-button {
-  width: auto;
-  min-width: 88px;
-  padding: 0 12px;
+  text-overflow: ellipsis;
   white-space: nowrap;
-  font-size: 0.95rem;
-  line-height: 1;
 }
 
-.search-form {
-  display: grid;
-  grid-template-columns: minmax(0, 1fr) auto;
-  flex: 1 1 260px;
-  gap: 8px;
-  max-width: 420px;
-  min-width: 220px;
-}
-
-.search-form input {
-  min-height: 42px;
-  min-width: 0;
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  padding: 0 12px;
-  box-shadow: 0 10px 24px rgba(48, 52, 56, 0.1);
-}
-
+/* 地質図の表示切り替え（Leaflet のコントロール） */
 .result-pane {
   position: relative;
   z-index: 2;
@@ -434,20 +533,20 @@ h3 {
 }
 
 .geology-control {
-  padding: 8px 10px;
-  border: 1px solid var(--line);
-  border-radius: 6px;
-  background: rgba(255, 255, 255, 0.95);
-  box-shadow: 0 8px 24px rgba(48, 52, 56, 0.14);
+  padding: 5px 12px 5px 8px;
+  border: 0;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.96);
+  box-shadow: 0 6px 18px rgba(48, 52, 56, 0.14);
 }
 
 .geology-control label {
   display: inline-flex;
   align-items: center;
   gap: 7px;
-  min-height: 26px;
+  min-height: 28px;
   color: var(--ink);
-  font-size: 0.9rem;
+  font-size: 0.84rem;
   font-weight: 700;
   white-space: nowrap;
   cursor: pointer;
@@ -1509,14 +1608,8 @@ body.stone-page {
 }
 
 @media (max-width: 820px) {
-  .app-header {
-    align-items: flex-start;
-    flex-direction: column;
-    min-height: 128px;
-  }
-
   .app-shell {
-    height: calc(100vh - 128px);
+    height: calc(100vh - 64px);
     grid-template-columns: 1fr;
     grid-template-rows: minmax(360px, 52vh) minmax(0, 1fr);
     transition: grid-template-rows 420ms cubic-bezier(0.4, 0, 0.2, 1);
@@ -1570,22 +1663,10 @@ body.stone-page {
     transform: none;
   }
 
-  .map-tools {
-    top: 82px;
-    right: 14px;
-    left: 14px;
-    gap: 10px;
-  }
-
-  .map-selected-place {
+  .map-overlay {
     top: 12px;
-    right: 14px;
-    left: 14px;
-  }
-
-  .search-form {
-    min-width: 0;
-    max-width: none;
+    right: 62px;
+    left: 12px;
   }
 
   .rock-cards {
@@ -2160,7 +2241,7 @@ body.stone-page {
    入れ物になり、ボタンだけを引き出しより前に出せない */
 .app-menu {
   position: fixed;
-  top: 21px;
+  top: 10px;
   right: clamp(16px, 3vw, 36px);
   z-index: 2200;
 }
@@ -2305,12 +2386,7 @@ body.stone-page {
 
 /* 820px 以下ではヘッダーが縦並びになる（地図の高さもそれに合わせて計算している）。
    メニューのボタンだけは右上に置いたままにする */
-@media (max-width: 820px) {
-  /* 狭い画面はヘッダーが縦に高くなるが、ボタンは画面に固定なので上に置いたままでよい */
-  .app-menu {
-    top: 16px;
-  }
-}
+
 
 /* ===== 用語集（glossary.html） =====
    詳細ページのカードを並べるのではなく、辞書の索引の見た目にする。

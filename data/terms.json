@@ -381,6 +381,9 @@
     "id": "metamorphic-rock",
     "name": "変成岩",
     "reading": "へんせいがん",
+    "aliases": [
+      "変成作用"
+    ],
     "category": "用語",
     "english": "Metamorphic rock",
     "shortDescription": "もとの岩石が、地下の熱や圧力を受けて、溶けないまま鉱物やつくりが作り変えられた岩石です。",
@@ -902,6 +905,1541 @@
               "id": "mylonite"
             },
             "text": "断層にそってできた変成岩"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "fault",
+    "name": "断層",
+    "reading": "だんそう",
+    "category": "地質",
+    "english": "Fault",
+    "shortDescription": "地下の岩盤が割れて、両側がずれ動いた面。ずれるときの揺れが地震です。",
+    "sections": [
+      {
+        "icon": "book",
+        "title": "どんなものか",
+        "paragraphs": [
+          "岩盤に力がかかって耐えきれなくなると、割れて両側がずれます。このずれた面が断層です。ずれる向きによって、正断層・逆断層・横ずれ断層に分けられます。",
+          "断層にそっては岩石が砕かれたり引き伸ばされたりするので、まわりより風化しやすく、谷や直線的な地形になることがあります。"
+        ],
+        "items": [
+          {
+            "name": "マイロナイト",
+            "link": {
+              "type": "stone",
+              "id": "mylonite"
+            },
+            "text": "断層の深いところで、岩石が引き伸ばされてできた岩石"
+          },
+          {
+            "name": "中央構造線",
+            "link": {
+              "type": "term",
+              "id": "median-tectonic-line"
+            },
+            "text": "日本最大級の断層"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "bedding",
+    "name": "層理",
+    "reading": "そうり",
+    "category": "用語",
+    "english": "Bedding",
+    "shortDescription": "堆積岩に見られる、積もった面にそった縞模様。地層の重なりを示します。",
+    "sections": [
+      {
+        "icon": "book",
+        "title": "どんなものか",
+        "paragraphs": [
+          "砂や泥は水底に平らに積もるので、粒の大きさや色の違いが面として残ります。これが層理で、地層の「重なりの向き」を教えてくれます。",
+          "変成岩の片理は、力を受けて鉱物が並んでできた別のものです。見た目は似ていますが、でき方が違います。"
+        ],
+        "items": [
+          {
+            "name": "砂岩",
+            "link": {
+              "type": "stone",
+              "id": "sandstone"
+            },
+            "text": "泥岩と交互に重なり、縞に見えることが多い"
+          },
+          {
+            "name": "級化構造",
+            "link": {
+              "type": "term",
+              "id": "graded-bedding"
+            },
+            "text": "1枚の地層の中の粒の変化。地層の上下が分かる"
+          },
+          {
+            "name": "片理",
+            "link": {
+              "type": "term",
+              "id": "schistosity"
+            },
+            "text": "変成岩にできる、似て非なる面"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "graded-bedding",
+    "name": "級化構造",
+    "reading": "きゅうかこうぞう",
+    "category": "用語",
+    "english": "Graded bedding",
+    "shortDescription": "1枚の地層の中で、下ほど粗く上ほど細かい粒になっている構造。地層の上下が分かります。",
+    "sections": [
+      {
+        "icon": "book",
+        "title": "どんなものか",
+        "paragraphs": [
+          "土砂が水中をなだれのように流れ下って積もると、重い粗い粒が先に沈み、軽い細かい粒があとから積もります。その結果、1枚の地層の中で下が粗く上が細かくなります。",
+          "地層は地殻変動でひっくり返ることがあります。級化構造が分かれば、どちらがもとの上なのかを判断できます。付加体の砂岩泥岩互層でよく見られます。"
+        ],
+        "items": [
+          {
+            "name": "砂岩",
+            "link": {
+              "type": "stone",
+              "id": "sandstone"
+            },
+            "text": "下部の粗い部分"
+          },
+          {
+            "name": "泥岩",
+            "link": {
+              "type": "stone",
+              "id": "mudstone"
+            },
+            "text": "上部の細かい部分"
+          },
+          {
+            "name": "付加体",
+            "link": {
+              "type": "term",
+              "id": "accretionary-complex"
+            },
+            "text": "級化構造の見られる地層が多い"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "clastic-rock",
+    "name": "砕屑岩",
+    "reading": "さいせつがん",
+    "category": "用語",
+    "english": "Clastic rock",
+    "shortDescription": "岩石が削られてできた粒（砕屑物）が積もって固まった堆積岩。粒の大きさで名前が決まります。",
+    "sections": [
+      {
+        "icon": "book",
+        "title": "どんなものか",
+        "paragraphs": [
+          "山の岩石が風化や浸食で砕け、川や海で運ばれて積もったものです。粒の大きさで礫岩・砂岩・泥岩に分かれます。",
+          "同じ堆積岩でも、水に溶けた成分や生き物の殻からできた石灰岩・チャートは砕屑岩には含めません。"
+        ],
+        "items": [
+          {
+            "name": "礫岩",
+            "link": {
+              "type": "stone",
+              "id": "conglomerate"
+            },
+            "text": "2mm以上の礫"
+          },
+          {
+            "name": "砂岩",
+            "link": {
+              "type": "stone",
+              "id": "sandstone"
+            },
+            "text": "1/16〜2mmの砂"
+          },
+          {
+            "name": "泥岩",
+            "link": {
+              "type": "stone",
+              "id": "mudstone"
+            },
+            "text": "1/16mm未満の泥"
+          },
+          {
+            "name": "堆積岩",
+            "link": {
+              "type": "term",
+              "id": "sedimentary-rock"
+            },
+            "text": "砕屑岩を含む大きな分け方"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "chemical-rock",
+    "name": "化学岩",
+    "reading": "かがくがん",
+    "category": "用語",
+    "english": "Chemical sedimentary rock",
+    "shortDescription": "水に溶けていた成分が沈殿してできた堆積岩。生き物の殻が積もったものと合わせて、砕屑岩と区別します。",
+    "sections": [
+      {
+        "icon": "book",
+        "title": "どんなものか",
+        "paragraphs": [
+          "海水や湖水に溶けていた成分が、蒸発や化学変化で沈殿して固まった岩石です。岩塩や石こうが代表です。",
+          "石灰岩やチャートは、生き物の殻が積もってできたもの（生物起源）が多いのですが、化学的に沈殿したものもあり、どちらも砕屑岩とは区別されます。"
+        ],
+        "items": [
+          {
+            "name": "石灰岩",
+            "link": {
+              "type": "stone",
+              "id": "limestone"
+            },
+            "text": "サンゴや貝の殻が積もったものが多い"
+          },
+          {
+            "name": "チャート",
+            "link": {
+              "type": "stone",
+              "id": "chert"
+            },
+            "text": "放散虫の殻が積もったものが多い"
+          },
+          {
+            "name": "砕屑岩",
+            "link": {
+              "type": "term",
+              "id": "clastic-rock"
+            },
+            "text": "岩石の粒からできる堆積岩"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "lava",
+    "name": "溶岩",
+    "reading": "ようがん",
+    "category": "用語",
+    "english": "Lava",
+    "shortDescription": "地表に流れ出たマグマ、またはそれが冷えて固まった岩石のことです。",
+    "sections": [
+      {
+        "icon": "book",
+        "title": "どんなものか",
+        "paragraphs": [
+          "地下にあるあいだはマグマ、地表に出ると溶岩と呼び分けます。冷えて固まった岩石も溶岩といいます。",
+          "シリカが少ない玄武岩質の溶岩はさらさらで遠くまで流れ、シリカが多いとねばりが強く、溶岩ドームをつくったり爆発的な噴火になったりします。"
+        ],
+        "items": [
+          {
+            "name": "玄武岩",
+            "link": {
+              "type": "stone",
+              "id": "basalt"
+            },
+            "text": "さらさら流れる溶岩が固まったもの"
+          },
+          {
+            "name": "デイサイト",
+            "link": {
+              "type": "stone",
+              "id": "dacite"
+            },
+            "text": "ねばりが強く、溶岩ドームをつくる"
+          },
+          {
+            "name": "シリカ",
+            "link": {
+              "type": "term",
+              "id": "silica"
+            },
+            "text": "溶岩のねばりけを決める成分"
+          },
+          {
+            "name": "枕状溶岩",
+            "link": {
+              "type": "term",
+              "id": "pillow-lava"
+            },
+            "text": "水中に流れ出た溶岩の形"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "pillow-lava",
+    "name": "枕状溶岩",
+    "reading": "まくらじょうようがん",
+    "category": "用語",
+    "english": "Pillow lava",
+    "shortDescription": "水中に流れ出た溶岩が、枕を積み重ねたような丸い塊の集まりになって固まったものです。",
+    "sections": [
+      {
+        "icon": "book",
+        "title": "どんなものか",
+        "paragraphs": [
+          "水中では溶岩の表面が急に冷えて殻ができ、その中を流れた溶岩が殻を破って次の塊をつくります。これを繰り返して、枕のような塊が積み重なった形になります。",
+          "陸上の溶岩にはできない形なので、その岩石が水中（多くは海底）で噴出した証拠になります。日本では付加体の緑色岩によく見られます。"
+        ],
+        "items": [
+          {
+            "name": "緑色岩",
+            "link": {
+              "type": "stone",
+              "id": "greenstone"
+            },
+            "text": "海底の玄武岩が変質したもの。枕状の形が残ることがある"
+          },
+          {
+            "name": "玄武岩",
+            "link": {
+              "type": "stone",
+              "id": "basalt"
+            },
+            "text": "海底火山の溶岩"
+          },
+          {
+            "name": "付加体",
+            "link": {
+              "type": "term",
+              "id": "accretionary-complex"
+            },
+            "text": "海底の岩石が陸に付け加わった場所"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "pyroclastic-flow",
+    "name": "火砕流",
+    "reading": "かさいりゅう",
+    "category": "用語",
+    "english": "Pyroclastic flow",
+    "shortDescription": "高温の火山灰・軽石と火山ガスが混じり合い、山の斜面を高速で流れ下る現象です。",
+    "sections": [
+      {
+        "icon": "book",
+        "title": "どんなものか",
+        "paragraphs": [
+          "噴煙柱が崩れたり、溶岩ドームが崩れたりすると、高温の破片とガスの混合物が地面にそって流れ下ります。速度が大きく、火山災害のなかでも危険なものです。",
+          "積もったものが固まると凝灰岩になり、熱いまま押しつぶされて固まると溶結凝灰岩になります。"
+        ],
+        "items": [
+          {
+            "name": "凝灰岩",
+            "link": {
+              "type": "stone",
+              "id": "tuff"
+            },
+            "text": "積もった火山灰が固まったもの"
+          },
+          {
+            "name": "溶結凝灰岩",
+            "link": {
+              "type": "stone",
+              "id": "welded-tuff"
+            },
+            "text": "熱いまま押しつぶされて固まったもの"
+          },
+          {
+            "name": "軽石",
+            "link": {
+              "type": "stone",
+              "id": "pumice"
+            },
+            "text": "火砕流に多く含まれる"
+          },
+          {
+            "name": "カルデラ",
+            "link": {
+              "type": "term",
+              "id": "caldera"
+            },
+            "text": "大規模な火砕流の噴火でできる地形"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "caldera",
+    "name": "カルデラ",
+    "reading": "かるでら",
+    "category": "地質",
+    "english": "Caldera",
+    "shortDescription": "大量のマグマが抜けたあと、地表が落ち込んでできた大きなくぼ地です。",
+    "sections": [
+      {
+        "icon": "book",
+        "title": "どんなものか",
+        "paragraphs": [
+          "巨大な噴火で地下のマグマだまりから大量のマグマが抜けると、その上の地面が支えを失って落ち込みます。こうしてできた直径数kmから数十kmのくぼ地がカルデラです。",
+          "日本では阿蘇や屈斜路などが知られています。カルデラをつくる噴火では広い範囲に火砕流が流れ、火山灰が遠くまで積もります。"
+        ],
+        "items": [
+          {
+            "name": "火砕流",
+            "link": {
+              "type": "term",
+              "id": "pyroclastic-flow"
+            },
+            "text": "カルデラ噴火で流れ下るもの"
+          },
+          {
+            "name": "溶結凝灰岩",
+            "link": {
+              "type": "stone",
+              "id": "welded-tuff"
+            },
+            "text": "カルデラ噴火の火砕流が固まった岩石"
+          },
+          {
+            "name": "凝灰岩",
+            "link": {
+              "type": "stone",
+              "id": "tuff"
+            },
+            "text": "積もった火山灰が固まった岩石"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "oceanic-plate",
+    "name": "海洋プレート",
+    "reading": "かいようぷれーと",
+    "category": "地質",
+    "english": "Oceanic plate",
+    "shortDescription": "海底をつくっているプレート。中央海嶺で生まれ、海溝で陸のプレートの下に沈み込みます。",
+    "sections": [
+      {
+        "icon": "book",
+        "title": "どんなものか",
+        "paragraphs": [
+          "海の底は、玄武岩と斑れい岩、その下のかんらん岩でできたプレートです。中央海嶺で生まれて両側に広がり、長い時間をかけて移動します。",
+          "移動するあいだ、上にはプランクトンの殻や泥が積もります。海溝にたどり着くと沈み込み、上に乗っていたものの一部がはぎ取られて付加体になります。"
+        ],
+        "items": [
+          {
+            "name": "玄武岩",
+            "link": {
+              "type": "stone",
+              "id": "basalt"
+            },
+            "text": "海洋プレートの上部をつくる"
+          },
+          {
+            "name": "チャート",
+            "link": {
+              "type": "stone",
+              "id": "chert"
+            },
+            "text": "移動するあいだに上に積もる"
+          },
+          {
+            "name": "付加体",
+            "link": {
+              "type": "term",
+              "id": "accretionary-complex"
+            },
+            "text": "沈み込みのときに陸へ付け加わる"
+          },
+          {
+            "name": "オフィオライト",
+            "link": {
+              "type": "term",
+              "id": "ophiolite"
+            },
+            "text": "海洋プレートの断片が陸に上がったもの"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "mantle",
+    "name": "マントル",
+    "reading": "まんとる",
+    "category": "地質",
+    "english": "Mantle",
+    "shortDescription": "地殻の下にある、地球の体積の大部分をしめる層。上部はかんらん岩でできています。",
+    "sections": [
+      {
+        "icon": "book",
+        "title": "どんなものか",
+        "paragraphs": [
+          "地球の内部は、外側から地殻・マントル・核に分かれます。マントルは地殻の下から深さ約2900kmまでで、上部はかんらん岩でできています。",
+          "マントルの岩石がとけるとマグマになります。プレートの動きによってマントルの岩石が地表近くまで押し上げられることがあり、日本でもかんらん岩や蛇紋岩として見られます。"
+        ],
+        "items": [
+          {
+            "name": "かんらん岩",
+            "link": {
+              "type": "stone",
+              "id": "peridotite"
+            },
+            "text": "マントルをつくる岩石"
+          },
+          {
+            "name": "蛇紋岩",
+            "link": {
+              "type": "stone",
+              "id": "serpentinite"
+            },
+            "text": "かんらん岩が水と反応したもの"
+          },
+          {
+            "name": "超苦鉄質岩",
+            "link": {
+              "type": "term",
+              "id": "ultramafic-rock"
+            },
+            "text": "かんらん岩を含む岩石のまとまり"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "ophiolite",
+    "name": "オフィオライト",
+    "reading": "おふぃおらいと",
+    "category": "地質",
+    "english": "Ophiolite",
+    "shortDescription": "海洋プレートの断片が、沈み込まずに陸側へ押し上げられたものです。",
+    "sections": [
+      {
+        "icon": "book",
+        "title": "どんなものか",
+        "paragraphs": [
+          "ふつう海洋プレートは海溝で沈み込みますが、まれに陸側へ乗り上げて残ることがあります。これがオフィオライトです。",
+          "下からかんらん岩・斑れい岩・玄武岩（枕状溶岩）・チャートという、海洋プレートの重なりがそのまま見られるのが特徴です。海の底を陸の上で観察できる場所になります。"
+        ],
+        "items": [
+          {
+            "name": "かんらん岩",
+            "link": {
+              "type": "stone",
+              "id": "peridotite"
+            },
+            "text": "いちばん下の層"
+          },
+          {
+            "name": "斑れい岩",
+            "link": {
+              "type": "stone",
+              "id": "gabbro"
+            },
+            "text": "その上の層"
+          },
+          {
+            "name": "緑色岩",
+            "link": {
+              "type": "stone",
+              "id": "greenstone"
+            },
+            "text": "海底に噴出した玄武岩が変質したもの"
+          },
+          {
+            "name": "海洋プレート",
+            "link": {
+              "type": "term",
+              "id": "oceanic-plate"
+            },
+            "text": "もとになったプレート"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "hydrothermal",
+    "name": "熱水",
+    "reading": "ねっすい",
+    "category": "用語",
+    "english": "Hydrothermal fluid",
+    "shortDescription": "地下で熱せられた水。岩石の成分を溶かして運び、冷えるときに鉱物として沈殿します。",
+    "sections": [
+      {
+        "icon": "book",
+        "title": "どんなものか",
+        "paragraphs": [
+          "マグマから出た水や、地下にしみ込んだ水がマグマの熱で温められると、岩石の成分を溶かし込みながら割れ目を移動します。",
+          "温度や圧力が下がると溶けていた成分が沈殿し、割れ目を埋めます。石英や方解石、金属の鉱物がこうしてできます。"
+        ],
+        "items": [
+          {
+            "name": "脈石英",
+            "link": {
+              "type": "stone",
+              "id": "vein-quartz"
+            },
+            "text": "熱水から石英が沈殿したもの"
+          },
+          {
+            "name": "水晶",
+            "link": {
+              "type": "mineral",
+              "id": "rock-crystal"
+            },
+            "text": "すき間でゆっくり成長した石英"
+          },
+          {
+            "name": "鉱脈",
+            "link": {
+              "type": "term",
+              "id": "ore-vein"
+            },
+            "text": "熱水からできた鉱物の板状の集まり"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "ore-vein",
+    "name": "鉱脈",
+    "reading": "こうみゃく",
+    "category": "用語",
+    "english": "Vein",
+    "shortDescription": "岩石の割れ目を鉱物が埋めてできた、板状の集まり。金属の鉱物を含むものは鉱山になります。",
+    "sections": [
+      {
+        "icon": "book",
+        "title": "どんなものか",
+        "paragraphs": [
+          "割れ目を通った熱水から鉱物が沈殿し、板のような形で岩石を貫きます。白い石英の脈は、野外でもよく目につきます。",
+          "金や銀、銅などの鉱物を多く含む鉱脈は鉱床となり、鉱山として掘られてきました。"
+        ],
+        "items": [
+          {
+            "name": "脈石英",
+            "link": {
+              "type": "stone",
+              "id": "vein-quartz"
+            },
+            "text": "石英でできた脈。硬いので川原に残りやすい"
+          },
+          {
+            "name": "熱水",
+            "link": {
+              "type": "term",
+              "id": "hydrothermal"
+            },
+            "text": "鉱物を運んでくる水"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "cleavage",
+    "name": "劈開",
+    "reading": "へきかい",
+    "category": "用語",
+    "english": "Cleavage",
+    "shortDescription": "決まった方向に平らに割れる性質。鉱物の劈開と、岩石が薄く割れる劈開があります。",
+    "sections": [
+      {
+        "icon": "book",
+        "title": "どんなものか",
+        "paragraphs": [
+          "鉱物の劈開は、原子の結びつきが弱い面にそって平らに割れる性質です。雲母が薄くはがれるのも、方解石が菱形に割れるのもこれです。",
+          "岩石では、粘板岩が薄い板に割れる性質を劈開（スレート劈開）と呼びます。こちらは弱い変成のときに鉱物が並んでできたもので、もとの地層の面（層理）とは向きが違うことがあります。"
+        ],
+        "items": [
+          {
+            "name": "白雲母",
+            "link": {
+              "type": "mineral",
+              "id": "muscovite"
+            },
+            "text": "薄くはがれる"
+          },
+          {
+            "name": "方解石",
+            "link": {
+              "type": "mineral",
+              "id": "calcite"
+            },
+            "text": "菱形に割れる"
+          },
+          {
+            "name": "粘板岩",
+            "link": {
+              "type": "stone",
+              "id": "slate"
+            },
+            "text": "薄い板に割れる"
+          },
+          {
+            "name": "層理",
+            "link": {
+              "type": "term",
+              "id": "bedding"
+            },
+            "text": "堆積のときにできる面。劈開とは別物"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "conchoidal-fracture",
+    "name": "貝殻状断口",
+    "reading": "かいがらじょうだんこう",
+    "category": "用語",
+    "english": "Conchoidal fracture",
+    "shortDescription": "割れ口が、貝殻の内側のようになめらかな曲面になること。ガラスや石英に見られます。",
+    "sections": [
+      {
+        "icon": "book",
+        "title": "どんなものか",
+        "paragraphs": [
+          "決まった割れやすい方向を持たない物質は、割れると貝殻の内側のような曲面になります。中心から波紋のような模様が広がって見えることもあります。",
+          "黒曜石やチャート、石英にはっきり現れます。鋭い刃ができるため、黒曜石は石器の材料として使われてきました。"
+        ],
+        "items": [
+          {
+            "name": "黒曜石",
+            "link": {
+              "type": "stone",
+              "id": "obsidian"
+            },
+            "text": "きれいな曲面に割れる"
+          },
+          {
+            "name": "チャート",
+            "link": {
+              "type": "stone",
+              "id": "chert"
+            },
+            "text": "同じように曲面で割れる"
+          },
+          {
+            "name": "石英",
+            "link": {
+              "type": "mineral",
+              "id": "quartz"
+            },
+            "text": "平らな割れ口ができない"
+          },
+          {
+            "name": "劈開",
+            "link": {
+              "type": "term",
+              "id": "cleavage"
+            },
+            "text": "こちらは平らに割れる性質"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "contact-metamorphic-rock",
+    "name": "接触変成岩",
+    "reading": "せっしょくへんせいがん",
+    "category": "用語",
+    "english": "Contact metamorphic rock",
+    "shortDescription": "入り込んできたマグマの熱で、まわりの岩石が焼かれてできた変成岩です。",
+    "sections": [
+      {
+        "icon": "book",
+        "title": "どんなものか",
+        "paragraphs": [
+          "マグマが地下に入り込むと、接した岩石が熱で作り変えられます。圧力ではなく熱が主な原因なので、鉱物が一方向に並ばず、硬く緻密な岩石になります。",
+          "熱の届く範囲はマグマの縁から数百mほどで、離れるほど変成は弱くなります。花崗岩の分布するところでは、そのまわりを探すと見つかります。"
+        ],
+        "items": [
+          {
+            "name": "ホルンフェルス",
+            "link": {
+              "type": "stone",
+              "id": "hornfels"
+            },
+            "text": "泥岩などが焼かれてできた、硬く緻密な岩石"
+          },
+          {
+            "name": "大理石",
+            "link": {
+              "type": "stone",
+              "id": "marble"
+            },
+            "text": "石灰岩が焼かれて再結晶したもの"
+          },
+          {
+            "name": "菫青石",
+            "link": {
+              "type": "mineral",
+              "id": "cordierite"
+            },
+            "text": "泥質のホルンフェルスにできる鉱物"
+          },
+          {
+            "name": "貫入",
+            "link": {
+              "type": "term",
+              "id": "intrusion"
+            },
+            "text": "マグマが入り込むこと"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "regional-metamorphic-rock",
+    "name": "広域変成岩",
+    "reading": "こういきへんせいがん",
+    "category": "用語",
+    "english": "Regional metamorphic rock",
+    "shortDescription": "広い範囲の岩石が、地下深くで熱と圧力を受けて作り変えられた変成岩です。",
+    "sections": [
+      {
+        "icon": "book",
+        "title": "どんなものか",
+        "paragraphs": [
+          "プレートの沈み込みや大陸の衝突で、広い範囲の岩石が地下深くに運ばれると、熱と圧力を受けて作り変えられます。帯のように細長く分布するのが特徴です。",
+          "力を受けながら変成するので、鉱物が一方向に並び、片理や縞模様ができます。温度が上がるほど、粘板岩 → 千枚岩 → 結晶片岩 → 片麻岩と変わります。"
+        ],
+        "items": [
+          {
+            "name": "結晶片岩",
+            "link": {
+              "type": "stone",
+              "id": "schist"
+            },
+            "text": "薄くはがれる"
+          },
+          {
+            "name": "片麻岩",
+            "link": {
+              "type": "stone",
+              "id": "gneiss"
+            },
+            "text": "温度が高く、粗い縞ができたもの"
+          },
+          {
+            "name": "片理",
+            "link": {
+              "type": "term",
+              "id": "schistosity"
+            },
+            "text": "鉱物が並んでできる面"
+          },
+          {
+            "name": "三波川変成帯",
+            "link": {
+              "type": "term",
+              "id": "sanbagawa-belt"
+            },
+            "text": "日本の代表的な広域変成帯"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "dynamic-metamorphic-rock",
+    "name": "変位変成岩",
+    "reading": "へんいへんせいがん",
+    "category": "用語",
+    "english": "Dynamic metamorphic rock",
+    "shortDescription": "断層が動くときに、岩石がすりつぶされたり引き伸ばされたりしてできた変成岩です。",
+    "sections": [
+      {
+        "icon": "book",
+        "title": "どんなものか",
+        "paragraphs": [
+          "断層の浅いところでは岩石が砕かれ、深いところでは固体のまま引き伸ばされます。この力によってできた変成岩をまとめてこう呼びます。",
+          "深いところでできたものがマイロナイトで、もとの粒が細かくつぶれ、流れたような縞模様になります。"
+        ],
+        "items": [
+          {
+            "name": "マイロナイト",
+            "link": {
+              "type": "stone",
+              "id": "mylonite"
+            },
+            "text": "引き伸ばされてできた変成岩"
+          },
+          {
+            "name": "断層",
+            "link": {
+              "type": "term",
+              "id": "fault"
+            },
+            "text": "岩盤がずれた面"
+          },
+          {
+            "name": "剪断帯",
+            "link": {
+              "type": "term",
+              "id": "shear-zone"
+            },
+            "text": "ずれが幅を持って起きる帯"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "shear-zone",
+    "name": "剪断帯",
+    "reading": "せんだんたい",
+    "category": "地質",
+    "english": "Shear zone",
+    "shortDescription": "1本の面ではなく、ある幅を持ってずれが起きた帯。地下深くの断層にあたります。",
+    "sections": [
+      {
+        "icon": "book",
+        "title": "どんなものか",
+        "paragraphs": [
+          "浅いところの断層は1本の割れ目としてずれますが、深く温度が高いところでは、岩石が割れずに固体のまま流れるように変形します。この変形が集中した帯が剪断帯です。",
+          "剪断帯の中の岩石は、粒が細かくつぶれて引き伸ばされ、マイロナイトになります。"
+        ],
+        "items": [
+          {
+            "name": "マイロナイト",
+            "link": {
+              "type": "stone",
+              "id": "mylonite"
+            },
+            "text": "剪断帯にできる岩石"
+          },
+          {
+            "name": "断層",
+            "link": {
+              "type": "term",
+              "id": "fault"
+            },
+            "text": "浅いところでのずれ"
+          },
+          {
+            "name": "中央構造線",
+            "link": {
+              "type": "term",
+              "id": "median-tectonic-line"
+            },
+            "text": "剪断帯をともなう大きな断層"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "intrusion",
+    "name": "貫入",
+    "reading": "かんにゅう",
+    "category": "用語",
+    "english": "Intrusion",
+    "shortDescription": "マグマが地下の岩石の割れ目などに入り込むこと。地表に出ずに固まると深成岩や岩脈になります。",
+    "sections": [
+      {
+        "icon": "book",
+        "title": "どんなものか",
+        "paragraphs": [
+          "マグマはまわりの岩石より軽いので上へ動き、割れ目や弱いところに入り込みます。これが貫入です。地表に出れば火山の噴火になりますが、出ずに固まると地下に岩体として残ります。",
+          "貫入したマグマの熱で、まわりの岩石は焼かれて接触変成岩になります。貫入した岩体と、それを取り囲む変成帯はセットで見つかります。"
+        ],
+        "items": [
+          {
+            "name": "花崗岩",
+            "link": {
+              "type": "stone",
+              "id": "granite"
+            },
+            "text": "貫入したマグマが地下で固まった岩石"
+          },
+          {
+            "name": "ホルンフェルス",
+            "link": {
+              "type": "stone",
+              "id": "hornfels"
+            },
+            "text": "貫入の熱で焼かれた岩石"
+          },
+          {
+            "name": "接触変成岩",
+            "link": {
+              "type": "term",
+              "id": "contact-metamorphic-rock"
+            },
+            "text": "貫入の熱でできる変成岩"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "migmatite",
+    "name": "ミグマタイト",
+    "reading": "みぐまたいと",
+    "category": "用語",
+    "english": "Migmatite",
+    "shortDescription": "変成岩の一部がとけ始め、白い部分と黒い部分が入り混じった岩石です。",
+    "sections": [
+      {
+        "icon": "book",
+        "title": "どんなものか",
+        "paragraphs": [
+          "変成の温度がとても高くなると、岩石の中のとけやすい成分（石英や長石）が先にとけ始めます。とけた部分が白い脈や縞になり、とけ残った黒っぽい部分と入り混じります。",
+          "変成岩と火成岩の境目にあたる岩石で、片麻岩の分布するところで見られます。うねった白い縞が目印です。"
+        ],
+        "items": [
+          {
+            "name": "片麻岩",
+            "link": {
+              "type": "stone",
+              "id": "gneiss"
+            },
+            "text": "ミグマタイトと一緒に分布することが多い"
+          },
+          {
+            "name": "広域変成岩",
+            "link": {
+              "type": "term",
+              "id": "regional-metamorphic-rock"
+            },
+            "text": "温度が上がるとミグマタイトになる"
+          },
+          {
+            "name": "火成岩",
+            "link": {
+              "type": "term",
+              "id": "igneous-rock"
+            },
+            "text": "とけた部分が固まったもの"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "piemontite-schist",
+    "name": "紅簾石片岩",
+    "reading": "こうれんせきへんがん",
+    "category": "用語",
+    "english": "Piemontite schist",
+    "shortDescription": "紅簾石という赤い鉱物を含む、赤紫色の結晶片岩。埼玉県の長瀞のものがよく知られています。",
+    "sections": [
+      {
+        "icon": "book",
+        "title": "どんなものか",
+        "paragraphs": [
+          "マンガンを含むチャートが変成してできた結晶片岩で、紅簾石という赤紫色の鉱物を含むため、全体が赤みを帯びます。",
+          "長瀞（埼玉県）の岩畳のそばにあるものは古くから知られ、国の天然記念物に指定されています。三波川変成帯の石英片岩のなかに、色の違う層として現れます。"
+        ],
+        "items": [
+          {
+            "name": "石英片岩",
+            "link": {
+              "type": "stone",
+              "id": "siliceous-schist"
+            },
+            "text": "紅簾石片岩の母体になる岩石"
+          },
+          {
+            "name": "チャート",
+            "link": {
+              "type": "stone",
+              "id": "chert"
+            },
+            "text": "もとの岩石"
+          },
+          {
+            "name": "三波川変成帯",
+            "link": {
+              "type": "term",
+              "id": "sanbagawa-belt"
+            },
+            "text": "紅簾石片岩が見られる変成帯"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "pyroclastic-rock",
+    "name": "火山砕屑岩",
+    "reading": "かざんさいせつがん",
+    "category": "用語",
+    "english": "Pyroclastic rock",
+    "shortDescription": "噴火で飛び出した破片が積もって固まった岩石。破片の大きさで名前が決まります。",
+    "sections": [
+      {
+        "icon": "book",
+        "title": "どんなものか",
+        "paragraphs": [
+          "噴火では、火山灰・軽石・岩片などが飛び散ります。これらが積もって固まった岩石をまとめて火山砕屑岩と呼びます。",
+          "平均の大きさが2mm未満なら凝灰岩、2〜64mmなら火山礫凝灰岩、それ以上の大きな岩塊を多く含むと凝灰角礫岩や火山角礫岩になります。"
+        ],
+        "items": [
+          {
+            "name": "凝灰岩",
+            "link": {
+              "type": "stone",
+              "id": "tuff"
+            },
+            "text": "火山灰が固まったもの"
+          },
+          {
+            "name": "溶結凝灰岩",
+            "link": {
+              "type": "stone",
+              "id": "welded-tuff"
+            },
+            "text": "熱いまま押しつぶされて固まったもの"
+          },
+          {
+            "name": "火山灰",
+            "link": {
+              "type": "term",
+              "id": "volcanic-ash"
+            },
+            "text": "2mm未満の破片"
+          },
+          {
+            "name": "火砕流",
+            "link": {
+              "type": "term",
+              "id": "pyroclastic-flow"
+            },
+            "text": "高温の破片が流れ下る現象"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "volcanic-ash",
+    "name": "火山灰",
+    "reading": "かざんばい",
+    "category": "用語",
+    "english": "Volcanic ash",
+    "shortDescription": "噴火で飛び出した2mm未満の細かい破片。ガラスや鉱物、岩石のかけらでできています。",
+    "sections": [
+      {
+        "icon": "book",
+        "title": "どんなものか",
+        "paragraphs": [
+          "「灰」といっても燃えかすではなく、マグマが噴火で砕けてできた細かい破片です。火山ガラスのかけらや、鉱物の結晶、岩石のかけらが混じっています。",
+          "風で遠くまで運ばれ、広い範囲に薄く積もります。そのため、離れた地層をつなぐ目印（鍵層）として使われます。"
+        ],
+        "items": [
+          {
+            "name": "凝灰岩",
+            "link": {
+              "type": "stone",
+              "id": "tuff"
+            },
+            "text": "火山灰が固まった岩石"
+          },
+          {
+            "name": "火山ガラス",
+            "link": {
+              "type": "term",
+              "id": "volcanic-glass"
+            },
+            "text": "火山灰の主な中身"
+          },
+          {
+            "name": "火山砕屑岩",
+            "link": {
+              "type": "term",
+              "id": "pyroclastic-rock"
+            },
+            "text": "大きさで分けた呼び名"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "scoria",
+    "name": "スコリア",
+    "reading": "すこりあ",
+    "category": "用語",
+    "english": "Scoria",
+    "shortDescription": "泡だらけで黒っぽい火山の噴出物。軽石の玄武岩質のもので、色が濃いのが違いです。",
+    "sections": [
+      {
+        "icon": "book",
+        "title": "どんなものか",
+        "paragraphs": [
+          "ガスを多く含んだマグマが噴き出して急に冷えると、泡の穴だらけの岩石になります。シリカの少ない黒っぽいものがスコリア、シリカが多く白っぽいものが軽石です。",
+          "富士山のまわりの黒いざらざらした砂利は、スコリアが砕けたものです。"
+        ],
+        "items": [
+          {
+            "name": "軽石",
+            "link": {
+              "type": "stone",
+              "id": "pumice"
+            },
+            "text": "白っぽく、水に浮くことが多い"
+          },
+          {
+            "name": "玄武岩",
+            "link": {
+              "type": "stone",
+              "id": "basalt"
+            },
+            "text": "スコリアと同じ成分の岩石"
+          },
+          {
+            "name": "火山砕屑岩",
+            "link": {
+              "type": "term",
+              "id": "pyroclastic-rock"
+            },
+            "text": "積もって固まるとこうなる"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "lava-dome",
+    "name": "溶岩ドーム",
+    "reading": "ようがんどーむ",
+    "category": "用語",
+    "english": "Lava dome",
+    "shortDescription": "ねばりの強い溶岩が流れずに盛り上がってできた、お椀をふせたような地形です。",
+    "sections": [
+      {
+        "icon": "book",
+        "title": "どんなものか",
+        "paragraphs": [
+          "シリカが多い溶岩はねばりが強く、遠くまで流れられません。火口の上に盛り上がって固まり、ドーム状の高まりをつくります。",
+          "ドームは不安定で崩れやすく、崩れると火砕流が発生することがあります。雲仙普賢岳の平成新山が知られています。"
+        ],
+        "items": [
+          {
+            "name": "デイサイト",
+            "link": {
+              "type": "stone",
+              "id": "dacite"
+            },
+            "text": "溶岩ドームをつくる代表的な岩石"
+          },
+          {
+            "name": "流紋岩",
+            "link": {
+              "type": "stone",
+              "id": "rhyolite"
+            },
+            "text": "さらにねばりが強い"
+          },
+          {
+            "name": "火砕流",
+            "link": {
+              "type": "term",
+              "id": "pyroclastic-flow"
+            },
+            "text": "ドームの崩壊で起きることがある"
+          },
+          {
+            "name": "溶岩",
+            "link": {
+              "type": "term",
+              "id": "lava"
+            },
+            "text": "地表に出たマグマ"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "breccia",
+    "name": "角礫岩",
+    "reading": "かくれきがん",
+    "category": "用語",
+    "english": "Breccia",
+    "shortDescription": "角ばったままの礫が固まった岩石。丸い礫でできた礫岩と区別します。",
+    "sections": [
+      {
+        "icon": "book",
+        "title": "どんなものか",
+        "paragraphs": [
+          "礫は川や海で転がるほど角がとれて丸くなります。角ばったままということは、あまり運ばれずにその場近くで積もった証拠です。",
+          "崖崩れの堆積物や、断層で砕かれた岩石、噴火で飛び散った岩片などが角礫岩になります。"
+        ],
+        "items": [
+          {
+            "name": "礫岩",
+            "link": {
+              "type": "stone",
+              "id": "conglomerate"
+            },
+            "text": "こちらは丸い礫"
+          },
+          {
+            "name": "断層",
+            "link": {
+              "type": "term",
+              "id": "fault"
+            },
+            "text": "断層でも角礫ができる"
+          },
+          {
+            "name": "火山砕屑岩",
+            "link": {
+              "type": "term",
+              "id": "pyroclastic-rock"
+            },
+            "text": "噴火でできる角礫岩もある"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "tonalite",
+    "name": "トーナル岩",
+    "reading": "とーなるがん",
+    "category": "用語",
+    "english": "Tonalite",
+    "shortDescription": "石英を多く含み、長石のほとんどが斜長石の深成岩。花崗閃緑岩よりさらにカリ長石が少ないものです。",
+    "sections": [
+      {
+        "icon": "book",
+        "title": "どんなものか",
+        "paragraphs": [
+          "石英が20〜60%で、長石のうち斜長石が90%以上をしめる深成岩です。カリ長石がほとんどないので、花崗岩より白と黒のはっきりしたまだらに見えます。",
+          "花崗岩・花崗閃緑岩・トーナル岩は、石英と長石の割合で連続的に分けられます。地質図では「花崗閃緑岩・トーナル岩」とまとめて書かれることがよくあります。"
+        ],
+        "items": [
+          {
+            "name": "花崗閃緑岩",
+            "link": {
+              "type": "stone",
+              "id": "granodiorite"
+            },
+            "text": "カリ長石がもう少し多い"
+          },
+          {
+            "name": "花崗岩",
+            "link": {
+              "type": "stone",
+              "id": "granite"
+            },
+            "text": "カリ長石が多い"
+          },
+          {
+            "name": "深成岩",
+            "link": {
+              "type": "term",
+              "id": "plutonic-rock"
+            },
+            "text": "名前の決まり方の仲間"
+          }
+        ]
+      }
+    ],
+    "sources": [
+      "Streckeisen (1976) Earth-Science Reviews 12, 1–33／Le Maitre 編 (2002) Igneous Rocks: A Classification and Glossary of Terms, 2nd ed.（IUGS の QAPF 分類）"
+    ]
+  },
+  {
+    "id": "carbonaceous-matter",
+    "name": "炭質物",
+    "reading": "たんしつぶつ",
+    "category": "用語",
+    "english": "Carbonaceous matter",
+    "shortDescription": "岩石に含まれる炭素の粒。黒色片岩や泥岩が黒いのは、この炭質物のためです。",
+    "sections": [
+      {
+        "icon": "book",
+        "title": "どんなものか",
+        "paragraphs": [
+          "海底に沈んだプランクトンなどの有機物が、地層の中に炭素として残ったものです。ごく少量でも岩石を黒く見せます。",
+          "変成が進むとグラファイト（石墨）に変わっていきます。黒色片岩の黒色や、手につく黒い粉はこれによるものです。"
+        ],
+        "items": [
+          {
+            "name": "黒色片岩",
+            "link": {
+              "type": "stone",
+              "id": "pelitic-schist"
+            },
+            "text": "炭質物で黒く見える"
+          },
+          {
+            "name": "泥岩",
+            "link": {
+              "type": "stone",
+              "id": "mudstone"
+            },
+            "text": "黒っぽいものは炭質物を含む"
+          },
+          {
+            "name": "変成岩",
+            "link": {
+              "type": "term",
+              "id": "metamorphic-rock"
+            },
+            "text": "変成が進むとグラファイトになる"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "fossil",
+    "name": "化石",
+    "reading": "かせき",
+    "category": "用語",
+    "english": "Fossil",
+    "shortDescription": "地層に残された生き物の遺骸や生活のあと。地層のできた時代や環境を知る手がかりになります。",
+    "sections": [
+      {
+        "icon": "book",
+        "title": "どんなものか",
+        "paragraphs": [
+          "殻や骨が地層に埋もれて残ったもののほか、巣穴や足あとのような生活のあとも化石に含まれます。",
+          "時代ごとに現れる生き物が違うので、化石から地層の年代が分かります。日本の付加体の年代は、チャートや泥岩に含まれる放散虫の化石で明らかにされました。"
+        ],
+        "items": [
+          {
+            "name": "石灰岩",
+            "link": {
+              "type": "stone",
+              "id": "limestone"
+            },
+            "text": "サンゴや貝の殻からできた岩石"
+          },
+          {
+            "name": "チャート",
+            "link": {
+              "type": "stone",
+              "id": "chert"
+            },
+            "text": "放散虫の殻からできた岩石"
+          },
+          {
+            "name": "放散虫",
+            "link": {
+              "type": "term",
+              "id": "radiolaria"
+            },
+            "text": "年代を決めるのに使われる化石"
+          },
+          {
+            "name": "付加体",
+            "link": {
+              "type": "term",
+              "id": "accretionary-complex"
+            },
+            "text": "化石で年代が分かった地質"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "coral",
+    "name": "サンゴ",
+    "reading": "さんご",
+    "category": "用語",
+    "english": "Coral",
+    "shortDescription": "炭酸カルシウムの骨格をつくる海の生き物。その骨格が積もると石灰岩になります。",
+    "sections": [
+      {
+        "icon": "book",
+        "title": "どんなものか",
+        "paragraphs": [
+          "浅くて暖かい海で育ち、炭酸カルシウムの硬い骨格をつくります。仲間が集まって広がったものがサンゴ礁です。",
+          "サンゴ礁の石灰岩は、海山の上にできたものがプレートに運ばれ、付加体の一部として日本各地に残っています。秋吉台などの石灰岩がその例です。"
+        ],
+        "items": [
+          {
+            "name": "石灰岩",
+            "link": {
+              "type": "stone",
+              "id": "limestone"
+            },
+            "text": "サンゴなどの骨格が積もってできた岩石"
+          },
+          {
+            "name": "炭酸カルシウム",
+            "link": {
+              "type": "term",
+              "id": "calcium-carbonate"
+            },
+            "text": "骨格をつくる成分"
+          },
+          {
+            "name": "付加体",
+            "link": {
+              "type": "term",
+              "id": "accretionary-complex"
+            },
+            "text": "海山の石灰岩が陸に付け加わった"
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "id": "calcium-carbonate",
+    "name": "炭酸カルシウム",
+    "reading": "たんさんかるしうむ",
+    "category": "用語",
+    "english": "Calcium carbonate",
+    "shortDescription": "カルシウム・炭素・酸素からなる物質（CaCO₃）。方解石の成分で、貝殻やサンゴの骨格もこれです。",
+    "sections": [
+      {
+        "icon": "book",
+        "title": "どんなものか",
+        "paragraphs": [
+          "海水に溶けているカルシウムと二酸化炭素から作られます。貝やサンゴ、有孔虫などが殻や骨格として利用しています。",
+          "酸に溶けて二酸化炭素の泡を出すのが特徴です。石灰岩に薄い塩酸をかけると泡が出るのはこのためで、現場での見分けに使えます。"
+        ],
+        "items": [
+          {
+            "name": "方解石",
+            "link": {
+              "type": "mineral",
+              "id": "calcite"
+            },
+            "text": "炭酸カルシウムが結晶になった鉱物"
+          },
+          {
+            "name": "石灰岩",
+            "link": {
+              "type": "stone",
+              "id": "limestone"
+            },
+            "text": "炭酸カルシウムでできた岩石"
+          },
+          {
+            "name": "大理石",
+            "link": {
+              "type": "stone",
+              "id": "marble"
+            },
+            "text": "石灰岩が変成したもの"
           }
         ]
       }
