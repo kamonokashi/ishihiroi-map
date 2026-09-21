@@ -35,7 +35,8 @@ body {
   margin: 0;
   background: var(--bg);
   color: var(--ink);
-  font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, "Noto Sans JP", sans-serif;
+  /* 欧文は端末のUIフォント、日本語は Noto Sans JP。端末まかせだと太字が機械的に太らされて、字面が濁る */
+  font-family: "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont, "Noto Sans JP", "Hiragino Sans", "Yu Gothic UI", sans-serif;
 }
 
 button,
@@ -67,22 +68,28 @@ button:disabled {
   cursor: not-allowed;
 }
 
-/* 地図画面の帯。高さを詰めて、ロゴマークと名前だけにする（太い帯に文字が置いてあるだけだと間が持たない） */
+/* 上の帯。名前（操作しないもの）と検索（操作するもの）の種類を分けるための入れ物。
+   帯に名前だけを置くと間が持たないので、検索もここに入れて帯に仕事をさせる。
+   いちばん右はメニューボタン（画面に固定）のための空き */
+/* 帯は名前（操作しないもの）だけを載せる枠。検索やレイヤーの切り替えは地図を操作するものなので
+   地図の上に置く。両方を同じ面に丸い札で並べると、どれが主役か分からなくなる */
 .app-header {
-  height: 64px;
+  position: relative;
+  z-index: 1100;
+  height: 52px;
   display: flex;
   align-items: center;
-  gap: 20px;
-  padding: 0 clamp(14px, 3vw, 28px);
+  justify-content: space-between;
+  gap: 16px;
+  padding: 0 16px 0 clamp(14px, 3vw, 22px);
   border-bottom: 1px solid var(--line);
-  background: rgba(255, 255, 255, 0.9);
-  backdrop-filter: blur(12px);
+  background: var(--panel);
 }
 
 .app-brand {
-  display: flex;
+  display: inline-flex;
   align-items: center;
-  gap: 11px;
+  gap: 10px;
   color: var(--ink);
   text-decoration: none;
 }
@@ -90,17 +97,18 @@ button:disabled {
 .app-logo {
   display: grid;
   place-items: center;
-  width: 34px;
-  height: 34px;
+  width: 32px;
+  height: 32px;
+  flex: 0 0 auto;
   border-radius: 10px;
   background: linear-gradient(140deg, var(--accent) 0%, var(--accent-dark) 100%);
   color: #fff;
-  box-shadow: 0 4px 10px rgba(13, 162, 189, 0.3);
+  box-shadow: 0 3px 9px rgba(13, 162, 189, 0.32);
 }
 
 .app-logo svg {
-  width: 20px;
-  height: 20px;
+  width: 19px;
+  height: 19px;
   fill: none;
   stroke: currentColor;
   stroke-width: 1.6;
@@ -115,7 +123,7 @@ button:disabled {
 }
 
 .app-brand-name {
-  font-size: 1.14rem;
+  font-size: 1.02rem;
   font-weight: 800;
   letter-spacing: 0.01em;
   white-space: nowrap;
@@ -130,10 +138,17 @@ button:disabled {
   white-space: nowrap;
 }
 
-@media (max-width: 640px) {
+@media (max-width: 1180px) {
   .app-brand-tagline {
     display: none;
   }
+}
+
+/* メニューボタンのぶんの空き。ボタン自体は画面に固定してあるので、ここには何も入らない */
+.app-header-menu-slot {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
 }
 
 .eyebrow {
@@ -178,17 +193,20 @@ h3 {
   font-weight: 700;
 }
 
+/* 地図を画面いっぱいに敷いて、結果はその上に浮かせる。
+   地図と結果を横に並べると、地図が「四角い部品のひとつ」に見えてしまう。
+   --panel-w は結果パネルの幅。地図の上の操作や地図の出典表示も、この幅だけ左に逃がす */
+/* 地図と結果は重ねずに左右へ分ける。地図の上に浮かせると、結果が「閉じられる付箋」に見えて、
+   消す方法があると勘違いさせる。--panel-gap は地図の上に置く操作の内側の余白 */
 .app-shell {
   position: relative;
-  height: calc(100vh - 64px);
+  --panel-w: min(455px, 38vw);
+  --panel-gap: 14px;
+  height: calc(100vh - 52px);
   display: grid;
-  grid-template-columns: minmax(0, 55%) minmax(430px, 45%);
+  grid-template-columns: minmax(0, 1fr) var(--panel-w);
   overflow: hidden;
   transition: grid-template-columns 420ms cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.app-shell.map-collapsed {
-  grid-template-columns: 0 minmax(0, 1fr);
 }
 
 .map-pane {
@@ -196,17 +214,17 @@ h3 {
   min-width: 0;
   min-height: 0;
   overflow: hidden;
-  border-right: 1px solid var(--line);
   isolation: isolate;
   opacity: 1;
-  clip-path: inset(0 0 0 0);
-  transition: opacity 320ms ease, clip-path 420ms cubic-bezier(0.4, 0, 0.2, 1);
+  transition: opacity 320ms ease;
+}
+
+.app-shell.map-collapsed {
+  grid-template-columns: 0 minmax(0, 1fr);
 }
 
 .app-shell.map-collapsed .map-pane {
-  border-right: 0;
   opacity: 0;
-  clip-path: inset(0 100% 0 0);
   pointer-events: none;
 }
 
@@ -216,12 +234,6 @@ h3 {
   width: 100%;
   height: 100%;
   background: #dce3d3;
-  transform: translateX(0);
-  transition: transform 420ms cubic-bezier(0.4, 0, 0.2, 1);
-}
-
-.app-shell.map-collapsed #map {
-  transform: translateX(-34%);
 }
 
 .leaflet-container {
@@ -311,36 +323,39 @@ h3 {
   z-index: 1;
 }
 
+/* 地図と結果の境目に置く丸いつまみ。地図の上のほかの操作と形をそろえる */
 .map-collapse-button,
 .map-restore-button {
   position: absolute;
   z-index: 3200;
   display: grid;
-  width: 30px;
-  min-height: 88px;
+  width: 34px;
+  height: 34px;
+  min-height: 34px;
   padding: 0;
   place-items: center;
-  border: 1px solid var(--line);
-  background-color: #f4f5f3;
+  border: 0;
+  border-radius: 50%;
+  background-color: rgba(255, 255, 255, 0.96);
   background-image: none;
-  color: var(--color-rare);
-  box-shadow: 0 4px 12px rgba(48, 52, 56, 0.08);
+  color: var(--muted);
+  box-shadow: 0 6px 18px rgba(48, 52, 56, 0.18);
   transition: background 160ms ease, box-shadow 160ms ease, color 160ms ease, transform 160ms ease;
 }
 
+/* 地図の面の中に収める。境目にまたがらせると、地図の overflow: hidden で半分が切れる */
 .map-collapse-button {
   top: 50%;
-  right: -1px;
-  border-right: 0;
-  border-radius: 12px 0 0 12px;
+  right: 10px;
   transform: translateY(-50%);
 }
 
+/* 折りたたんだあとは結果パネルが画面いっぱいなので、その左端に重ねて置く */
 .map-restore-button {
   top: 50%;
-  left: 0;
-  border-left: 0;
-  border-radius: 0 12px 12px 0;
+  left: 10px;
+  z-index: 1300;
+  background-color: #eef0ec;
   transform: translateY(-50%);
 }
 
@@ -352,8 +367,8 @@ h3 {
 .map-restore-button:hover {
   background-color: #e6f4f4;
   background-image: none;
-  color: var(--color-primary);
-  box-shadow: 0 6px 14px rgba(48, 52, 56, 0.12);
+  color: var(--accent-dark);
+  box-shadow: 0 8px 20px rgba(48, 52, 56, 0.22);
 }
 
 .map-collapse-button:hover {
@@ -393,69 +408,95 @@ h3 {
   transform: translateX(2px);
 }
 
-.leaflet-right .leaflet-control {
-  float: right;
-  clear: both;
-  margin-top: 10px;
-  margin-right: 10px;
+/* 右上の操作を1列にまとめる。Leaflet は追加した順に積むので、並び順は order で決める。
+   結果パネルの下に潜らせないよう、パネルの幅だけ左に逃がす */
+.leaflet-top.leaflet-right {
+  right: var(--panel-gap);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  padding-top: calc(var(--panel-gap) - 8px);
 }
 
-/* 地点のポップアップ(3000)より前面に置く。操作できなくなるのを防ぐ。 */
-/* 地図の上の操作まわり。検索バーと選択地点をひとつのまとまりにして、丸い形でそろえる */
-.map-overlay {
+.leaflet-top.leaflet-right .geology-control {
+  order: 1;
+}
+
+.leaflet-top.leaflet-right .leaflet-control-zoom {
+  order: 2;
+}
+
+.leaflet-right .leaflet-control {
+  float: none;
+  clear: both;
+  margin-top: 8px;
+  margin-right: 0;
+}
+
+
+
+.leaflet-bottom .leaflet-control {
+  margin-bottom: 12px;
+}
+
+
+
+.leaflet-left .leaflet-control {
+  margin-left: 12px;
+}
+
+/* 検索は地図を操作するものなので、地図の上に浮かせる。
+   結果パネルの下に潜らせない（潜らせると入力欄が白いパネルの裏に消える） */
+.map-search-bar {
   position: absolute;
   z-index: 3300;
-  top: 14px;
-  left: 14px;
-  right: clamp(150px, 22vw, 190px);
-  display: grid;
-  justify-items: start;
-  gap: 8px;
+  top: var(--panel-gap);
+  left: var(--panel-gap);
+  /* 右上の操作（36px）とその余白のぶんを空ける */
+  right: calc(var(--panel-gap) + 46px);
+  display: flex;
   pointer-events: none;
-}
-
-.map-overlay > * {
-  pointer-events: auto;
-  max-width: 100%;
 }
 
 .map-search {
   display: flex;
   align-items: center;
   gap: 4px;
-  width: min(460px, 100%);
-  padding: 5px;
+  width: min(420px, 100%);
+  padding: 4px;
   border-radius: 999px;
-  background: rgba(255, 255, 255, 0.96);
-  box-shadow: 0 10px 26px rgba(48, 52, 56, 0.16);
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow: 0 8px 24px rgba(48, 52, 56, 0.18);
   backdrop-filter: blur(8px);
+  pointer-events: auto;
+  transition: box-shadow 160ms ease;
+}
+
+.map-search:focus-within {
+  box-shadow: 0 8px 24px rgba(48, 52, 56, 0.18), 0 0 0 2px rgba(13, 162, 189, 0.4);
 }
 
 .map-search input {
   flex: 1 1 auto;
   min-width: 0;
-  min-height: 38px;
-  padding: 0 6px;
+  min-height: 36px;
+  padding: 0 4px;
   border: 0;
   background: transparent;
   color: var(--ink);
-  font-size: 0.95rem;
+  font-size: 0.93rem;
 }
 
 .map-search input:focus {
   outline: none;
 }
 
-.map-search:focus-within {
-  box-shadow: 0 10px 26px rgba(48, 52, 56, 0.16), 0 0 0 2px rgba(13, 162, 189, 0.35);
-}
-
-.map-round-button {
+.search-icon-button {
   display: grid;
   place-items: center;
-  width: 38px;
-  height: 38px;
-  min-height: 38px;
+  width: 36px;
+  height: 36px;
+  min-height: 36px;
   flex: 0 0 auto;
   padding: 0;
   border: 0;
@@ -465,9 +506,9 @@ h3 {
   box-shadow: none;
 }
 
-.map-round-button svg {
-  width: 19px;
-  height: 19px;
+.search-icon-button svg {
+  width: 18px;
+  height: 18px;
   fill: none;
   stroke: currentColor;
   stroke-width: 1.9;
@@ -475,125 +516,282 @@ h3 {
   stroke-linejoin: round;
 }
 
-.map-round-button:hover {
-  background: rgba(48, 52, 56, 0.07);
+.search-icon-button:hover {
+  background: rgba(48, 52, 56, 0.08);
   color: var(--ink);
 }
 
-.map-round-button.is-submit {
+.search-icon-button.is-submit {
   background: var(--accent);
   color: #fff;
 }
 
-.map-round-button.is-submit:hover {
+.search-icon-button.is-submit:hover {
   background: var(--accent-dark);
   color: #fff;
 }
 
-/* 選択地点は1行の細い帯。長い住所は末尾を省略する */
-.map-place {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  margin: 0;
-  padding: 6px 14px 6px 8px;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.96);
-  box-shadow: 0 6px 18px rgba(48, 52, 56, 0.12);
-  font-size: 0.86rem;
-}
-
-.map-place-label {
-  flex: 0 0 auto;
-  padding: 2px 9px;
-  border-radius: 999px;
-  background: #e6f4f4;
-  color: var(--accent-dark);
-  font-size: 0.74rem;
-  font-weight: 700;
-}
-
-.map-place span:last-child {
-  min-width: 0;
-  overflow: hidden;
-  color: var(--muted);
-  text-overflow: ellipsis;
-  white-space: nowrap;
-}
-
-/* 地質図の表示切り替え（Leaflet のコントロール） */
+/* 結果は地図の上に浮かぶ1枚のカード。幅が変わると地図の見える範囲も変わる */
+/* 結果は地図の隣に並ぶ面。角丸や影は付けない（浮いていると「閉じられるもの」に見える） */
 .result-pane {
   position: relative;
   z-index: 2;
+  display: flex;
+  flex-direction: column;
   min-width: 0;
   min-height: 0;
-  padding: 20px;
+  padding: 0;
   overflow: auto;
-  background: var(--bg);
-}
-
-.geology-control {
-  padding: 5px 12px 5px 8px;
-  border: 0;
-  border-radius: 999px;
-  background: rgba(255, 255, 255, 0.96);
-  box-shadow: 0 6px 18px rgba(48, 52, 56, 0.14);
-}
-
-.geology-control label {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  min-height: 28px;
-  color: var(--ink);
-  font-size: 0.84rem;
-  font-weight: 700;
-  white-space: nowrap;
-  cursor: pointer;
-}
-
-.tabs,
-.note {
+  overscroll-behavior: contain;
+  border-left: 1px solid var(--line);
   background: var(--panel);
-  border: 1px solid var(--line);
-  border-radius: 8px;
-  box-shadow: var(--shadow);
 }
 
-.tabs {
-  overflow: hidden;
-}
-
-.tab-buttons {
+/* 切り替えは上に貼り付ける。中身が長いので、スクロールしても戻らずに切り替えられるようにする。
+   右側はメニューボタン（画面に固定）のぶんを空けておく */
+.result-head {
+  position: sticky;
+  z-index: 3;
+  top: 0;
   display: grid;
-  grid-template-columns: 1fr 1fr;
-  border-bottom: 1px solid var(--line);
+  gap: 12px;
+  justify-items: start;
+  padding: 16px 20px 12px;
+  background: linear-gradient(var(--panel) 78%, rgba(255, 255, 255, 0));
+}
+
+/* 選んだ地点は「結果の見出し」。地図の上に帯で出すと、地質図の切り替えと同じ形になって、
+   表示なのか操作なのか分からなくなる。小さな見出し＋地名の組みにして、面を持たせない */
+.result-place {
+  display: grid;
+  gap: 2px;
+  width: 100%;
+  margin: 0;
+}
+
+.result-place[hidden] {
+  display: none;
+}
+
+.result-place-label {
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.result-place-name {
+  /* 逆引きの住所は長いことがあるので2行で打ち切る。全文は title 属性で出す */
+  display: -webkit-box;
+  overflow: hidden;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
+  color: var(--ink);
+  font-size: 1rem;
+  font-weight: 800;
+  line-height: 1.45;
+}
+
+/* 地質図の表示切り替え（Leaflet のコントロール） */
+
+/* ズームも同じ幅・同じ角丸にそろえる */
+.leaflet-control-zoom {
+  border: 0 !important;
+  border-radius: 10px !important;
+  overflow: hidden;
+  box-shadow: 0 6px 18px rgba(48, 52, 56, 0.18);
+}
+
+.leaflet-control-zoom a {
+  width: 36px !important;
+  height: 36px !important;
+  line-height: 36px !important;
+  border: 0 !important;
+  background: rgba(255, 255, 255, 0.97);
+  color: var(--ink);
+  font-size: 1.1rem;
+}
+
+.leaflet-control-zoom a + a {
+  border-top: 1px solid rgba(171, 167, 157, 0.35) !important;
+}
+
+.leaflet-control-zoom a:hover {
+  background: #e6f4f4;
+  color: var(--accent-dark);
+}
+
+/* 地図の操作は、同じ大きさ・同じ形のアイコンを縦に並べる。
+   幅の違うもの（文字つきのスイッチと細い＋−）を重ねると、そろっていないように見える */
+.map-icon-button {
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  min-height: 36px;
+  padding: 0;
+  border: 0;
+  border-radius: 10px;
+  background: rgba(255, 255, 255, 0.97);
+  color: var(--ink);
+  box-shadow: 0 6px 18px rgba(48, 52, 56, 0.18);
+  transition: background 160ms ease, color 160ms ease;
+}
+
+.map-icon-button svg {
+  width: 19px;
+  height: 19px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
+/* 押されている（地質図が出ている）ことを色で示す */
+.map-icon-button.is-on {
+  background: var(--accent);
+  color: #fff;
+}
+
+.map-icon-button:hover {
+  background: #e6f4f4;
+  color: var(--accent-dark);
+}
+
+.map-icon-button.is-on:hover {
+  background: var(--accent-dark);
+  color: #fff;
+}
+
+/* 結果パネルの中で枠を重ねない。切り替えはセグメント（丸いトグル） */
+.tab-buttons {
+  display: inline-flex;
+  gap: 2px;
+  padding: 4px;
+  border-radius: 999px;
+  background: rgba(171, 167, 157, 0.16);
 }
 
 .tab-buttons button {
-  border-radius: 0;
-  background: rgba(171, 167, 157, 0.18);
-  color: var(--ink);
+  min-height: 36px;
+  padding: 0 18px;
+  border-radius: 999px;
+  background: transparent;
+  color: var(--muted);
+  font-size: 0.94rem;
   box-shadow: none;
+  transition: background 160ms ease, color 160ms ease;
+}
+
+.tab-buttons button:hover {
+  background: rgba(255, 255, 255, 0.7);
+  color: var(--ink);
 }
 
 .tab-buttons button.active {
-  background: rgba(13, 162, 189, 0.12);
+  background: var(--panel);
   color: var(--accent-dark);
+  box-shadow: 0 2px 8px rgba(48, 52, 56, 0.12);
+}
+
+/* 中身が短いときも断り書きが下に落ちるように、切り替えの箱が残りの高さを取る */
+.tabs {
+  flex: 1 0 auto;
 }
 
 .tab-panel {
   display: none;
-  padding: 16px;
+  padding: 2px 20px 0;
 }
 
 .tab-panel.active {
   display: block;
 }
 
+/* 何も選んでいないとき。白いパネルに1行だけだと間が持たないので、
+   目印の丸と手順を置く。手順は最初だけで、1度でも操作したら出さない（script.js） */
+.panel-intro {
+  display: grid;
+  justify-items: center;
+  gap: 16px;
+  padding: 46px 6px 20px;
+  text-align: center;
+}
+
+/* 取得中や取得失敗のときは、案内の丸と手順を出さずに文だけにする */
+.panel-intro:has(.empty-message[hidden]) {
+  display: none;
+}
+
+.panel-intro-icon {
+  display: grid;
+  place-items: center;
+  width: 66px;
+  height: 66px;
+  border-radius: 50%;
+  background: rgba(13, 162, 189, 0.1);
+  color: var(--accent-dark);
+}
+
+.panel-intro-icon svg {
+  width: 30px;
+  height: 30px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 1.5;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+}
+
 .empty-message {
-  color: var(--muted);
+  margin: 0;
+  color: var(--ink);
+  font-size: 1.02rem;
+  font-weight: 700;
   line-height: 1.7;
+}
+
+/* 手順。番号は丸い札にして、文は左ぞろえで読ませる */
+.panel-steps {
+  display: grid;
+  gap: 11px;
+  width: 100%;
+  max-width: 320px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  counter-reset: step;
+  text-align: left;
+}
+
+.panel-steps li {
+  display: grid;
+  grid-template-columns: 22px minmax(0, 1fr);
+  align-items: start;
+  gap: 10px;
+  color: var(--muted);
+  font-size: 0.86rem;
+  line-height: 1.55;
+}
+
+/* hidden は display: grid に負けるので、明示的に消す */
+.panel-steps[hidden] {
+  display: none;
+}
+
+.panel-steps li::before {
+  display: grid;
+  place-items: center;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: rgba(171, 167, 157, 0.2);
+  color: var(--ink);
+  font-size: 0.74rem;
+  font-weight: 700;
+  counter-increment: step;
+  content: counter(step);
 }
 
 .geology-list {
@@ -645,7 +843,7 @@ h3 {
 
 .rock-grid {
   display: grid;
-  align-items: flex-start;
+  align-items: stretch;
   justify-content: start;
   gap: var(--rock-gap);
   grid-template-columns: repeat(var(--rock-columns), minmax(0, 1fr));
@@ -674,7 +872,8 @@ h3 {
   --rock-card-size: 140px;
   --rock-name-size: 0.8rem;
   --rock-detail-size: 0.8rem;
-  --rock-columns: 4;
+  /* 浮かせたパネルの幅では4列にすると1列95pxしかなく、名前が縦に割れる */
+  --rock-columns: 3;
   --rock-gap: 16px;
 }
 
@@ -685,7 +884,7 @@ h3 {
 
 .geology-card {
   border: 1px solid var(--line);
-  border-radius: 8px;
+  border-radius: 12px;
   background: #fff;
   overflow: hidden;
 }
@@ -693,11 +892,22 @@ h3 {
 .rock-card {
   width: 100%;
   display: grid;
-  border: 1px solid var(--line);
-  border-radius: 5px;
+  border: 1px solid transparent;
+  border-radius: 12px;
   background: #fff;
-  box-shadow: 0 10px 24px rgba(48, 52, 56, 0.08);
+  box-shadow: 0 1px 2px rgba(48, 52, 56, 0.08), 0 8px 20px rgba(48, 52, 56, 0.08);
   overflow: hidden;
+  transition: box-shadow 180ms ease, transform 180ms ease;
+}
+
+/* 高さをそろえたぶんの余りは下に出す。写真と名前は上にそろえる */
+.rock-card {
+  align-content: start;
+}
+
+.rock-card:hover {
+  box-shadow: 0 1px 2px rgba(48, 52, 56, 0.1), 0 12px 26px rgba(48, 52, 56, 0.14);
+  transform: translateY(-2px);
 }
 
 .app-shell.map-collapsed .rock-card {
@@ -798,7 +1008,7 @@ h3 {
   width: 100%;
   margin-top: 7px;
   border: 1px solid var(--rock-section-accent);
-  border-radius: 5px;
+  border-radius: 12px;
   background: #fff;
   box-shadow: 0 10px 24px rgba(48, 52, 56, 0.08);
   padding: 14px 16px 16px;
@@ -1071,12 +1281,14 @@ h3 {
   background: var(--line);
 }
 
+/* 結果パネルの足もとの断り書き。中身より前に出ないよう、細い線のうしろに小さく置く */
 .note {
-  margin-top: 16px;
-  padding: 14px;
+  margin: 22px 20px 20px;
+  border-top: 1px solid var(--line);
+  padding: 12px 0 0;
   color: var(--muted);
+  font-size: 0.78rem;
   line-height: 1.7;
-  font-size: 0.9rem;
 }
 
 html.stone-root,
@@ -1380,10 +1592,10 @@ body.stone-page {
 
 .rock-credit {
   margin: 0;
-  padding: 4px 10px 0;
+  padding: 0 10px 7px;
   color: var(--muted);
-  font-size: 0.68rem;
-  line-height: 1.4;
+  font-size: 0.62rem;
+  line-height: 1.35;
 }
 
 /* 見分け方。現場でいちばん使うので目立たせる */
@@ -1607,66 +1819,78 @@ body.stone-page {
   opacity: 1;
 }
 
+/* 狭い画面では横に置けないので、地図を上、結果を下にする。
+   結果は地図に少しかぶせて、下から出てきた紙のように見せる */
 @media (max-width: 820px) {
   .app-shell {
-    height: calc(100vh - 64px);
-    grid-template-columns: 1fr;
-    grid-template-rows: minmax(360px, 52vh) minmax(0, 1fr);
+    --panel-gap: 12px;
+    height: calc(100vh - 52px);
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(300px, 46vh) minmax(0, 1fr);
     transition: grid-template-rows 420ms cubic-bezier(0.4, 0, 0.2, 1);
   }
 
   .app-shell.map-collapsed {
-    grid-template-columns: 1fr;
+    grid-template-columns: minmax(0, 1fr);
     grid-template-rows: 0 minmax(0, 1fr);
   }
 
-  .map-pane {
-    border-right: 0;
-    border-bottom: 1px solid var(--line);
+  .result-pane {
+    border-top: 1px solid var(--line);
+    border-left: 0;
   }
 
-  .map-pane.collapsed {
-    min-height: 74px;
+  .result-head {
+    padding: 14px 64px 10px 14px;
   }
 
-  .map-pane.collapsed #map {
-    height: 74px;
+  .tab-panel {
+    padding: 2px 14px 0;
   }
 
+  .note {
+    margin: 20px 14px 18px;
+  }
+
+
+
+  /* 上下に並ぶので、つまみの矢印も上下向きにする */
   .map-collapse-button {
     top: auto;
-    right: 16px;
-    bottom: -1px;
-    width: 58px;
-    min-height: 32px;
-    border-right: 1px solid var(--line);
-    border-bottom: 0;
-    border-radius: 10px 10px 0 0;
+    right: 14px;
+    bottom: 10px;
     transform: none;
   }
 
   .map-restore-button {
-    top: 0;
-    left: 16px;
-    width: 58px;
-    min-height: 32px;
-    border-top: 0;
-    border-left: 1px solid var(--line);
-    border-radius: 0 0 10px 10px;
-    transform: none;
+    top: auto;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+  }
+
+  .map-collapse-button .map-panel-handle-icon,
+  .map-collapse-button:hover .map-panel-handle-icon,
+  .map-collapse-button:active .map-panel-handle-icon,
+  .map-restore-button .map-panel-handle-icon,
+  .map-restore-button:hover .map-panel-handle-icon,
+  .map-restore-button:active .map-panel-handle-icon {
+    transform: rotate(90deg);
   }
 
   .map-collapse-button:hover,
   .map-collapse-button:active,
-  .map-restore-button:hover,
-  .map-restore-button:active {
+  .map-restore-button:hover {
     transform: none;
   }
 
-  .map-overlay {
-    top: 12px;
-    right: 62px;
-    left: 12px;
+  .map-restore-button:hover,
+  .map-restore-button:active {
+    transform: translateX(-50%);
+  }
+
+  .app-header {
+    padding: 0 12px;
   }
 
   .rock-cards {
@@ -2229,20 +2453,14 @@ body.stone-page {
   background: #d7eef0;
 }
 
-/* 地図画面の右上のメニュー（menu.js）。押すと右から引き出しが出る */
-.app-header {
-  position: relative;
-  z-index: 1100;
-}
-
-/* 引き出しはヘッダーも含めて覆う。閉じるボタンは引き出しの中に置く（ヘッダーを前に出すと、
-   ヘッダーの帯が引き出しの上に乗ってしまう） */
-/* ボタンは画面に固定して、引き出しより前に出す。ヘッダーの中に置くと、ヘッダーが重なり順の
-   入れ物になり、ボタンだけを引き出しより前に出せない */
+/* 地図画面の右上のメニュー（menu.js）。押すと右から引き出しが出る。
+   ボタンは画面に固定して、引き出しより前に出す。何かの中に入れると、
+   その要素が重なり順の入れ物になり、ボタンだけを引き出しより前に出せない。
+   広い画面では結果パネルの右上の余白（.result-head の padding-right）に収まる */
 .app-menu {
   position: fixed;
-  top: 10px;
-  right: clamp(16px, 3vw, 36px);
+  top: 4px;
+  right: 16px;
   z-index: 2200;
 }
 

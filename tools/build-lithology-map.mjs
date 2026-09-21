@@ -149,7 +149,8 @@ const metamorphicRules = [
   [/^超苦鉄質片麻岩・超苦鉄質グラノフェルス/, [["peridotite", P], ["serpentinite", S]]],
   [/^泥質片麻岩/, [["gneiss", P], ["pelitic-schist", M]]],
   [/^砂質グラノフェルス・砂質片麻岩|^砂質片麻岩|^珪質片麻岩|^珪長質片麻岩/, [["gneiss", P]]],
-  [/^超苦鉄質グラノフェルス/, [["peridotite", P], ["hornfels", S]]],
+  // 接触変成でかんらん石が戻っていても、岩体のふちや割れ目は蛇紋岩のまま残る
+  [/^超苦鉄質グラノフェルス/, [["peridotite", P], ["serpentinite", S], ["hornfels", S]]],
   [/^石灰質グラノフェルス/, [["marble", P], ["hornfels", S]]],
   [/^苦鉄質グラノフェルス/, [["hornfels", P], ["amphibolite", M]]],
   [/^珪質グラノフェルス/, [["hornfels", P], ["chert", M]]],
@@ -183,7 +184,11 @@ const protolithRules = [
 
 // 火成岩の岩相語。
 const igneousRules = [
-  [/超苦鉄質岩類/, [["peridotite", P], ["serpentinite", S]]],
+  // 日本の超苦鉄質岩体は、地表に出てくる途中でほとんどが蛇紋岩に変質している。
+  // 実際に拾えるのは蛇紋岩のほうで、かんらん岩は変質を免れた部分に限られる
+  // （アポイ岳＝幌満が世界的に有名なのは、変質していないのが例外だから）。
+  // 白馬・八方尾根の超苦鉄質岩体も蛇紋岩マイロナイトとして知られる。
+  [/超苦鉄質岩類/, [["serpentinite", P], ["peridotite", S]]],
   [/斑れい岩・閃緑岩・石英閃緑岩/, [["gabbro", P], ["diorite", P]]],
   [/斑れい岩/, [["gabbro", P]]],
   [/閃緑岩・石英閃緑岩/, [["diorite", P]]],
@@ -225,9 +230,17 @@ function classify(legend) {
   if (looseMatch) {
     // 未固結堆積物。ここにある石は他所から運ばれてきたものなので、
     // 岩相そのものからは石を決めない。周辺の岩盤から推定する。
-    const rocks = looseMatch[1] === LOOSE.volcanic
-      ? [["andesite", S], ["basalt", M], ["tuff", S], ["pumice", P]]
-      : [];
+    // 火山まわりの堆積物は、中身が2通りある。
+    //   岩屑なだれ・火山麓扇状地 … 山体が崩れて転がってきた溶岩の塊。
+    //     磐梯山の流れ山の中身は「安山岩の塊（かつての山体の溶岩）」、
+    //     鳥海山の基質も安山岩岩塊と火山礫で、軽石が主役ではない。
+    //   風成火山灰 … 降り積もった火山灰。軽石・スコリアの粒が主役。
+    let rocks = [];
+    if (looseMatch[1] === LOOSE.volcanic) {
+      rocks = /風成火山灰/.test(lithology)
+        ? [["pumice", P], ["tuff", S], ["andesite", M], ["basalt", M]]
+        : [["andesite", P], ["basalt", S], ["tuff", M], ["pumice", M]];
+    }
     return { kind: "loose", looseType: looseMatch[1], rocks };
   }
 

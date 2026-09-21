@@ -7,7 +7,11 @@
     <link
       rel="stylesheet"
       href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css">
-    <link rel="stylesheet" href="styles.css?v=20260920-21">
+    <!-- 日本語の本文用。読み込めなくても端末のゴシック体に落ちるだけで、表示は崩れない -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&display=swap">
+    <link rel="stylesheet" href="styles.css?v=20260921-04">
     <script
       defer
       src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
@@ -15,10 +19,12 @@
     <script defer src="data/bundle.js?v=20260919-10"></script>
     <script defer src="menu.js?v=20260920-18"></script>
     <script defer src="link-preview.js?v=20260920-17"></script>
-    <script defer src="script.js?v=20260920-21"></script>
+    <script defer src="script.js?v=20260921-07"></script>
   </head>
   <!-- 地図の検索結果ではホバーの説明カードを出さない（カードは詳細ページだけのもの） -->
   <body data-link-preview="off">
+    <!-- 名前は帯（動かない枠）に、検索は地図の上（操作する面）に置く。
+         同じ面に丸い札で並べると、どちらが主役か分からなくなる -->
     <header class="app-header">
       <a class="app-brand" href="index.html">
         <span class="app-logo" aria-hidden="true">
@@ -32,6 +38,9 @@
           <span class="app-brand-tagline">地質図から石を探す</span>
         </span>
       </a>
+
+      <!-- メニューボタンは画面に固定するので、ここでは場所だけ空けておく -->
+      <span class="app-header-menu-slot" aria-hidden="true"></span>
     </header>
 
     <!-- ボタンはヘッダーの外に出して画面に固定する。ヘッダーの中に置くと、ヘッダーが重なり順の
@@ -56,22 +65,19 @@
 
     <main class="app-shell" id="appShell">
       <section class="map-pane" aria-label="&#22320;&#22259;">
+        <!-- 地図の上に置くのは操作だけ。検索は左上、ズームと地質図の切り替えは右上。
+             選んだ地点は結果パネルの見出しに出す（地図の上に出すと、操作と同じ形の帯が並ぶ） -->
         <div id="map">
-          <!-- 地図の上に浮かせる操作まわり。ひとつのまとまりにして、丸いバーにする -->
-          <div class="map-overlay">
+          <div class="map-search-bar">
             <form id="searchForm" class="map-search">
-              <button id="locateButton" class="map-round-button" type="button" aria-label="現在地から探す" title="現在地から探す">
+              <button id="locateButton" class="search-icon-button" type="button" aria-label="現在地から探す" title="現在地から探す">
                 <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="12" cy="12" r="3.4"/><path d="M12 2.5v3"/><path d="M12 18.5v3"/><path d="M21.5 12h-3"/><path d="M5.5 12h-3"/><circle cx="12" cy="12" r="7.6"/></svg>
               </button>
               <input id="searchInput" type="search" placeholder="場所をさがす（函館、筑波山など）" autocomplete="off">
-              <button class="map-round-button is-submit" type="submit" aria-label="検索" title="検索">
+              <button class="search-icon-button is-submit" type="submit" aria-label="検索" title="検索">
                 <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><circle cx="11" cy="11" r="6.4"/><path d="M15.8 15.8L20.5 20.5"/></svg>
               </button>
             </form>
-            <p class="map-place">
-              <span class="map-place-label">選択地点</span>
-              <span id="selectedPoint">地図をクリックするか、現在地・検索で場所を選んでください。</span>
-            </p>
           </div>
         </div>
         <div id="inspectPopupOverlay" class="map-inspect-popup" hidden></div>
@@ -89,18 +95,46 @@
 
       <aside class="result-pane" aria-live="polite">
         <section class="tabs" aria-label="&#26908;&#32034;&#32080;&#26524;">
-          <div class="tab-buttons" role="tablist">
-            <button id="rocksTab" class="active" type="button" role="tab" aria-selected="true">&#30707;&#12434;&#35211;&#12427;</button>
-            <button id="geologyTab" type="button" role="tab" aria-selected="false">&#22320;&#36074;&#12434;&#35211;&#12427;</button>
+          <div class="result-head">
+            <p class="result-place" id="selectedPlace" hidden>
+              <span class="result-place-label">選択地点</span>
+              <span class="result-place-name" id="selectedPoint"></span>
+            </p>
+            <div class="tab-buttons" role="tablist">
+              <button id="rocksTab" class="active" type="button" role="tab" aria-selected="true">&#30707;&#12434;&#35211;&#12427;</button>
+              <button id="geologyTab" type="button" role="tab" aria-selected="false">&#22320;&#36074;&#12434;&#35211;&#12427;</button>
+            </div>
           </div>
 
           <div id="rocksPanel" class="tab-panel active" role="tabpanel" aria-labelledby="rocksTab">
-            <p class="empty-message">&#35211;&#12388;&#12363;&#12427;&#21487;&#33021;&#24615;&#12398;&#12354;&#12427;&#30707;&#12434;&#26908;&#32034;&#12391;&#12365;&#12414;&#12377;&#12290;&#12414;&#12378;&#22580;&#25152;&#12434;&#36984;&#12435;&#12391;&#12367;&#12384;&#12373;&#12356;&#12290;</p>
+            <div class="panel-intro">
+              <span class="panel-intro-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false">
+                  <path d="M12 21.2s7-5.6 7-11.2a7 7 0 1 0-14 0c0 5.6 7 11.2 7 11.2z"/>
+                  <circle cx="12" cy="10" r="2.6"/>
+                </svg>
+              </span>
+              <p class="empty-message">まず場所を選んでください</p>
+              <ol class="panel-steps">
+                <li>地図をクリックするか、上の窓で場所をさがす</li>
+                <li>ふきだしの「ここを調べる！」を押す</li>
+                <li>その場所で拾えそうな石がここに出ます</li>
+              </ol>
+            </div>
             <div id="rockCards" class="rock-cards"></div>
           </div>
 
           <div id="geologyPanel" class="tab-panel" role="tabpanel" aria-labelledby="geologyTab">
-            <p class="empty-message">&#21462;&#24471;&#12375;&#12383;&#22320;&#36074;&#24773;&#22577;&#12434;&#12371;&#12371;&#12395;&#34920;&#31034;&#12375;&#12414;&#12377;&#12290;</p>
+            <div class="panel-intro">
+              <span class="panel-intro-icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24" focusable="false">
+                  <path d="M12 3.2l8.4 4.3-8.4 4.3-8.4-4.3z"/>
+                  <path d="M4.4 11.6L12 15.5l7.6-3.9"/>
+                  <path d="M4.4 15.8L12 19.7l7.6-3.9"/>
+                </svg>
+              </span>
+              <p class="empty-message">取得した地質情報をここに表示します</p>
+            </div>
             <div id="geologyList" class="geology-list"></div>
           </div>
         </section>

@@ -129,6 +129,13 @@ let selectedAddressRequestId = 0;
 let inspectRequestId = 0;
 
 const selectedPoint = document.querySelector("#selectedPoint");
+const selectedPlace = document.querySelector("#selectedPlace");
+// いま選んでいる地点の住所。見出しに出すのは「調べ終わった地点」だけなので、
+// 住所そのものはここに持っておく
+let pendingAddressText = "";
+// いま出している結果がどの地点のものか。住所は地質より遅れて返ることがあるので、
+// 遅れて届いた住所を見出しに書いてよいかの判断に使う
+let inspectedLatLng = null;
 const inspectPopupOverlay = document.querySelector("#inspectPopupOverlay");
 const appShell = document.querySelector("#appShell");
 const mapCollapseButton = document.querySelector("#mapCollapseButton");
@@ -153,7 +160,7 @@ function initMap() {
     zoomControl: false
   }).setView(DEFAULT_CENTER, DEFAULT_ZOOM);
 
-  L.control.zoom({ position: "bottomleft" }).addTo(map);
+  L.control.zoom({ position: "topright" }).addTo(map);
 
   L.tileLayer("https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png", {
     attribution: '<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noreferrer">GSI Tiles</a>',
@@ -182,21 +189,29 @@ function initMap() {
 
 function addGeologyControl() {
   const GeologyControl = L.Control.extend({
+    // ズームと同じ角（右上）に置いて、同じ大きさのアイコンで縦に並べる。
+    // 幅の違うものを重ねると、そろっていないように見える
     options: { position: "topright" },
     onAdd() {
       const container = L.DomUtil.create("div", "leaflet-control geology-control");
       container.innerHTML = `
-        <label>
-          <input id="geologyLayerToggle" type="checkbox" checked>
-          <span>${text.geologyToggle}</span>
-        </label>
+        <button id="geologyLayerToggle" class="map-icon-button is-on" type="button" aria-pressed="true" aria-label="${text.geologyToggle}" title="${text.geologyToggle}">
+          <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+            <path d="M12 3.2l8.4 4.3-8.4 4.3-8.4-4.3z"/>
+            <path d="M4.4 11.6L12 15.5l7.6-3.9"/>
+            <path d="M4.4 15.8L12 19.7l7.6-3.9"/>
+          </svg>
+        </button>
       `;
       L.DomEvent.disableClickPropagation(container);
       L.DomEvent.disableScrollPropagation(container);
 
-      const input = container.querySelector("input");
-      input.addEventListener("change", (event) => {
-        if (event.target.checked) {
+      const button = container.querySelector("button");
+      button.addEventListener("click", () => {
+        const on = button.getAttribute("aria-pressed") !== "true";
+        button.setAttribute("aria-pressed", String(on));
+        button.classList.toggle("is-on", on);
+        if (on) {
           geologyLayer.addTo(map);
           console.info("GSJ geology layer enabled.");
         } else {
@@ -214,7 +229,7 @@ function addGeologyControl() {
 
 function bindUi() {
   // 地図の上に重ねた操作は、押しても地図のクリック（地点選択）にしない
-  [".map-overlay", ".map-collapse-button", ".map-restore-button"].forEach((selector) => {
+  [".map-search-bar", ".map-collapse-button", ".map-restore-button"].forEach((selector) => {
     const element = document.querySelector(selector);
     if (element) {
       L.DomEvent.disableClickPropagation(element);
@@ -314,7 +329,9 @@ async function selectPoint(latlng, initialAddress = "") {
   clickedLatLng = latlng;
   const requestId = ++selectedAddressRequestId;
   const pendingAddress = initialAddress ? formatAddress(initialAddress) : text.addressLoading;
-  selectedPoint.textContent = pendingAddress;
+  // ここで見出しを書き換えてはいけない。カードは「ここを調べる！」を押すまで入れ替わらないので、
+  // 前の地点の結果に、新しく選んだ地名の見出しが付いてしまう
+  pendingAddressText = pendingAddress;
 
   if (!marker) {
     marker = L.marker(latlng).addTo(map);
@@ -342,7 +359,7 @@ async function selectPoint(latlng, initialAddress = "") {
 // ボタンを押さなくてもそのまま調べる。地図クリックは誤操作もあるので手動のまま。
 function selectAndInspect(latlng, initialAddress = "") {
   selectPoint(latlng, initialAddress);
-  hideInspectPopupButton();
+  hideInspectPopup();
   return inspectGeology(latlng);
 }
 
@@ -375,7 +392,7 @@ function createInspectPopupContent(address) {
     event.preventDefault();
     event.stopPropagation();
     if (clickedLatLng && !inspectInProgress) {
-      hideInspectPopupButton();
+      hideInspectPopup();
       inspectGeology(clickedLatLng);
     }
   });
@@ -384,19 +401,41 @@ function createInspectPopupContent(address) {
   return content;
 }
 
+// 結果パネルの見出し。**いま出している結果の地点**を指す。
+// 出ているのは結果があるあいだだけ（inspectGeology が出し入れする）
+function showSelectedPlace(name) {
+  selectedPoint.textContent = name;
+  // 見出しは2行で切るので、全文はマウスを乗せたときに読めるようにしておく
+  selectedPoint.title = name;
+  selectedPlace.hidden = false;
+}
+
+function hideSelectedPlace() {
+  selectedPlace.hidden = true;
+}
+
+function isInspectedPoint(latlng) {
+  return Boolean(inspectedLatLng && latlng
+    && inspectedLatLng.lat === latlng.lat
+    && inspectedLatLng.lng === latlng.lng);
+}
+
 function updateSelectedAddress(address) {
-  selectedPoint.textContent = address;
+  pendingAddressText = address;
+  // 住所は地質の取得より遅れて返ることがある。いま出ている結果がこの地点のものなら、
+  // 見出しも追いかけて書き換える。別の地点を選んだだけのときは書き換えない
+  if (isInspectedPoint(clickedLatLng)) {
+    showSelectedPlace(address);
+  }
   inspectPopupOverlay.querySelectorAll(".inspect-popup-address").forEach((element) => {
     element.textContent = address;
   });
   requestAnimationFrame(updateInspectPopupPosition);
 }
 
-function hideInspectPopupButton() {
-  inspectPopupOverlay.querySelectorAll(".inspect-popup-button").forEach((button) => {
-    button.remove();
-  });
-  updateInspectPopupPosition();
+function hideInspectPopup() {
+  inspectPopupOverlay.hidden = true;
+  inspectPopupOverlay.innerHTML = "";
 }
 
 function setInspectPopupButtonsState({ disabled, label }) {
@@ -408,9 +447,9 @@ function setInspectPopupButtonsState({ disabled, label }) {
 
 const POPUP_GAP = 12;
 const POPUP_EDGE = 8;
-// 地図の上端には住所表示と検索フォームが重なっている。
-// ここにポップアップが乗ると検索が押せなくなるので、収まらなければ下側に出す。
-const POPUP_TOP_INSET = 140;
+// 地図の上端には検索バーが重なっている。
+// ここにふきだしが乗ると検索が押せなくなるので、収まらなければ下側に出す。
+const POPUP_TOP_INSET = 78;
 
 function updateInspectPopupPosition() {
   if (!clickedLatLng || inspectPopupOverlay.hidden || !map) {
@@ -449,6 +488,9 @@ async function inspectGeology(latlng) {
   setInspectPopupButtonsState({ disabled: true, label: text.loading });
   rockCards.innerHTML = "";
   geologyList.innerHTML = "";
+  // 結果を消したので、その地点を指していた見出しも消す
+  inspectedLatLng = null;
+  hideSelectedPlace();
   setPanelMessage(rocksPanel, text.fetching);
   setPanelMessage(geologyPanel, text.fetching);
 
@@ -473,6 +515,10 @@ async function inspectGeology(latlng) {
 
     // keepOpen は候補を足しての描き直しのときだけ。別の地点を調べたときは畳んだ状態から始める
     const draw = (keepOpen = false) => {
+      // 見出しは結果と一緒に出す。結果が出ていないのに地名だけ出ていると、
+      // その地名の結果があるように見える
+      inspectedLatLng = latlng;
+      showSelectedPlace(pendingAddressText);
       renderGeology(pointLegend, usedTiers, area, catchment);
       renderRocks(
         estimateRocks(pointLegend, usedTiers, carriedMode, area, catchment),
@@ -1095,6 +1141,27 @@ function ageDurabilityFor(group, ageCode) {
   return AGE_DURABILITY[ageCode] ?? 1;
 }
 
+// 年代でだんだん拾えなくなる石。岩相の名前には出てくるが、古い地層では
+// その形のまま残らない。添字は ageCodeOf() の 0=第四紀 … 4=古生代以前。
+//   軽石   … 埋もれて固結すると凝灰岩になり、軽石としては拾えない
+//   黒曜石 … 火山ガラス。時間とともに結晶化して失われる。日本の産地（白滝・霧ヶ峰・
+//             神津島・隠岐・姫島・腰岳など）はいずれも第四紀の火山
+//   脈石英 … 熱水が回って石英の脈ができるには時間と埋没が要る。
+//             できたての火山岩の中には入っていない（新第三紀の熱水脈は普通にある）
+const AGE_FADE = {
+  pumice: [1, 0.3, 0, 0, 0],
+  obsidian: [1, 0.2, 0, 0, 0],
+  "vein-quartz": [0.25, 0.85, 1, 1, 1]
+};
+
+function ageFade(rockId, ageCode) {
+  const curve = AGE_FADE[rockId];
+  if (!curve) {
+    return 1;
+  }
+  return curve[ageCode] ?? curve[curve.length - 1];
+}
+
 function ageCodeOf(age) {
   if (/第四紀/.test(age)) return 0;
   if (/新第三紀/.test(age)) return 1;
@@ -1127,9 +1194,13 @@ function estimateRocks(pointLegend, tiers, carriedMode, area = null, catchment =
 
   // byLithology は、どの地質から何点もらったか。鉱物の判定で「その地質ではできない鉱物」
   // （高P/T型の片麻岩に菫青石など）を除くのに使う。
-  const addRocks = (rocks, factor, source, lithology) => {
+  const addRocks = (rocks, factor, source, lithology, ageCode) => {
     rocks.forEach(({ id, weight }) => {
-      const score = weight * factor;
+      // 軽石・黒曜石・脈石英は、地層の年代によって残り方が変わる
+      const score = weight * factor * ageFade(id, ageCode);
+      if (score <= 0) {
+        return;
+      }
       const current = scores.get(id);
       if (!current) {
         scores.set(id, { id, score, sources: new Set([source]), byLithology: new Map([[lithology, score]]) });
@@ -1146,11 +1217,12 @@ function estimateRocks(pointLegend, tiers, carriedMode, area = null, catchment =
   };
 
   if (pointEntry) {
+    const pointAge = ageCodeOf(pointLegend?.formationAge_ja || "");
     if (pointEntry.kind === "bedrock") {
-      addRocks(pointEntry.rocks, SCORE_AT_POINT, "point", pointEntry.lithology);
+      addRocks(pointEntry.rocks, SCORE_AT_POINT, "point", pointEntry.lithology, pointAge);
     } else {
       // 火山灰や岩屑なだれには、その火山の石そのものが含まれる。
-      addRocks(pointEntry.rocks, SCORE_VOLCANIC_FALL, "point", pointEntry.lithology);
+      addRocks(pointEntry.rocks, SCORE_VOLCANIC_FALL, "point", pointEntry.lithology, pointAge);
     }
   }
 
@@ -1179,7 +1251,7 @@ function estimateRocks(pointLegend, tiers, carriedMode, area = null, catchment =
         factor *= ageDurability(legend);
       }
 
-      addRocks(entry.rocks, factor, carriedMode ? "carried" : "nearby", entry.lithology);
+      addRocks(entry.rocks, factor, carriedMode ? "carried" : "nearby", entry.lithology, ageCodeOf(legend.formationAge_ja || ""));
     });
   });
 
@@ -1190,8 +1262,9 @@ function estimateRocks(pointLegend, tiers, carriedMode, area = null, catchment =
       if (!entry || entry.kind !== "bedrock") {
         return;
       }
-      const factor = catchmentBoost(share) * ageDurabilityFor(entry.group, catchment.ages.get(key) ?? 3);
-      addRocks(entry.rocks, factor, "upstream", entry.lithology);
+      const ageCode = catchment.ages.get(key) ?? 3;
+      const factor = catchmentBoost(share) * ageDurabilityFor(entry.group, ageCode);
+      addRocks(entry.rocks, factor, "upstream", entry.lithology, ageCode);
     });
   }
 
@@ -1541,7 +1614,6 @@ function renderRockCard(rock) {
       <a class="rock-photo-link" href="${detailUrl}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(rock.name)}${text.details}">
         <img class="rock-photo" src="${rockImageSrc(rock)}" alt="${escapeHtml(rock.name)}の表面イメージ" loading="lazy">
       </a>
-      ${rockPhotoCredit(rock)}
       <button class="rock-card-summary" type="button" data-details="${escapeHtml(rock.id)}" aria-expanded="false" aria-controls="rock-details-${escapeHtml(rock.id)}">
         <div>
           <h4>${escapeHtml(rock.name)}</h4>
@@ -1553,6 +1625,7 @@ function renderRockCard(rock) {
           </svg>
         </span>
       </button>
+      ${rockPhotoCredit(rock)}
     </article>
     <div class="rock-details" id="rock-details-${escapeHtml(rock.id)}" data-rock="${escapeHtml(rock.id)}" hidden>
       <div class="tags">${tags.map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("")}</div>
@@ -1783,7 +1856,7 @@ function formatAddress(address) {
 
 function locateUser() {
   if (!navigator.geolocation) {
-    selectedPoint.textContent = text.currentUnsupported;
+    setPanelMessage(rocksPanel, text.currentUnsupported);
     return;
   }
 
@@ -1795,7 +1868,7 @@ function locateUser() {
       setTimeout(() => map.invalidateSize(), 0);
     },
     () => {
-      selectedPoint.textContent = text.currentFailed;
+      setPanelMessage(rocksPanel, text.currentFailed);
     },
     { enableHighAccuracy: true, timeout: 10000 }
   );
@@ -1831,7 +1904,7 @@ async function searchPlace(event) {
     }
     const results = await response.json();
     if (!results.length) {
-      selectedPoint.textContent = text.searchNotFound;
+      setPanelMessage(rocksPanel, text.searchNotFound);
       return;
     }
     const latlng = L.latLng(Number(results[0].lat), Number(results[0].lon));
@@ -1840,7 +1913,7 @@ async function searchPlace(event) {
     setTimeout(() => map.invalidateSize(), 0);
   } catch (error) {
     console.error("Place search failed:", error);
-    selectedPoint.textContent = text.searchFailed;
+    setPanelMessage(rocksPanel, text.searchFailed);
   }
 }
 
@@ -1860,12 +1933,22 @@ function setPanelMessage(panel, message) {
     empty.hidden = false;
     empty.textContent = message;
   }
+  hidePanelSteps(panel);
 }
 
 function clearPanelMessage(panel) {
   const empty = panel.querySelector(".empty-message");
   if (empty) {
     empty.hidden = true;
+  }
+  hidePanelSteps(panel);
+}
+
+// はじめの使い方の案内。一度でも操作したら用がないので、以後は出さない
+function hidePanelSteps(panel) {
+  const steps = panel.querySelector(".panel-steps");
+  if (steps) {
+    steps.hidden = true;
   }
 }
 
