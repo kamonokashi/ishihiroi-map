@@ -555,9 +555,9 @@ h3 {
   top: 0;
   display: grid;
   gap: 12px;
-  justify-items: start;
-  padding: 16px 20px 12px;
-  background: linear-gradient(var(--panel) 78%, rgba(255, 255, 255, 0));
+  padding: 16px 0 0;
+  /* タブの下線で中身を切るので、ぼかさずに塗る */
+  background: var(--panel);
 }
 
 /* 選んだ地点は「結果の見出し」。地図の上に帯で出すと、地質図の切り替えと同じ形になって、
@@ -567,6 +567,7 @@ h3 {
   gap: 2px;
   width: 100%;
   margin: 0;
+  padding: 0 20px;
 }
 
 .result-place[hidden] {
@@ -664,35 +665,57 @@ h3 {
   color: #fff;
 }
 
-/* 結果パネルの中で枠を重ねない。切り替えはセグメント（丸いトグル） */
+/* 切り替えは半分ずつの2枚のタブ。幅を中身に合わせると、2つの項目の大きさが
+   ちぐはぐになり、パネルの中で行き場のない形になる */
 .tab-buttons {
-  display: inline-flex;
-  gap: 2px;
-  padding: 4px;
-  border-radius: 999px;
-  background: rgba(171, 167, 157, 0.16);
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  padding: 0;
+  border-bottom: 1px solid var(--line);
+  border-radius: 0;
+  background: none;
 }
 
 .tab-buttons button {
-  min-height: 36px;
-  padding: 0 18px;
-  border-radius: 999px;
+  position: relative;
+  min-height: 46px;
+  padding: 0 10px;
+  border-radius: 0;
   background: transparent;
   color: var(--muted);
-  font-size: 0.94rem;
+  font-size: 0.95rem;
   box-shadow: none;
   transition: background 160ms ease, color 160ms ease;
 }
 
+/* いま見ているほうを下線で示す。枠で囲うより、2枚が地続きに見える */
+.tab-buttons button::after {
+  position: absolute;
+  right: 0;
+  bottom: -1px;
+  left: 0;
+  height: 2px;
+  background: transparent;
+  content: "";
+  transition: background 160ms ease;
+}
+
 .tab-buttons button:hover {
-  background: rgba(255, 255, 255, 0.7);
+  background: rgba(171, 167, 157, 0.12);
   color: var(--ink);
 }
 
+.tab-buttons button:active {
+  transform: none;
+}
+
 .tab-buttons button.active {
-  background: var(--panel);
+  background: transparent;
   color: var(--accent-dark);
-  box-shadow: 0 2px 8px rgba(48, 52, 56, 0.12);
+}
+
+.tab-buttons button.active::after {
+  background: var(--accent);
 }
 
 /* 中身が短いときも断り書きが下に落ちるように、切り替えの箱が残りの高さを取る */
@@ -702,7 +725,7 @@ h3 {
 
 .tab-panel {
   display: none;
-  padding: 2px 20px 0;
+  padding: 16px 20px 0;
 }
 
 .tab-panel.active {
@@ -1841,11 +1864,15 @@ body.stone-page {
   }
 
   .result-head {
-    padding: 14px 64px 10px 14px;
+    padding: 14px 0 0;
+  }
+
+  .result-place {
+    padding: 0 14px;
   }
 
   .tab-panel {
-    padding: 2px 14px 0;
+    padding: 14px 14px 0;
   }
 
   .note {

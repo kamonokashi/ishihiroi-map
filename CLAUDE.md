@@ -27,7 +27,8 @@
   - 折りたたむと `grid-template-columns: 0 minmax(0, 1fr)` になる。つまみ（`.map-collapse-button`）は地図の面の中に収める。境目にまたがらせると、地図の `overflow: hidden` ではみ出した半分が切れる
   - 調べ終わったら `hideInspectPopup()` でふきだしごと消す。地名は結果パネルの見出しに出ているので、住所だけのふきだしを残すと同じ内容が2か所に出る
   - 現在地・検索の失敗は「選択地点」ではないので、見出しではなく `setPanelMessage(rocksPanel, ...)` で結果パネルの案内として出す
-  - 切り替えタブはセグメント（丸いトグル）で、`.result-head` に入れて上に貼り付ける（sticky）
+  - 切り替えは**半分ずつの2枚のタブ**（`grid-template-columns: 1fr 1fr`）。幅を中身に合わせると、2つの項目の大きさがちぐはぐになり、パネルの中で行き場のない形になる。いま見ているほうは下線（`::after`）で示す。`.result-head` に入れて上に貼り付ける（sticky）
+  - タブの下線をパネルの幅いっぱいに引くため、左右の余白は `.result-head` ではなく中身（`.result-place` と `.tab-panel`）に持たせる。`.result-head` の背景は、下線で中身を切るのでぼかさずに塗る
   - 何も選んでいないときは `.panel-intro`（丸い目印＋見出し＋手順3つ）を出す。手順は最初だけで、`setPanelMessage()` / `clearPanelMessage()` が `hidePanelSteps()` を呼んで以後は出さない。`hidden` は `display: grid` に負けるので `.panel-steps[hidden]` で明示的に消している
   - 狭い画面（820px以下）では地図が上、結果が下。ここでも重ねず、境目は1本の線（`border-top`）にする
   - 参考にした地図: 地理院地図（帯＋地図いっぱい）、Electricity Maps（検索は地図の上、操作は同じ大きさのアイコンを縦1列、凡例や日時などの「表示」には面を持たせない）
