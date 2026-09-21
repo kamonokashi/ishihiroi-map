@@ -3361,3 +3361,259 @@ a.stone-back-button {
 .lithology-age-more .lithology-age-list {
   margin-top: 6px;
 }
+
+/* ===== 石の分類マップ（rock-tree.html） =====
+   左の「岩石」から右へ枝分かれする木。石は枝の先に横並びの房（.cluster）でまとめる。
+   位置は rock-tree.js が計算して、箱は absolute で置き、枝の線は後ろの SVG に描く。 */
+.rock-tree-page {
+  --branch-root: #6b706a;
+  --branch-igneous: #b4583c;
+  --branch-sedimentary: #a07a2c;
+  --branch-metamorphic: #4f7d56;
+  --branch-vein: #6b7785;
+}
+
+.rock-tree {
+  width: min(1200px, calc(100% - 32px));
+  margin: 0 auto;
+  padding: 26px 0 60px;
+}
+
+.rock-tree-head h1 {
+  margin-bottom: 2px;
+  font-size: 1.3rem;
+}
+
+.rock-tree-sub {
+  margin-bottom: 18px;
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+/* 横幅は枠に合わせて組むので、はみ出さない。
+   ここを overflow: auto にすると、狭い画面の帯の文字（sticky）が枠のほうに張り付いて効かなくなる */
+.tree-canvas {
+  position: relative;
+}
+
+.tree-loading {
+  color: var(--muted);
+}
+
+.tree-lines {
+  position: absolute;
+  inset: 0;
+  overflow: visible;
+}
+
+.tree-branch-igneous { --branch: var(--branch-igneous); }
+.tree-branch-sedimentary { --branch: var(--branch-sedimentary); }
+.tree-branch-metamorphic { --branch: var(--branch-metamorphic); }
+.tree-branch-vein { --branch: var(--branch-vein); }
+.tree-branch-root { --branch: var(--branch-root); }
+
+.tree-line {
+  fill: none;
+  stroke: var(--branch);
+  stroke-width: 1.6;
+  stroke-linecap: round;
+  opacity: 0.55;
+  transition: opacity 0.15s, stroke-width 0.15s;
+}
+
+/* 触れている石や枝から根までの道筋だけを濃くし、ほかの枝は薄くする */
+.tree-canvas.has-lit .tree-line {
+  opacity: 0.18;
+}
+
+.tree-canvas.has-lit .tree-line.is-lit {
+  opacity: 1;
+  stroke-width: 2.6;
+}
+
+/* 高さを測り終えるまでは見せない（いったん全部を上端に置いて測るため） */
+.tree-list {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  visibility: hidden;
+}
+
+.tree-canvas.is-measured .tree-list {
+  visibility: visible;
+}
+
+.tree-item {
+  position: absolute;
+  transform: translateY(-50%);
+}
+
+.tree-item.is-cluster-item,
+.tree-item.is-bar-item {
+  transform: none;
+}
+
+/* 枝の箱。名前と、どう分かれたかのひとこと。1段の高さはこの箱で決まるので、上下は詰めておく */
+.tree-node {
+  display: grid;
+  gap: 1px;
+  padding: 4px 10px;
+  border: 1px solid color-mix(in srgb, var(--branch) 38%, transparent);
+  border-left: 3px solid var(--branch);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--ink);
+  text-decoration: none;
+}
+
+.tree-node.is-major {
+  background: color-mix(in srgb, var(--branch) 12%, var(--panel));
+}
+
+.tree-node-name {
+  font-size: 0.9rem;
+  font-weight: 700;
+  line-height: 1.3;
+}
+
+.tree-node.is-major .tree-node-name,
+.tree-node.is-root .tree-node-name {
+  color: var(--branch);
+  font-size: 1rem;
+  font-weight: 800;
+}
+
+.tree-node-note {
+  color: var(--muted);
+  font-size: 0.7rem;
+  line-height: 1.35;
+}
+
+a.tree-node:hover .tree-node-name,
+a.tree-node:focus-visible .tree-node-name {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.tree-node.is-lit {
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--branch) 45%, transparent);
+}
+
+/* 石の房。写真と名前の札を横に並べ、入りきらなければ折り返す */
+.cluster {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+  margin: 0;
+  padding: 3px;
+  border: 1px solid color-mix(in srgb, var(--branch) 22%, transparent);
+  border-radius: 10px;
+  background: color-mix(in srgb, var(--branch) 5%, var(--panel));
+  list-style: none;
+}
+
+.cluster.is-lit {
+  border-color: color-mix(in srgb, var(--branch) 55%, transparent);
+}
+
+.cluster-chip {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 2px 10px 2px 2px;
+  border-radius: 999px;
+  color: var(--ink);
+  font-size: 0.88rem;
+  font-weight: 700;
+  text-decoration: none;
+  white-space: nowrap;
+}
+
+.cluster-chip-photo {
+  flex: 0 0 auto;
+  width: 28px;
+  height: 28px;
+  border-radius: 50%;
+  object-fit: cover;
+  box-shadow: 0 0 0 2px var(--panel), 0 0 0 3px color-mix(in srgb, var(--branch) 55%, transparent);
+}
+
+.cluster-chip:hover,
+.cluster-chip:focus-visible,
+.cluster-chip.is-lit {
+  background: color-mix(in srgb, var(--branch) 14%, transparent);
+}
+
+.cluster-chip:hover .cluster-chip-name,
+.cluster-chip:focus-visible .cluster-chip-name {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* 狭い画面：根と大枝は、子の範囲いっぱいに伸びた縦書きの帯（rock-tree.js の CLUSTER_SIZES.narrow）。
+   長い帯でも名前が見えるよう、文字は画面上に残す */
+.tree-node.is-bar {
+  display: block;
+  height: 100%;
+  padding: 8px 0;
+  border: 0;
+  border-radius: 6px;
+  background: color-mix(in srgb, var(--branch) 14%, var(--panel));
+  text-align: center;
+}
+
+.tree-node.is-bar .tree-node-name {
+  position: sticky;
+  top: 72px;
+  display: inline-block;
+  font-size: 0.92rem;
+  letter-spacing: 0.12em;
+  writing-mode: vertical-rl;
+}
+
+@media (max-width: 640px) {
+  .rock-tree {
+    width: calc(100% - 24px);
+  }
+
+  .tree-node {
+    padding: 5px 7px;
+  }
+
+  .tree-node-name {
+    font-size: 0.8rem;
+  }
+
+  /* 枝のひとことは、狭い箱では読めない長さになるので出さない（押した先の用語ページにある） */
+  .tree-node-note {
+    display: none;
+  }
+
+  .cluster {
+    gap: 2px;
+  }
+
+  .cluster-chip {
+    gap: 5px;
+    padding: 2px 7px 2px 2px;
+    font-size: 0.8rem;
+  }
+
+  .cluster-chip-photo {
+    width: 24px;
+    height: 24px;
+  }
+}
+
+/* とても狭い画面（320px 前後）では枝の箱が50px まで細くなる。名前が何行にも折り返して
+   隣の枝とぶつからないよう、余白と字を少し詰めて1行に3字入るようにする */
+@media (max-width: 360px) {
+  .tree-node:not(.is-bar) {
+    padding: 4px 4px 4px 5px;
+  }
+
+  .tree-node:not(.is-bar) .tree-node-name {
+    font-size: 0.74rem;
+    line-height: 1.25;
+  }
+}
