@@ -340,6 +340,6 @@ function updateOpenAll() {
     return;
   }
   const allOpen = allFamilies.length > 0 && allFamilies.every((key) => openFamilies.has(key));
-  openAllButton.textContent = allOpen ? "全部閉じる" : "全部開く";
+  openAllButton.querySelector(".open-all-label").textContent = allOpen ? "全部閉じる" : "全部開く";
   openAllButton.setAttribute("aria-pressed", String(allOpen));
 }
