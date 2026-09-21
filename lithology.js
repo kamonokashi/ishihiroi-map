@@ -272,7 +272,7 @@ function renderClassification(entry, rockCatalog) {
 
 function rockLink(id, rockCatalog) {
   const rock = rockCatalog.get(id);
-  return `<a class="stone-mineral stone-mineral-link" href="stone.html?id=${encodeURIComponent(id)}" target="_blank">${escapeHtml(rock.name)}</a>`;
+  return `<a class="stone-mineral stone-mineral-link" href="stone.html?id=${encodeURIComponent(id)}" target="_blank" rel="opener">${escapeHtml(rock.name)}</a>`;
 }
 
 // 地図画面の estimateMinerals() と同じ2通り。母岩から導くものと、変成帯の名前から導くもの。
@@ -321,7 +321,7 @@ function renderMinerals(entry, rockCatalog, minerals) {
       <ul class="lithology-mineral-list">
         ${found.map(({ mineral, score, reason }) => `
           <li>
-            <a class="stone-mineral stone-mineral-link" href="mineral.html?id=${encodeURIComponent(mineral.id)}" target="_blank">${escapeHtml(mineral.name)}</a>
+            <a class="stone-mineral stone-mineral-link" href="mineral.html?id=${encodeURIComponent(mineral.id)}" target="_blank" rel="opener">${escapeHtml(mineral.name)}</a>
             <span class="lithology-mineral-level">${mineralLevelLabel(score)}</span>
             <span class="lithology-mineral-reason">${escapeHtml(reason)}</span>
           </li>
