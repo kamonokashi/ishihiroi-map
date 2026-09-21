@@ -1,21 +1,8 @@
 const stoneDetail = document.querySelector("#stoneDetail");
-const backButton = document.querySelector("#backButton");
 
 window.addEventListener("DOMContentLoaded", async () => {
-  bindBackButton();
   await renderStonePage();
 });
-
-function bindBackButton() {
-  backButton.addEventListener("click", () => {
-    if (window.history.length > 1) {
-      window.history.back();
-      return;
-    }
-
-    window.location.href = "index.html";
-  });
-}
 
 async function renderStonePage() {
   const id = new URLSearchParams(window.location.search).get("id");

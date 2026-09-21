@@ -56,7 +56,7 @@ function catalogLink(name, className = "", self = null) {
     return className ? `<span class="${className}">${label}</span>` : label;
   }
   const href = `${CATALOG_PAGES[target.type]}?id=${encodeURIComponent(target.id)}`;
-  return `<a class="${className} catalog-link" href="${href}" target="_blank" rel="noopener noreferrer">${label}</a>`;
+  return `<a class="${className} catalog-link" href="${href}" target="_blank">${label}</a>`;
 }
 
 // ===== カタログのデータ =====
@@ -154,7 +154,7 @@ function catalogRow({ name, text, target, self, withPlaceholder }) {
   if (rock) {
     const photo = stonePhoto(rock);
     // 名前のリンクと同じ先なので、画像のリンクはキーボードでは飛ばす（同じリンクが2回続かないように）
-    thumb = `<a class="confuse-thumb" href="stone.html?id=${encodeURIComponent(rock.id)}" target="_blank" rel="noopener noreferrer" tabindex="-1" aria-hidden="true"><img src="${catalogEscape(photo.src)}" alt="" loading="lazy"></a>`;
+    thumb = `<a class="confuse-thumb" href="stone.html?id=${encodeURIComponent(rock.id)}" target="_blank" tabindex="-1" aria-hidden="true"><img src="${catalogEscape(photo.src)}" alt="" loading="lazy"></a>`;
     if (photo.credit) {
       credit = `<p class="confuse-credit">写真：${catalogEscape(photo.credit)}</p>`;
     }
@@ -165,7 +165,7 @@ function catalogRow({ name, text, target, self, withPlaceholder }) {
   }
 
   const nameHtml = target
-    ? `<a class="catalog-link" href="${CATALOG_PAGES[target.type]}?id=${encodeURIComponent(target.id)}" target="_blank" rel="noopener noreferrer">${catalogEscape(name)}</a>`
+    ? `<a class="catalog-link" href="${CATALOG_PAGES[target.type]}?id=${encodeURIComponent(target.id)}" target="_blank">${catalogEscape(name)}</a>`
     : catalogLink(name, "", self);
 
   return `
@@ -197,7 +197,7 @@ function confusedItem(pair, self, withPlaceholder) {
 function stoneTile(rock) {
   const photo = stonePhoto(rock);
   return `
-    <a class="stone-tile" href="stone.html?id=${encodeURIComponent(rock.id)}" target="_blank" rel="noopener noreferrer">
+    <a class="stone-tile" href="stone.html?id=${encodeURIComponent(rock.id)}" target="_blank">
       <img src="${catalogEscape(photo.src)}" alt="" loading="lazy">
       <span class="stone-tile-name">${catalogEscape(rock.name)}</span>
       ${photo.credit ? `<span class="stone-tile-credit">写真：${catalogEscape(photo.credit)}</span>` : ""}
@@ -401,3 +401,44 @@ function stoneTile(rock) {
   // 詳細ページはbodyがスクロールするので、どの要素のスクロールでも閉じるよう capture で受ける。
   document.addEventListener("scroll", hide, { capture: true, passive: true });
 })();
+
+// 上のバーの戻るボタン。詳細ページ（stone / mineral / lithology / term）と用語集が共通で使う。
+//
+// 詳細ページは地図から target="_blank" で開くので、そのタブには履歴がない。
+// ここで index.html を開くと、そのタブに**もう1枚**地図が出てしまい、
+// もとの地図（選んだ地点も結果も残っている）は裏のタブに置き去りになる。
+// 新しいタブで開かれたなら、そのタブを閉じてもとの地図に戻す。
+//
+// タブを閉じられるのは window.opener があるときだけなので、自分のページへの
+// リンクからは rel="noopener" を外してある（同じオリジンの自分のページなので問題ない）。
+function bindBackButton() {
+  const button = document.querySelector("#backButton");
+  if (!button) {
+    return;
+  }
+
+  button.addEventListener("click", () => {
+    if (window.opener && !window.opener.closed) {
+      window.close();
+      // ブラウザが閉じるのを拒むことがある。そのときのための保険。
+      window.setTimeout(() => {
+        window.location.href = "index.html";
+      }, 200);
+      return;
+    }
+
+    // 同じタブで開いたなら、戻ればもとの画面が（地図の位置ごと）復元される。
+    if (window.history.length > 1) {
+      window.history.back();
+      return;
+    }
+
+    window.location.href = "index.html";
+  });
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", bindBackButton);
+} else {
+  bindBackButton();
+}

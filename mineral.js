@@ -1,21 +1,8 @@
 const mineralDetail = document.querySelector("#mineralDetail");
-const backButton = document.querySelector("#backButton");
 
 window.addEventListener("DOMContentLoaded", async () => {
-  bindBackButton();
   await renderMineralPage();
 });
-
-function bindBackButton() {
-  backButton.addEventListener("click", () => {
-    if (window.history.length > 1) {
-      window.history.back();
-      return;
-    }
-
-    window.location.href = "index.html";
-  });
-}
 
 async function renderMineralPage() {
   const id = new URLSearchParams(window.location.search).get("id");

@@ -1,5 +1,4 @@
 const termDetail = document.querySelector("#termDetail");
-const backButton = document.querySelector("#backButton");
 
 // 用語ページから石・鉱物の詳細へ飛ぶリンク先。
 const TERM_LINK_PAGES = {
@@ -9,20 +8,8 @@ const TERM_LINK_PAGES = {
 };
 
 window.addEventListener("DOMContentLoaded", async () => {
-  bindBackButton();
   await renderTermPage();
 });
-
-function bindBackButton() {
-  backButton.addEventListener("click", () => {
-    if (window.history.length > 1) {
-      window.history.back();
-      return;
-    }
-
-    window.location.href = "index.html";
-  });
-}
 
 async function renderTermPage() {
   const id = new URLSearchParams(window.location.search).get("id");

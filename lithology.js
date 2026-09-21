@@ -1,5 +1,4 @@
 const lithologyDetail = document.querySelector("#lithologyDetail");
-const backButton = document.querySelector("#backButton");
 
 // 地図画面（script.js）の鉱物の判定と同じ値。ここでは「この地質そのもの」の話なので
 // 周辺の割り引きはしない。
@@ -86,20 +85,8 @@ const SETTING_TERMS = {
 };
 
 window.addEventListener("DOMContentLoaded", async () => {
-  bindBackButton();
   await renderLithologyPage();
 });
-
-function bindBackButton() {
-  backButton.addEventListener("click", () => {
-    if (window.history.length > 1) {
-      window.history.back();
-      return;
-    }
-
-    window.location.href = "index.html";
-  });
-}
 
 async function renderLithologyPage() {
   const id = new URLSearchParams(window.location.search).get("id");
@@ -285,7 +272,7 @@ function renderClassification(entry, rockCatalog) {
 
 function rockLink(id, rockCatalog) {
   const rock = rockCatalog.get(id);
-  return `<a class="stone-mineral stone-mineral-link" href="stone.html?id=${encodeURIComponent(id)}" target="_blank" rel="noopener noreferrer">${escapeHtml(rock.name)}</a>`;
+  return `<a class="stone-mineral stone-mineral-link" href="stone.html?id=${encodeURIComponent(id)}" target="_blank">${escapeHtml(rock.name)}</a>`;
 }
 
 // 地図画面の estimateMinerals() と同じ2通り。母岩から導くものと、変成帯の名前から導くもの。
@@ -334,7 +321,7 @@ function renderMinerals(entry, rockCatalog, minerals) {
       <ul class="lithology-mineral-list">
         ${found.map(({ mineral, score, reason }) => `
           <li>
-            <a class="stone-mineral stone-mineral-link" href="mineral.html?id=${encodeURIComponent(mineral.id)}" target="_blank" rel="noopener noreferrer">${escapeHtml(mineral.name)}</a>
+            <a class="stone-mineral stone-mineral-link" href="mineral.html?id=${encodeURIComponent(mineral.id)}" target="_blank">${escapeHtml(mineral.name)}</a>
             <span class="lithology-mineral-level">${mineralLevelLabel(score)}</span>
             <span class="lithology-mineral-reason">${escapeHtml(reason)}</span>
           </li>

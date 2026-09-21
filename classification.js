@@ -201,7 +201,7 @@ function scaleTitle(scale) {
   if (!term || !scale.title.includes(term.word)) {
     return title;
   }
-  const link = `<a class="term-link" href="term.html?id=${encodeURIComponent(term.id)}" target="_blank" rel="noopener noreferrer">${classificationEscape(term.word)}</a>`;
+  const link = `<a class="term-link" href="term.html?id=${encodeURIComponent(term.id)}" target="_blank">${classificationEscape(term.word)}</a>`;
   return title.replace(classificationEscape(term.word), link);
 }
 

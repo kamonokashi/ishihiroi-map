@@ -1596,7 +1596,7 @@ function renderMinerals(found) {
             <p class="mineral-note">${escapeHtml(mineral.shortDescription || "")}</p>
             <div class="tags">${(mineral.features || []).map((feature) => `<span class="tag">${escapeHtml(feature)}</span>`).join("")}</div>
             ${mineral.fromZone ? '<p class="mineral-source">この地質の変成帯の名前は、この鉱物ができる段階まで変成したことを示しています</p>' : ""}
-            <a class="secondary-button mineral-detail-link" href="mineral.html?id=${encodeURIComponent(mineral.id)}" target="_blank" rel="noopener noreferrer">${text.details}</a>
+            <a class="secondary-button mineral-detail-link" href="mineral.html?id=${encodeURIComponent(mineral.id)}" target="_blank">${text.details}</a>
           </li>
         `).join("")}
       </ul>
@@ -1611,7 +1611,7 @@ function renderRockCard(rock) {
   // 別の行へ動いてしまう（layoutRockDetails() の注記を参照）。
   return `
     <article class="rock-card rock-card-${escapeHtml(rock.level)}" data-rock="${escapeHtml(rock.id)}">
-      <a class="rock-photo-link" href="${detailUrl}" target="_blank" rel="noopener noreferrer" aria-label="${escapeHtml(rock.name)}${text.details}">
+      <a class="rock-photo-link" href="${detailUrl}" target="_blank" aria-label="${escapeHtml(rock.name)}${text.details}">
         <img class="rock-photo" src="${rockImageSrc(rock)}" alt="${escapeHtml(rock.name)}の表面イメージ" loading="lazy">
       </a>
       <button class="rock-card-summary" type="button" data-details="${escapeHtml(rock.id)}" aria-expanded="false" aria-controls="rock-details-${escapeHtml(rock.id)}">
@@ -1631,7 +1631,7 @@ function renderRockCard(rock) {
       <div class="tags">${tags.map((tag) => `<span class="tag">${escapeHtml(tag)}</span>`).join("")}</div>
       <p class="rock-minerals">${mainMinerals(rock)}</p>
       <p>${escapeHtml(rock.shortDescription || text.noDetails)}</p>
-      <a class="secondary-button rock-detail-link" href="${detailUrl}" target="_blank" rel="noopener noreferrer">${text.details}</a>
+      <a class="secondary-button rock-detail-link" href="${detailUrl}" target="_blank">${text.details}</a>
     </div>
   `;
 }
@@ -1776,7 +1776,7 @@ function renderCatchment(catchment) {
         ${rows.map(({ key, share, entry }) => `
           <li>
             <span class="catchment-share">${Math.round(share * 100)}%</span>
-            <a class="catchment-lithology" href="${lithologyUrl(key)}" target="_blank" rel="noopener noreferrer">${escapeHtml(entry.lithology)}</a>
+            <a class="catchment-lithology" href="${lithologyUrl(key)}" target="_blank">${escapeHtml(entry.lithology)}</a>
           </li>
         `).join("")}
       </ul>
@@ -1803,7 +1803,7 @@ function geologyCard(legend, isPoint, area) {
       <p class="geology-meta">${escapeHtml(legend.lithology_ja || text.lithologyUnavailable)}</p>
       <p class="geology-meta">${escapeHtml(legend.formationAge_ja || text.ageUnavailable)}</p>
       ${rockNames.length > 0 ? `<p class="geology-rocks">対応する石：${escapeHtml(rockNames.join("・"))}</p>` : ""}
-      ${entry ? `<a class="secondary-button geology-detail-link" href="${lithologyUrl(legendKey(legend))}" target="_blank" rel="noopener noreferrer">${text.lithologyDetails}</a>` : ""}
+      ${entry ? `<a class="secondary-button geology-detail-link" href="${lithologyUrl(legendKey(legend))}" target="_blank">${text.lithologyDetails}</a>` : ""}
       <!-- 記号は石を拾うのに要らないが、対応表の突き合わせには要る。畳んで残す -->
       <details class="geology-symbol">
         <summary>地質図の記号</summary>
