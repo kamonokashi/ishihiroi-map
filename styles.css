@@ -3617,3 +3617,242 @@ a.tree-node:focus-visible .tree-node-name {
     line-height: 1.25;
   }
 }
+
+/* ===== 地質の分類マップ（litho-tree.html） =====
+   木の描き方は石の分類マップと共通（tree-layout.js と上の節）。枝の先は写真ではなく、地質図の色の札 */
+.rock-tree-page {
+  --branch-accretion: #7a5a8c;
+  --branch-other: #6b7785;
+}
+
+.tree-branch-accretion { --branch: var(--branch-accretion); }
+.tree-branch-other { --branch: var(--branch-other); }
+
+/* 系統の札。名前が長いもの（泥質片岩・泥質グラノフェルス・…）は折り返す。
+   幅の上限は札ではなく入れ物の li に持たせる。札に max-width: 100% を付けると、li の幅が札の中身で決まるため
+   循環して最小の幅で計算され、「チャート」のような短い名前まで2行に折れる */
+.cluster > li {
+  max-width: 100%;
+}
+
+/* 開閉する札は button。全体の button の指定（高さ42px・押すと沈む）を打ち消して、リンクの札と同じ見た目にする */
+.litho-chip {
+  min-height: 0;
+  transform: none !important;
+  padding: 4px 8px 4px 10px;
+  border: 0;
+  background: transparent;
+  font: inherit;
+  font-size: 0.84rem;
+  font-weight: 700;
+  line-height: 1.35;
+  text-align: left;
+  white-space: normal;
+  cursor: pointer;
+}
+
+.litho-count {
+  flex: 0 0 auto;
+  min-width: 1.6em;
+  padding: 0 5px;
+  border-radius: 999px;
+  background: color-mix(in srgb, var(--branch) 16%, transparent);
+  color: color-mix(in srgb, var(--branch) 80%, var(--ink));
+  font-size: 0.72rem;
+  text-align: center;
+}
+
+.litho-chip.is-open {
+  background: color-mix(in srgb, var(--branch) 18%, transparent);
+}
+
+.litho-chip.is-current {
+  box-shadow: inset 0 0 0 2px var(--branch);
+}
+
+/* 開いた系統の中身。房の幅いっぱいに、帯・時代ちがいの地質を並べる */
+.litho-variants {
+  flex: 1 0 100%;
+  margin: 2px 0 4px;
+  padding: 6px 8px;
+  border-left: 3px solid var(--branch);
+  border-radius: 0 8px 8px 0;
+  background: var(--panel);
+}
+
+.litho-variant-group + .litho-variant-group {
+  margin-top: 6px;
+}
+
+.litho-variant-head {
+  margin: 0 0 2px;
+  color: var(--muted);
+  font-size: 0.72rem;
+  font-weight: 700;
+}
+
+/* 岩相は1件1行。名前を左に、地質図の色を右に1列で並べる（色は折り返さない） */
+/* 列は minmax(0, 1fr)。auto のままだと列の幅が行の最小幅（名前の5em＋縮む前の丸）になり、狭い画面ではみ出す */
+.litho-variant-list {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 1px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.litho-variant {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 3px 8px;
+  border-radius: 6px;
+  color: var(--ink);
+  font-size: 0.8rem;
+  line-height: 1.35;
+  text-decoration: none;
+}
+
+/* 名前は長ければ折り返す。ただし色に押されて2字ずつにならないよう、最低の幅を持たせる */
+.litho-variant-name {
+  flex: 0 1 auto;
+  min-width: 5em;
+}
+
+.litho-variant:hover .litho-variant-name,
+.litho-variant:focus-visible .litho-variant-name {
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+/* 地質図でその地質が塗られている色。時代ごとに1つの丸で、古い順。触れると時代が出る（title）。
+   多いもので26色あるので、幅が足りなければ丸を細い縦棒に縮めて、1列のまま収める */
+.litho-colors {
+  display: flex;
+  flex: 0 1 auto;
+  gap: 2px;
+  min-width: 0;
+}
+
+/* 幅は flex-basis ではなく width で持たせる。basis だけだと入れ物の幅が「中身なし」で計算され、
+   広い画面でも丸が最小の2pxまで縮んでしまう */
+.litho-dot {
+  flex: 0 1 auto;
+  width: 10px;
+  min-width: 2px;
+  height: 10px;
+  border-radius: 5px;
+  box-shadow: inset 0 0 0 1px rgba(48, 52, 56, 0.28);
+}
+
+.litho-variant:hover,
+.litho-variant:focus-visible {
+  background: color-mix(in srgb, var(--branch) 12%, transparent);
+}
+
+.litho-variant.is-current {
+  background: color-mix(in srgb, var(--branch) 18%, transparent);
+  font-weight: 700;
+}
+
+@media (max-width: 640px) {
+  .litho-chip {
+    padding: 3px 7px;
+    font-size: 0.78rem;
+  }
+
+  .litho-variants {
+    padding: 5px 6px;
+  }
+}
+
+/* 岩相ページの要点欄から、地質の分類マップへ */
+.detail-facts-link {
+  display: block;
+  margin-top: 4px;
+  color: var(--accent-dark);
+  font-size: 0.8rem;
+  font-weight: 700;
+}
+
+/* 地質の分類マップの「見方」。左に見本、右に説明の2列 */
+.tree-guide {
+  display: grid;
+  grid-template-columns: max-content minmax(0, 1fr);
+  gap: 8px 14px;
+  align-items: center;
+  margin: 0 0 22px;
+  padding: 12px 14px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel);
+  font-size: 0.84rem;
+}
+
+.tree-guide dt,
+.tree-guide dd {
+  margin: 0;
+}
+
+.tree-guide-mark {
+  display: flex;
+  justify-content: center;
+}
+
+.tree-guide-mark .litho-chip {
+  --branch: var(--branch-metamorphic);
+  cursor: default;
+}
+
+.tree-guide-arrow {
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+  white-space: nowrap;
+}
+
+@media (max-width: 640px) {
+  .tree-guide {
+    gap: 8px 10px;
+    padding: 10px;
+    font-size: 0.8rem;
+  }
+
+  .litho-colors {
+    gap: 1px;
+  }
+}
+
+/* 見方の「全部開く」。全体の button（高さ42px・塗りつぶし）ではなく、枠線だけの小さなボタンにする */
+.tree-guide-with-button {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 6px 12px;
+}
+
+.tree-guide-button {
+  min-height: 0;
+  padding: 4px 12px;
+  border: 1px solid var(--accent-dark);
+  border-radius: 999px;
+  background: var(--panel);
+  color: var(--accent-dark);
+  font-size: 0.8rem;
+  white-space: nowrap;
+}
+
+.tree-guide-button:hover {
+  background: color-mix(in srgb, var(--accent) 12%, var(--panel));
+}
+
+.tree-guide-button[hidden] {
+  display: none;
+}
+
+/* 見方の見本の枝。木の中では幅が決まっているが、見本は中身の幅でよい */
+.tree-guide-node {
+  display: inline-grid;
+}

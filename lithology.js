@@ -181,7 +181,10 @@ function renderLithology(id, entry, detail, rockCatalog, minerals) {
       <aside class="detail-aside" aria-label="要点">
         <dl class="detail-facts">
           <dt>区分</dt>
-          <dd>${catalogLink(entry.group || "区分なし")}${entry.kind === "bedrock" ? "" : "（固まっていない堆積物）"}</dd>
+          <dd>
+            ${catalogLink(entry.group || "区分なし")}${entry.kind === "bedrock" ? "" : "（固まっていない堆積物）"}
+            <a class="detail-facts-link" href="litho-tree.html?id=${encodeURIComponent(id)}" target="_blank" rel="opener">分類マップでこの地質を見る</a>
+          </dd>
           <dt>地質図の記号</dt>
           <dd>
             <code class="lithology-code">${escapeHtml(id)}</code>

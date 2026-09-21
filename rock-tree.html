@@ -8,10 +8,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&display=swap">
-    <link rel="stylesheet" href="styles.css?v=20260921-15">
+    <link rel="stylesheet" href="styles.css?v=20260921-28">
     <script defer src="data/bundle.js?v=20260920-07"></script>
     <script defer src="link-preview.js?v=20260921-09"></script>
-    <script defer src="rock-tree.js?v=20260921-16"></script>
+    <script defer src="tree-layout.js?v=20260921-22"></script>
+    <script defer src="rock-tree.js?v=20260921-28"></script>
   </head>
   <body class="stone-page rock-tree-page">
     <header class="stone-header">
@@ -21,7 +22,16 @@
     <main class="rock-tree">
       <div class="rock-tree-head">
         <h1>石の分類マップ</h1>
-        <p class="rock-tree-sub">左の「岩石」から右へ、でき方で枝分かれしていきます。枝の先に、その仲間の石を並べています。名前を押すと詳しいページを開きます。</p>
+        <p class="rock-tree-sub">拾える石を、でき方ごとに枝分かれさせて並べています。</p>
+        <!-- 見方。見本（石の札・枝）は木の中と同じ部品で描いて、同じものを探せるようにする。石の札の写真は rock-tree.js が入れる -->
+        <dl class="tree-guide">
+          <dt class="tree-guide-mark"><span class="tree-guide-arrow">左 → 右</span></dt>
+          <dd>大きな分け方（火成岩・堆積岩など）から、細かい仲間へ分かれていきます</dd>
+          <dt class="tree-guide-mark"><span id="guideStone" class="cluster-chip tree-branch-igneous"><span class="cluster-chip-name">花崗岩</span></span></dt>
+          <dd>石の名前です。押すと、その石のくわしいページを開きます。触れると「岩石」までの道筋が濃くなります</dd>
+          <dt class="tree-guide-mark"><span class="tree-node tree-branch-igneous tree-guide-node"><span class="tree-node-name">深成岩</span></span></dt>
+          <dd>枝の名前です。押すと、その言葉の説明を開きます</dd>
+        </dl>
       </div>
 
       <div id="treeScroll" class="tree-scroll">
