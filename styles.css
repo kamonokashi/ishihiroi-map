@@ -4042,13 +4042,13 @@ a.tree-node:focus-visible .tree-node-name {
   }
 }
 
-/* 広い画面では、切り替えを画面の右端に縦向きで貼り付ける（しおりのように少し出っぱらせる）。
+/* 広い画面では、切り替えを画面の左端に縦向きで貼り付ける（しおりのように少し出っぱらせる）。
    上下の場所をまったく取らないので、木を見る場所が減らない。
-   狭い画面では木が画面いっぱいで、右端に出すと中身に重なるので、ヘッダーの下の細い帯のままにする。
+   狭い画面では木が画面いっぱいで、端に出すと中身に重なるので、ヘッダーの下の細い帯のままにする。
    札が木に重ならないよう、横に出すあいだは本文の幅を左右56pxずつ狭めて、札の場所をあらかじめ空ける。
    1024px より狭いと、そのぶん木が窮屈になるので帯に戻す */
 @media (min-width: 1024px) {
-  /* 右端の札のぶんだけ本文を狭める（左右対称にして、木が左に寄って見えないようにする） */
+  /* 左端の札のぶんだけ本文を狭める（左右対称にして、木が寄って見えないようにする） */
   .rock-tree {
     width: min(1200px, calc(100% - 112px));
   }
@@ -4056,8 +4056,8 @@ a.tree-node:focus-visible .tree-node-name {
   .tree-tabbar {
     position: fixed;
     top: 50%;
-    right: 0;
-    left: auto;
+    left: 0;
+    right: auto;
     z-index: 12;
     margin: 0;
     border: 0;
@@ -4074,12 +4074,12 @@ a.tree-node:focus-visible .tree-node-name {
   /* 選んでいないほうは少し引っこめて、選んでいるほうだけが出ているように見せる */
   .tree-switch-tab {
     padding: 18px 9px;
-    border-radius: 12px 0 0 12px;
+    border-radius: 0 12px 12px 0;
     background: var(--panel);
     box-shadow: 0 2px 10px rgba(48, 52, 56, 0.12);
     writing-mode: vertical-rl;
     letter-spacing: 0.1em;
-    transform: translateX(5px);
+    transform: translateX(-5px);
     transition: transform 200ms ease, background 200ms ease, color 200ms ease;
   }
 
