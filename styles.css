@@ -3962,37 +3962,40 @@ a.tree-node:focus-visible .tree-node-name {
   font-size: 0.86rem;
 }
 
-/* 石と鉱物の切り替えスイッチ。上のバー（戻るボタンの帯）のまん中に、文字だけで置く。
-   バーはもともと戻るボタンしかなく空いているので、場所を増やさずに、スクロールしてもいつでも切り替えられる。
-   戻るボタンと同じく箱も枠も持たせない。選んでいる側は濃い文字にして、下に短い線（.tree-switch-indicator）を引き、
-   切り替えると線が滑って移る。
-   以前は見出しの下に横幅いっぱいのスイッチを貼り付けていたが、スクロール中に木を見る場所を狭めて邪魔だった。
-   次にバーの中へ灰色の箱にアイコンと数を詰めたスイッチを置いたが、すっきりしたバーの中でそこだけ重たく浮いた */
-.tree-header .tree-switch {
-  position: absolute;
-  top: 0;
-  bottom: 0;
-  left: 50%;
-  display: grid;
-  grid-template-columns: 76px 76px;
-  transform: translateX(-50%);
+/* 石と鉱物の切り替えタブ。ヘッダー（戻るボタンの帯）のすぐ下に、細い帯として貼り付ける。
+   ヘッダーはサイトの名前や戻る場所のためのものなので、操作は入れない（ヘッダーに入れると、そこだけ浮いて見えた）。
+   文字だけのタブと、選んでいる側の下線、境目の線1本だけ。高さは44pxで、スクロール中に木を見る場所をほとんど取らない。
+   ここに落ち着くまでに試した形は CLAUDE.md に残してある */
+.tree-tabbar {
+  position: sticky;
+  top: 60px;
+  z-index: 9;
+  margin-bottom: 18px;
+  border-bottom: 1px solid var(--line);
+  background: rgba(244, 245, 243, 0.92);
+  backdrop-filter: blur(12px);
+}
+
+.tree-switch {
+  position: relative;
+  display: flex;
+  gap: 4px;
 }
 
 /* 全体の button の指定（高さ42px・塗りつぶし・押すと沈む）を打ち消す */
 .tree-switch-tab {
   min-height: 0;
-  padding: 0;
+  padding: 12px 18px;
   border-radius: 0;
   background: transparent;
   color: var(--muted);
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 700;
-  letter-spacing: 0.04em;
   transition: color 160ms ease;
 }
 
 .tree-switch-tab:hover {
-  background: transparent;
+  background: rgba(171, 167, 157, 0.12);
   color: var(--ink);
 }
 
@@ -4002,29 +4005,30 @@ a.tree-node:focus-visible .tree-node-name {
 
 .tree-switch-tab:focus-visible {
   outline: 2px solid var(--accent);
-  outline-offset: -6px;
-  border-radius: 8px;
+  outline-offset: -4px;
 }
 
 .tree-switch-tab.is-active {
-  color: var(--ink);
+  color: var(--accent-dark);
   font-weight: 800;
 }
 
-/* 選んでいる側の下の短い線。バーの下端に沿わせる */
+/* 選んでいるタブの下線。帯の境目の線に重ねて引く。幅と位置は rock-tree.js が入れる（タブごとに幅が違うため） */
 .tree-switch-indicator {
   position: absolute;
-  bottom: 9px;
-  left: 26px;
-  width: 24px;
-  height: 3px;
-  border-radius: 2px;
+  bottom: -1px;
+  left: 0;
+  width: 60px;
+  height: 2px;
   background: var(--accent);
-  transition: transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1), width 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
 }
 
-.tree-switch[data-active="mineral"] .tree-switch-indicator {
-  transform: translateX(76px);
+@media (max-width: 640px) {
+  .tree-switch-tab {
+    padding: 11px 14px;
+    font-size: 0.9rem;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {

@@ -8,30 +8,31 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&display=swap">
-    <link rel="stylesheet" href="styles.css?v=20260921-37">
+    <link rel="stylesheet" href="styles.css?v=20260923-02">
     <script defer src="data/bundle.js?v=20260920-07"></script>
     <script defer src="link-preview.js?v=20260921-09"></script>
     <script defer src="tree-layout.js?v=20260921-30"></script>
-    <script defer src="rock-tree.js?v=20260923-01"></script>
+    <script defer src="rock-tree.js?v=20260923-02"></script>
   </head>
   <body class="stone-page rock-tree-page">
-    <header class="stone-header tree-header">
+    <header class="stone-header">
       <button id="backButton" class="stone-back-button" type="button" aria-label="地図に戻る" title="地図に戻る"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 6l-6 6 6 6"/></svg></button>
-
-      <!-- 石と鉱物の切り替え。上のバーのまん中に、文字だけで置く（戻るボタンと同じく、箱も飾りも持たせない）。
-           選んでいる側は濃い文字にして、下に短い線を引く。切り替えると線が滑って移る -->
-      <div id="treeSwitch" class="tree-switch" role="tablist" aria-label="分類マップの切り替え" data-active="stone">
-        <button id="stoneTab" class="tree-switch-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="treePanel" data-tab="stone">石</button>
-        <button id="mineralTab" class="tree-switch-tab" type="button" role="tab" aria-selected="false" aria-controls="treePanel" data-tab="mineral">鉱物</button>
-        <span class="tree-switch-indicator" aria-hidden="true"></span>
-      </div>
     </header>
 
     <main class="rock-tree">
       <div class="rock-tree-head">
-        <!-- 見出しは、上のスイッチで選んでいるほうの名前になる（rock-tree.js の showTab）。
-             選んだ結果がページの見出しに出ることで、スイッチと中身のつながりが分かる -->
-        <h1 id="treeTitle">石の分類マップ</h1>
+        <h1>分類マップ</h1>
+      </div>
+
+      <!-- 石と鉱物の切り替え。ヘッダー（戻るボタンの帯）のすぐ下に、細い帯として貼り付ける。
+           ヘッダーはサイトの名前や戻る場所のためのもので、操作は入れない。
+           文字だけのタブと、選んでいる側の下線、境目の線1本だけにして、スクロール中に場所を取らないようにする -->
+      <div class="tree-tabbar">
+        <div id="treeSwitch" class="tree-switch" role="tablist" aria-label="分類マップの切り替え" data-active="stone">
+          <button id="stoneTab" class="tree-switch-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="treePanel" data-tab="stone">石</button>
+          <button id="mineralTab" class="tree-switch-tab" type="button" role="tab" aria-selected="false" aria-controls="treePanel" data-tab="mineral">鉱物</button>
+          <span class="tree-switch-indicator" aria-hidden="true"></span>
+        </div>
       </div>
 
       <div id="treePanel" role="tabpanel" aria-labelledby="stoneTab">
