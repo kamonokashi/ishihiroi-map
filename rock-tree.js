@@ -1,4 +1,4 @@
-// 石の分類マップ。左の「岩石」から右へ、でき方で枝分かれしていく木の形で石を並べる。
+// 石と鉱物の分類マップ。左の根から右へ枝分かれする木の形で並べる。上のバーのスイッチで、石（でき方で分ける）と鉱物（何でできているかで分ける）を切り替える。
 // 枝の組み方（TREE）はここで持つ。石の名前・読み・写真は rocks.json から引くので、ここには id だけを書く。
 // 枝の途中の「火成岩」「深成岩」などは用語ページ（terms.json）へのリンクにする。
 // 石は枝の先に横並びの房（クラスタ）でまとめ、入りきらなければ折り返す。石を1行に1つ並べると木が縦に
@@ -61,54 +61,188 @@ const TREE = {
   ]
 };
 
-let rocksById = new Map();
+// 鉱物の分類。鉱物学の基本の分け方（何でできているか）に従う。
+// 岩石をつくる鉱物のほとんどはケイ酸塩鉱物で、ケイ素と酸素の四面体（骨組み）がどうつながっているかで分ける。
+// つながりの少ない順（ばらばら → 2つ組・輪 → 鎖 → 板 → 立体の網目）に並べる。結晶の形や割れ方がこの順に変わる。
+// 石英は骨組みが立体につながったものとしてケイ酸塩に入れる（酸化鉱物に分ける流儀もあるが、造岩鉱物としてはこちらが一般的）。
+// 書き方は TREE と同じで、鉱物は minerals: [id…]、ほかの鉱物をまとめる鉱物（雲母・輝石）は mineral: id の枝にする
+const MINERAL_TREE = {
+  label: "鉱物",
+  note: "何でできているかで分ける",
+  children: [
+    {
+      label: "ケイ酸塩鉱物", note: "ケイ素と酸素が骨組み。岩石の鉱物のほとんど", branch: "silicate",
+      children: [
+        { label: "骨組みがばらばら", note: "ころんとした粒になりやすい",
+          minerals: ["olivine", "garnet", "sillimanite"] },
+        { label: "骨組みが2つ組・輪", note: "少しだけつながる",
+          minerals: ["epidote", "lawsonite", "cordierite"] },
+        { label: "骨組みが鎖", note: "細長い柱や針に育つ",
+          children: [
+            { label: "輝石", mineral: "pyroxene", note: "1本の鎖", minerals: ["jadeite"] },
+            { mineral: "amphibole" }
+          ] },
+        { label: "骨組みが板", note: "薄くはがれる",
+          children: [
+            { label: "雲母", mineral: "mica", note: "うすく何枚にもはがれる", minerals: ["biotite", "muscovite"] },
+            { mineral: "chlorite" },
+            { mineral: "serpentine" },
+            { mineral: "talc" }
+          ] },
+        { label: "骨組みが立体の網目", note: "すきまなく組み合う。硬い",
+          minerals: ["quartz", "rock-crystal", "agate", "feldspar"] }
+      ]
+    },
+    {
+      label: "炭酸塩鉱物", note: "炭酸と金属。うすい酸に溶ける", branch: "carbonate",
+      minerals: ["calcite", "dolomite"]
+    },
+    {
+      label: "酸化鉱物", note: "金属と酸素。重く、黒や赤", branch: "oxide",
+      minerals: ["magnetite", "hematite", "chromian-spinel"]
+    },
+    {
+      label: "硫化鉱物", note: "金属と硫黄。金色に光るものが多い", branch: "sulfide",
+      minerals: ["pyrite", "chalcopyrite"]
+    },
+    {
+      label: "元素鉱物", note: "1種類の元素だけでできている", branch: "native",
+      minerals: ["native-gold"]
+    }
+  ]
+};
+
+// 石と鉱物で違うところ。spec の中で中身を並べる名前（stones / minerals）、1つを指す名前（stone / mineral）、
+// 詳しいページ、書き忘れたものの置き場所
+const TREE_KINDS = {
+  stone: {
+    list: "stones", item: "stone", page: "stone.html", source: "rocks.json", byId: new Map(),
+    // 石は category が同じ大枝の下に
+    home: (root, item) => root.children.find((node) => node.category === (item.category || "その他"))
+  },
+  mineral: {
+    list: "minerals", item: "mineral", page: "mineral.html", source: "minerals.json", byId: new Map(),
+    // 鉱物は根の下の「そのほか」に
+    home: (root, item, makeNode) => {
+      let other = root.children.find((node) => node.label === "そのほか");
+      if (!other) {
+        other = makeNode({ label: "そのほか", branch: "root" }, root);
+        root.children.push(other);
+      }
+      return other;
+    }
+  }
+};
+
+const TABS = {
+  stone: { title: "石の分類マップ", tree: null },
+  mineral: { title: "鉱物の分類マップ", tree: null }
+};
 
 window.addEventListener("DOMContentLoaded", async () => {
   let rocks;
+  let minerals;
   try {
-    rocks = await loadData("data/rocks.json", "rocks");
+    [rocks, minerals] = await Promise.all([
+      loadData("data/rocks.json", "rocks"),
+      loadData("data/minerals.json", "minerals")
+    ]);
   } catch (error) {
     console.info("rock tree data could not be loaded.", error);
-    treeCanvas.innerHTML = `<p class="tree-loading">石のデータを読み込めませんでした。時間をおいてもう一度お試しください。</p>`;
+    treeCanvas.innerHTML = `<p class="tree-loading">石と鉱物のデータを読み込めませんでした。時間をおいてもう一度お試しください。</p>`;
     return;
   }
 
   registerCatalog("rocks", rocks);
-  rocksById = new Map(rocks.map((rock) => [rock.id, rock]));
+  registerCatalog("minerals", minerals);
+  TREE_KINDS.stone.byId = new Map(rocks.map((rock) => [rock.id, rock]));
+  TREE_KINDS.mineral.byId = new Map(minerals.map((mineral) => [mineral.id, mineral]));
 
   // 木の描き方は tree-layout.js（地質の分類マップと共通）
-  mountTree(toClusters(buildTree(TREE, rocks)), stoneClusterItems);
-  fillGuideStone(rocksById.get("granite"));
+  TABS.stone.tree = toClusters(buildTree(TREE, rocks, TREE_KINDS.stone));
+  TABS.mineral.tree = toClusters(buildTree(MINERAL_TREE, minerals, TREE_KINDS.mineral));
+  fillGuideStone(TREE_KINDS.stone.byId.get("granite"));
+
+  document.querySelectorAll("[data-tab]").forEach((button) => {
+    button.addEventListener("click", () => showTab(button.dataset.tab, { remember: true }));
+  });
+  const first = new URLSearchParams(window.location.search).get("tab");
+  showTab(TABS[first] ? first : "stone");
 });
 
-// TREE の書き方（stones: [...] と children: [...]）を、どれも children を持つ形にそろえる。
-// 石が rocks.json にないものは落とし、逆に TREE に書かれていない石は同じ category の大枝の下に足す。
-function buildTree(spec, rocks) {
+// 石と鉱物の切り替え。同じ枠に描き直し、見方の説明も入れ替える。どちらを見ているかは URL（?tab=mineral）に残す
+function showTab(name, { remember = false } = {}) {
+  document.querySelectorAll("[data-tab]").forEach((button) => {
+    const active = button.dataset.tab === name;
+    button.classList.toggle("is-active", active);
+    button.setAttribute("aria-selected", String(active));
+  });
+  // 白い面の位置は data-active で決める（CSS で滑らせる）
+  document.querySelector("#treeSwitch").dataset.active = name;
+  document.querySelectorAll("[data-tab-guide]").forEach((guide) => {
+    guide.hidden = guide.dataset.tabGuide !== name;
+  });
+  document.querySelector("#treePanel")?.setAttribute("aria-labelledby", `${name}Tab`);
+  document.querySelector("#treeTitle").textContent = TABS[name].title;
+  document.title = `${TABS[name].title} - いしひろいマップ`;
+
+  if (remember) {
+    const url = new URL(window.location.href);
+    if (name === "stone") {
+      url.searchParams.delete("tab");
+    } else {
+      url.searchParams.set("tab", name);
+    }
+    window.history.replaceState(null, "", url);
+  }
+
+  mountTree(TABS[name].tree, (node) => clusterItems(node, name));
+
+  // 下のほうで切り替えたら、新しい木の頭（紹介文）が上のバーのすぐ下に見えるところまで戻す
+  // （そのままだと、短い木の下の余白を見ていることになる）
+  if (remember) {
+    const panel = document.querySelector("#treePanel");
+    const bar = document.querySelector(".tree-header");
+    const top = panel.getBoundingClientRect().top - bar.getBoundingClientRect().bottom;
+    if (top < 0) {
+      // 行き先は絶対位置で渡す（scrollBy だと、途中で止まったり重なったりしたときにずれる）
+      window.scrollTo({ top: window.scrollY + top - 8, behavior: "smooth" });
+    }
+  }
+}
+
+// spec の書き方（stones: [...] / minerals: [...] と children: [...]）を、どれも children を持つ形にそろえる。
+// カタログにないものは落とし、逆に spec に書かれていないものは kind.home() の枝の下に足す（一覧から漏らさないため）
+function buildTree(spec, items, kind) {
   const placed = new Set();
   let serial = 0;
 
   const toNode = (item, parent) => {
+    const id = item[kind.item] && kind.byId.has(item[kind.item]) ? item[kind.item] : "";
     const node = {
-      key: `n${serial += 1}`,
+      key: `${kind.item}${serial += 1}`,
       parent,
-      label: item.label || rocksById.get(item.stone)?.name || "",
+      label: item.label || kind.byId.get(id)?.name || "",
       note: item.note || "",
       term: item.term || "",
-      stone: item.stone && rocksById.has(item.stone) ? item.stone : "",
+      id,
+      // 名前の付いた枝（結晶片岩・雲母など）は、その石・鉱物のページへのリンクになる（tree-layout.js）
+      [kind.item]: item.label ? id : "",
       branch: item.branch || parent?.branch || "",
       category: item.category || "",
       children: []
     };
-    if (node.stone) {
-      placed.add(node.stone);
+    if (id) {
+      placed.add(id);
     }
     const kids = [
       ...(item.children || []),
-      ...(item.stones || []).map((id) => ({ stone: id }))
+      ...(item[kind.list] || []).map((kidId) => ({ [kind.item]: kidId }))
     ];
     kids.forEach((kid) => {
-      if (kid.stone && !kid.label && !kid.children && !kid.stones && !rocksById.has(kid.stone)) {
-        console.info(`rock tree: ${kid.stone} is not in rocks.json`);
+      const kidId = kid[kind.item];
+      if (kidId && !kid.label && !kid.children && !kid[kind.list] && !kind.byId.has(kidId)) {
+        console.info(`tree: ${kidId} is not in ${kind.source}`);
         return;
       }
       node.children.push(toNode(kid, node));
@@ -118,19 +252,19 @@ function buildTree(spec, rocks) {
 
   const root = toNode(spec, null);
 
-  rocks.filter((rock) => !placed.has(rock.id)).forEach((rock) => {
-    const home = root.children.find((node) => node.category === (rock.category || "その他"));
+  items.filter((item) => !placed.has(item.id)).forEach((item) => {
+    const home = kind.home(root, item, toNode);
     if (!home) {
-      console.info(`rock tree: no branch for ${rock.id} (${rock.category})`);
+      console.info(`tree: no branch for ${item.id}`);
       return;
     }
-    home.children.push(toNode({ stone: rock.id }, home));
+    home.children.push(toNode({ [kind.item]: item.id }, home));
   });
 
   return root;
 }
 
-// 枝の子のうち、続けて並ぶ石をひとまとまり（房）にする。
+// 枝の子のうち、続けて並ぶ石（鉱物）をひとまとまり（房）にする。
 // 広域変成岩のように石と枝（結晶片岩）が混ざるところは、順番を保つため「粘板岩・千枚岩」「結晶片岩」「片麻岩・角閃岩」に分かれる
 function toClusters(node) {
   let serial = 0;
@@ -140,10 +274,10 @@ function toClusters(node) {
     item.children.forEach((child) => {
       if (child.children.length === 0) {
         if (!run) {
-          run = { key: `${item.key}c${serial += 1}`, parent: item, cluster: true, branch: child.branch, stones: [], children: [] };
+          run = { key: `${item.key}c${serial += 1}`, parent: item, cluster: true, branch: child.branch, ids: [], children: [] };
           children.push(run);
         }
-        run.stones.push(child.stone);
+        run.ids.push(child.id);
       } else {
         run = null;
         children.push(walk(child));
@@ -155,16 +289,18 @@ function toClusters(node) {
   return walk(node);
 }
 
-// 房の中身。石の写真と名前の札
-function stoneClusterItems(node) {
-  return node.stones.map((id) => {
-    const rock = rocksById.get(id);
-    const photo = stonePhoto(rock);
+// 房の中身。石は写真と名前の札、鉱物は名前の札（鉱物のカタログは写真を持たない）
+function clusterItems(node, tab) {
+  const kind = TREE_KINDS[tab];
+  return node.ids.map((id) => {
+    const item = kind.byId.get(id);
+    const photo = tab === "stone"
+      ? `<img class="cluster-chip-photo" src="${escapeHtml(stonePhoto(item).src)}" alt="" loading="lazy">`
+      : "";
     return `
       <li>
-        <a class="cluster-chip" data-cluster="${node.key}" href="stone.html?id=${encodeURIComponent(rock.id)}">
-          <img class="cluster-chip-photo" src="${escapeHtml(photo.src)}" alt="" loading="lazy">
-          <span class="cluster-chip-name">${escapeHtml(rock.name)}</span>
+        <a class="cluster-chip${tab === "mineral" ? " mineral-chip" : ""}" data-cluster="${node.key}" href="${kind.page}?id=${encodeURIComponent(item.id)}">
+          ${photo}<span class="cluster-chip-name">${escapeHtml(item.name)}</span>
         </a>
       </li>
     `;

@@ -2,8 +2,8 @@
 // 左の根から右へ枝分かれし、枝の先の中身（石や地質の系統）は横並びの房（.cluster）にまとめて折り返す。
 //
 // 木は次の2種類のもので組む。
-//   枝 … { key, parent, label, note, term, stone, branch, children: [...] }
-//         term / stone があれば、用語ページ／石のページへのリンクになる。branch は色分け（tree-branch-○○）
+//   枝 … { key, parent, label, note, term, stone, mineral, branch, children: [...] }
+//         term / stone / mineral があれば、用語／石／鉱物のページへのリンクになる。branch は色分け（tree-branch-○○）
 //   房 … { key, parent, cluster: true, branch, children: [] }
 //         中身の <li> は、ページごとに clusterItems(node) で作る。触れたときに根までの道筋を濃くするので、
 //         中身の触れる要素には data-cluster="房の key" を付けておく
@@ -25,21 +25,32 @@ const treeScroll = document.querySelector("#treeScroll");
 const treeCanvas = document.querySelector("#treeCanvas");
 
 // 木を描いて、枠の幅や画面の広さが変わったら組み直す。返す関数を呼ぶと、同じ木を描き直す（房の中身を開いたときなど）。
-// wide は広い画面の寸法の上書き（地質の分類マップは枝が深く房の中身も多いので、枝の箱を細くして房に幅を回す）
+// wide は広い画面の寸法の上書き（地質の分類マップは枝が深く房の中身も多いので、枝の箱を細くして房に幅を回す）。
+// 同じ枠に別の木を描き直してもよい（石と鉱物の切り替え）。そのときは、組み直すのは最後に渡した木になる
+let mountedTree = null;
+let treeWatching = false;
+
 function mountTree(root, clusterItems, { wide = {} } = {}) {
-  const redraw = () => drawTree(root, clusterItems, wide);
-  redraw();
+  mountedTree = { root, clusterItems, wide };
+  if (!treeWatching) {
+    treeWatching = true;
+    narrowQuery.addEventListener("change", redrawMountedTree);
+    let lastWidth = treeScroll.clientWidth;
+    new ResizeObserver(() => {
+      if (treeScroll.clientWidth !== lastWidth) {
+        lastWidth = treeScroll.clientWidth;
+        redrawMountedTree();
+      }
+    }).observe(treeScroll);
+  }
+  redrawMountedTree();
+  return redrawMountedTree;
+}
 
-  narrowQuery.addEventListener("change", redraw);
-  let lastWidth = treeScroll.clientWidth;
-  new ResizeObserver(() => {
-    if (treeScroll.clientWidth !== lastWidth) {
-      lastWidth = treeScroll.clientWidth;
-      redraw();
-    }
-  }).observe(treeScroll);
-
-  return redraw;
+function redrawMountedTree() {
+  if (mountedTree) {
+    drawTree(mountedTree.root, mountedTree.clusterItems, mountedTree.wide);
+  }
 }
 
 function drawTree(root, clusterItems, wide = {}) {
@@ -157,7 +168,9 @@ function treeNodeHtml(node, clusterItems) {
 
   const href = node.stone
     ? `stone.html?id=${encodeURIComponent(node.stone)}`
-    : node.term ? `term.html?id=${encodeURIComponent(node.term)}` : "";
+    : node.mineral
+      ? `mineral.html?id=${encodeURIComponent(node.mineral)}`
+      : node.term ? `term.html?id=${encodeURIComponent(node.term)}` : "";
   const tag = href ? "a" : "span";
   const kind = (node.depth === 0 ? " is-root" : node.depth === 1 ? " is-major" : "") + (node.bar ? " is-bar" : "");
   // 帯は縦書きで細いので、ひとことは title に回す

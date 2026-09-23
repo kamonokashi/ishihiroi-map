@@ -3564,7 +3564,7 @@ a.tree-node:focus-visible .tree-node-name {
 
 .tree-node.is-bar .tree-node-name {
   position: sticky;
-  top: 72px;
+  top: var(--tree-sticky-top, 72px);
   display: inline-block;
   font-size: 0.92rem;
   letter-spacing: 0.12em;
@@ -3934,4 +3934,101 @@ a.tree-node:focus-visible .tree-node-name {
 /* 見方の見本の枝。木の中では幅が決まっているが、見本は中身の幅でよい */
 .tree-guide-node {
   display: inline-grid;
+}
+
+/* ===== 石と鉱物の分類マップの切り替え（rock-tree.html） ===== */
+[data-tab-guide][hidden] {
+  display: none;
+}
+
+/* 鉱物の枝の色。ケイ酸塩（岩石の鉱物のほとんど）・炭酸塩・酸化・硫化・元素 */
+.rock-tree-page {
+  --branch-silicate: #4f7d56;
+  --branch-carbonate: #6b8fa8;
+  --branch-oxide: #9a4a3c;
+  --branch-sulfide: #a88a1f;
+  --branch-native: #b0892a;
+}
+
+.tree-branch-silicate { --branch: var(--branch-silicate); }
+.tree-branch-carbonate { --branch: var(--branch-carbonate); }
+.tree-branch-oxide { --branch: var(--branch-oxide); }
+.tree-branch-sulfide { --branch: var(--branch-sulfide); }
+.tree-branch-native { --branch: var(--branch-native); }
+
+/* 鉱物の札は写真を持たないので、名前だけの札にする */
+.mineral-chip {
+  padding: 4px 11px;
+  font-size: 0.86rem;
+}
+
+/* 石と鉱物の切り替えスイッチ。上のバー（戻るボタンの帯）のまん中に、文字だけで置く。
+   バーはもともと戻るボタンしかなく空いているので、場所を増やさずに、スクロールしてもいつでも切り替えられる。
+   戻るボタンと同じく箱も枠も持たせない。選んでいる側は濃い文字にして、下に短い線（.tree-switch-indicator）を引き、
+   切り替えると線が滑って移る。
+   以前は見出しの下に横幅いっぱいのスイッチを貼り付けていたが、スクロール中に木を見る場所を狭めて邪魔だった。
+   次にバーの中へ灰色の箱にアイコンと数を詰めたスイッチを置いたが、すっきりしたバーの中でそこだけ重たく浮いた */
+.tree-header .tree-switch {
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 50%;
+  display: grid;
+  grid-template-columns: 76px 76px;
+  transform: translateX(-50%);
+}
+
+/* 全体の button の指定（高さ42px・塗りつぶし・押すと沈む）を打ち消す */
+.tree-switch-tab {
+  min-height: 0;
+  padding: 0;
+  border-radius: 0;
+  background: transparent;
+  color: var(--muted);
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  transition: color 160ms ease;
+}
+
+.tree-switch-tab:hover {
+  background: transparent;
+  color: var(--ink);
+}
+
+.tree-switch-tab:active {
+  transform: none;
+}
+
+.tree-switch-tab:focus-visible {
+  outline: 2px solid var(--accent);
+  outline-offset: -6px;
+  border-radius: 8px;
+}
+
+.tree-switch-tab.is-active {
+  color: var(--ink);
+  font-weight: 800;
+}
+
+/* 選んでいる側の下の短い線。バーの下端に沿わせる */
+.tree-switch-indicator {
+  position: absolute;
+  bottom: 9px;
+  left: 26px;
+  width: 24px;
+  height: 3px;
+  border-radius: 2px;
+  background: var(--accent);
+  transition: transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+}
+
+.tree-switch[data-active="mineral"] .tree-switch-indicator {
+  transform: translateX(76px);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .tree-switch-indicator {
+    transition: none;
+  }
 }
