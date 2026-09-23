@@ -4055,7 +4055,8 @@ a.tree-node:focus-visible .tree-node-name {
 
   .tree-tabbar {
     position: fixed;
-    top: 50%;
+    /* 画面の真ん中より少し上。木の頭（紹介文のあたり）と同じ高さに来る */
+    top: 34%;
     left: 0;
     right: auto;
     z-index: 12;
