@@ -2491,6 +2491,11 @@ body.stone-page {
   z-index: 2200;
 }
 
+/* 詳細ページのバーは60px（地図画面は52px）。ボタンをバーの縦のまん中に合わせる */
+.stone-page .app-menu {
+  top: 8px;
+}
+
 /* 枠線も文字も持たない丸ボタン。開くと3本線が×に変わる */
 .menu-button {
   display: grid;
@@ -4034,5 +4039,58 @@ a.tree-node:focus-visible .tree-node-name {
 @media (prefers-reduced-motion: reduce) {
   .tree-switch-indicator {
     transition: none;
+  }
+}
+
+/* 広い画面では、切り替えを画面の右端に縦向きで貼り付ける（しおりのように少し出っぱらせる）。
+   上下の場所をまったく取らないので、木を見る場所が減らない。
+   狭い画面では木が画面いっぱいで、右端に出すと中身に重なるので、ヘッダーの下の細い帯のままにする。
+   出しっぱなしの札なので、本文（最大1200px）の外に札の幅（約45px）が収まる画面でだけ横に出す。
+   1200 + 45×2 で 1290px、スクロールバーのぶんを見て 1320px から */
+@media (min-width: 1320px) {
+  .tree-tabbar {
+    position: fixed;
+    top: 50%;
+    right: 0;
+    left: auto;
+    z-index: 12;
+    margin: 0;
+    border: 0;
+    background: none;
+    backdrop-filter: none;
+    transform: translateY(-50%);
+  }
+
+  .tree-switch {
+    flex-direction: column;
+    gap: 6px;
+  }
+
+  /* 選んでいないほうは少し引っこめて、選んでいるほうだけが出ているように見せる */
+  .tree-switch-tab {
+    padding: 18px 9px;
+    border-radius: 12px 0 0 12px;
+    background: var(--panel);
+    box-shadow: 0 2px 10px rgba(48, 52, 56, 0.12);
+    writing-mode: vertical-rl;
+    letter-spacing: 0.1em;
+    transform: translateX(5px);
+    transition: transform 200ms ease, background 200ms ease, color 200ms ease;
+  }
+
+  .tree-switch-tab:hover {
+    background: var(--panel);
+    transform: translateX(0);
+  }
+
+  .tree-switch-tab.is-active {
+    background: var(--accent-dark);
+    color: #fff;
+    transform: translateX(0);
+  }
+
+  /* 下線は帯のときだけのもの */
+  .tree-switch-indicator {
+    display: none;
   }
 }
