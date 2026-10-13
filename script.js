@@ -1,5 +1,7 @@
 const API_BASE = "https://gbank.gsj.jp/seamless/v2/api/1.3";
-const PROXY_URL = "api/geology.php";
+// GSJ API に直接届かないときの逃げ道。本番は Cloudflare Pages Functions（functions/api/geology.js）、
+// 手元は local-server.cjs が同じ道で中継する
+const PROXY_URL = "api/geology";
 const DEFAULT_CENTER = [35.681236, 139.767125];
 const DEFAULT_ZOOM = 11;
 
@@ -163,12 +165,16 @@ function initMap() {
   L.control.zoom({ position: "topright" }).addTo(map);
 
   L.tileLayer("https://cyberjapandata.gsi.go.jp/xyz/std/{z}/{x}/{y}.png", {
-    attribution: '<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noreferrer">GSI Tiles</a>',
+    attribution: '<a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noreferrer">国土地理院</a>',
     maxZoom: 18
   }).addTo(map);
 
+  // 地質図と Nominatim の出典は、レイヤーに付けずに常に出す。地質図を隠しても凡例 API は使い続けるし、
+  // Nominatim（地名の検索と住所の逆引き）はタイルではないので付ける先がない。どちらも表示が利用条件
+  map.attributionControl.addAttribution('<a href="https://gbank.gsj.jp/seamless/" target="_blank" rel="noreferrer">産総研 シームレス地質図</a>');
+  map.attributionControl.addAttribution('&copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer">OpenStreetMap contributors</a>');
+
   geologyLayer = L.tileLayer(`${API_BASE}/tiles/{z}/{y}/{x}.png?layer=glfs`, {
-    attribution: '<a href="https://gbank.gsj.jp/seamless/v2/api/1.3/" target="_blank" rel="noreferrer">GSJ Seamless Geology V2</a>',
     maxNativeZoom: 13,
     maxZoom: 18,
     opacity: 0.78,
@@ -665,12 +671,7 @@ async function requestLegendViaProxy(query) {
   if (!response.ok) {
     throw new Error(`Proxy API error: ${response.status}`);
   }
-  const body = await response.text();
-  // PHPが動いていないサーバーでは、プロキシのソースがそのまま返ってくる。
-  if (body.trimStart().startsWith("<?php")) {
-    throw new Error("PHPプロキシが動作していません。PHPサーバーで起動してください。");
-  }
-  return parseLegendBody(body);
+  return parseLegendBody(await response.text());
 }
 
 // 海の上など地質情報がない場所では本文が空で返る。例外にせず「なし」として扱う。
@@ -1470,7 +1471,9 @@ function renderRocks({ rocks, minerals: found = [], note }, stillWidening = fals
         ${group.rocks.map((rock) => renderRockCard(rock)).join("")}
       </div>
     </section>
-  `).join("") + renderMinerals(found);
+  `).join("") + renderMinerals(found) + renderRockFeedback();
+
+  bindRockFeedback(groups);
 
   rockCards.querySelectorAll("[data-details]").forEach((button) => {
     button.addEventListener("click", () => {
@@ -1479,6 +1482,14 @@ function renderRocks({ rocks, minerals: found = [], note }, stillWidening = fals
       layoutRockDetails();
     });
   });
+
+  rockCards.querySelectorAll("[data-report]").forEach((button) => {
+    button.addEventListener("click", () => {
+      const box = button.closest(".rock-report");
+      submitReport(box.dataset.reportRock, button.dataset.report, box.dataset.level);
+    });
+  });
+  loadReports();
 
   wasOpen.forEach(({ id, order }) => {
     const card = rockCards.querySelector(`.rock-card[data-rock="${CSS.escape(id)}"]`);
@@ -1632,8 +1643,189 @@ function renderRockCard(rock) {
       <p class="rock-minerals">${mainMinerals(rock)}</p>
       <p>${escapeHtml(rock.shortDescription || text.noDetails)}</p>
       <a class="secondary-button rock-detail-link" href="${detailUrl}" target="_blank" rel="opener">${text.details}</a>
+      ${renderRockReport(rock)}
     </div>
   `;
+}
+
+// ===== ご意見箱へのリンク =====
+// 「近所だけどこんな石じゃない」をほぼひとことで送れるよう、地点と表示していた石を
+// フォームの「どの部分について」に先に書いておく（フォームの住所は link-preview.js の feedbackFormUrl）。
+function renderRockFeedback() {
+  if (typeof feedbackFormUrl !== "function") {
+    return "";
+  }
+  return `
+    <p class="rock-feedback">
+      この場所の石、実際とちがう？
+      <a id="rockFeedbackLink" href="${escapeHtml(feedbackFormUrl({ kind: "stones" }))}" target="_blank" rel="noopener">ご意見箱で知らせる</a>
+    </p>
+  `;
+}
+
+function bindRockFeedback(groups) {
+  const link = rockCards.querySelector("#rockFeedbackLink");
+  if (!link) {
+    return;
+  }
+  const shown = groups
+    .map((group) => `${levelLabel(group.level)}＝${group.rocks.map((rock) => rock.name).join("・")}`)
+    .join("／");
+  // 住所は地質より遅れて届くことがあるので、押したときに見出しから読む
+  link.addEventListener("click", () => {
+    const place = selectedPoint.textContent.trim();
+    const point = inspectedLatLng ? `（${inspectedLatLng.lat.toFixed(4)}, ${inspectedLatLng.lng.toFixed(4)}）` : "";
+    link.href = feedbackFormUrl({
+      kind: "stones",
+      about: `地点：${place}${point}\n表示された石：${shown}`
+    });
+  });
+}
+
+// ===== 見つけた／探したけど無かった =====
+// 推定の答え合わせのための記録。アカウントは使わず、ブラウザが作るランダムな番号で人を区別する。
+// 同じ人・同じ石・同じ区画（約1km四方）は1件で、もう一度押すと取り消し、もう片方を押すと付け替え。
+// 「無かった」も集めるのは、見つけた記録だけだと、推定が外れていても気づけないから。
+// サーバーの中身は lib/reports.js。file:// では API がないので出さない。
+const REPORTS_URL = "api/reports";
+const REPORTS_ENABLED = window.location.protocol !== "file:";
+const CLIENT_ID_KEY = "ishihiroi-client-id";
+// いま表示している区画の人数と自分の記録。{ cell, counts, mine }
+let reportState = null;
+let fallbackClientId = null;
+
+// 保存できないブラウザ（プライベートモードなど）では、開いているあいだだけの番号にする
+function clientId() {
+  try {
+    let id = window.localStorage.getItem(CLIENT_ID_KEY);
+    if (!id) {
+      id = crypto.randomUUID();
+      window.localStorage.setItem(CLIENT_ID_KEY, id);
+    }
+    return id;
+  } catch {
+    fallbackClientId ||= crypto.randomUUID();
+    return fallbackClientId;
+  }
+}
+
+// lib/reports.js の cellOf() と同じ丸め方
+function reportCell(latlng) {
+  return `${(Math.round(latlng.lat * 100) / 100).toFixed(2)},${(Math.round(latlng.lng * 100) / 100).toFixed(2)}`;
+}
+
+function renderRockReport(rock) {
+  if (!REPORTS_ENABLED) {
+    return "";
+  }
+  return `
+    <div class="rock-report" data-report-rock="${escapeHtml(rock.id)}" data-level="${escapeHtml(rock.level)}">
+      <p class="rock-report-label">この近くで探してみたら <a href="about.html#reports" target="_blank" rel="opener">記録について</a></p>
+      <div class="rock-report-buttons" role="group" aria-label="${escapeHtml(rock.name)}を探した結果">
+        <button type="button" class="rock-report-button is-found" data-report="found" aria-pressed="false">見つけた</button>
+        <button type="button" class="rock-report-button is-missing" data-report="missing" aria-pressed="false">探したけど無かった</button>
+      </div>
+      <p class="rock-report-count" aria-live="polite"></p>
+    </div>
+  `;
+}
+
+async function loadReports() {
+  if (!REPORTS_ENABLED || !inspectedLatLng) {
+    return;
+  }
+  const latlng = inspectedLatLng;
+  const cell = reportCell(latlng);
+  // ±55kmの結果で描き直したときは同じ区画なので、取り直さずにそのまま付ける
+  if (reportState?.cell === cell) {
+    applyReports();
+    return;
+  }
+  reportState = null;
+  try {
+    const response = await fetch(`${REPORTS_URL}?lat=${latlng.lat}&lng=${latlng.lng}`, {
+      headers: { "X-Client-Id": clientId() },
+      cache: "no-store"
+    });
+    if (!response.ok) {
+      throw new Error(`reports fetch failed: ${response.status}`);
+    }
+    const state = await response.json();
+    // 待っているあいだに別の地点を調べていたら捨てる
+    if (!isInspectedPoint(latlng)) {
+      return;
+    }
+    reportState = state;
+    applyReports();
+  } catch (error) {
+    // 記録の数が読めなくても、石の推定はそのまま使える。ボタンは押せるままにしておく
+    console.info("見つけた記録を読み込めませんでした。", error);
+  }
+}
+
+function applyReports() {
+  rockCards.querySelectorAll(".rock-report").forEach((box) => {
+    const rock = box.dataset.reportRock;
+    const mine = reportState?.mine?.[rock];
+    box.querySelectorAll("[data-report]").forEach((button) => {
+      const on = button.dataset.report === mine;
+      button.setAttribute("aria-pressed", String(on));
+      button.classList.toggle("is-on", on);
+    });
+    box.querySelector(".rock-report-count").textContent = reportState ? reportCountText(reportState.counts[rock]) : "";
+  });
+}
+
+function reportCountText(count) {
+  if (!count || (count.found === 0 && count.missing === 0)) {
+    return "この近くの記録はまだありません。";
+  }
+  const parts = [];
+  if (count.found > 0) {
+    parts.push(`見つけた ${count.found}人`);
+  }
+  if (count.missing > 0) {
+    parts.push(`無かった ${count.missing}人`);
+  }
+  return `この近く（約1km四方）で ${parts.join("・")}`;
+}
+
+async function submitReport(rock, kind, level) {
+  if (!inspectedLatLng) {
+    return;
+  }
+  const latlng = inspectedLatLng;
+  const box = rockCards.querySelector(`.rock-report[data-report-rock="${CSS.escape(rock)}"]`);
+  const buttons = box ? [...box.querySelectorAll("[data-report]")] : [];
+  // 同じボタンをもう一度押したら取り消し
+  const undo = reportState?.mine?.[rock] === kind;
+  buttons.forEach((button) => { button.disabled = true; });
+
+  try {
+    const response = await fetch(REPORTS_URL, {
+      method: undo ? "DELETE" : "POST",
+      headers: { "Content-Type": "application/json", "X-Client-Id": clientId() },
+      body: JSON.stringify({ rock, lat: latlng.lat, lng: latlng.lng, found: kind === "found", level })
+    });
+    if (!response.ok) {
+      throw Object.assign(new Error(`report failed: ${response.status}`), { status: response.status });
+    }
+    const state = await response.json();
+    if (isInspectedPoint(latlng)) {
+      reportState = state;
+      applyReports();
+    }
+  } catch (error) {
+    console.info("見つけた記録を保存できませんでした。", error);
+    const count = box?.querySelector(".rock-report-count");
+    if (count) {
+      count.textContent = error.status === 429
+        ? "短いあいだに記録が多すぎます。しばらくしてからもう一度お試しください。"
+        : "記録できませんでした。時間をおいてもう一度お試しください。";
+    }
+  } finally {
+    buttons.forEach((button) => { button.disabled = false; });
+  }
 }
 
 function levelDescription(level) {

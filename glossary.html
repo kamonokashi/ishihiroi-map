@@ -8,11 +8,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&display=swap">
-    <link rel="stylesheet" href="styles.css?v=20260923-07">
+    <link rel="stylesheet" href="styles.css?v=20260926-13">
     <script defer src="data/bundle.js?v=20260920-07"></script>
-    <script defer src="menu.js?v=20260923-03"></script>
-    <script defer src="link-preview.js?v=20260921-09"></script>
-    <script defer src="glossary.js?v=20260921-09"></script>
+    <script defer src="menu.js?v=20260926-01"></script>
+    <script defer src="link-preview.js?v=20260926-04"></script>
+    <script defer src="glossary.js?v=20260926-01"></script>
   </head>
   <body class="stone-page glossary-page">
     <header class="stone-header">
@@ -23,34 +23,48 @@
       <div class="glossary-head">
         <h1>用語集</h1>
         <p class="glossary-sub">石・鉱物・地質の言葉の索引です。言葉にマウスを乗せると説明が出ます。</p>
-
-        <div class="glossary-search-box">
-          <svg class="glossary-search-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
-            <circle cx="11" cy="11" r="6.4"/>
-            <path d="M15.8 15.8L20.5 20.5"/>
-          </svg>
-          <input id="glossarySearch" class="glossary-search" type="search" aria-label="言葉をさがす" placeholder="かこうがん、付加体、石英…" autocomplete="off">
-        </div>
-
-        <div class="glossary-filters" role="group" aria-label="種類で絞り込む">
-          <button type="button" class="glossary-chip" data-kind="all" aria-pressed="true">すべて</button>
-          <button type="button" class="glossary-chip" data-kind="stone" aria-pressed="false">石</button>
-          <button type="button" class="glossary-chip" data-kind="mineral" aria-pressed="false">鉱物</button>
-          <button type="button" class="glossary-chip" data-kind="geology" aria-pressed="false">地質</button>
-          <button type="button" class="glossary-chip" data-kind="term" aria-pressed="false">用語</button>
-        </div>
-        <div id="glossarySubFilters" class="glossary-filters glossary-sub-filters" role="group" aria-label="石の種類で絞り込む" hidden>
-          <button type="button" class="glossary-chip" data-sub="all" aria-pressed="true">すべて</button>
-          <button type="button" class="glossary-chip" data-sub="火成岩" aria-pressed="false">火成岩</button>
-          <button type="button" class="glossary-chip" data-sub="堆積岩" aria-pressed="false">堆積岩</button>
-          <button type="button" class="glossary-chip" data-sub="変成岩" aria-pressed="false">変成岩</button>
-          <button type="button" class="glossary-chip" data-sub="その他" aria-pressed="false">その他</button>
-        </div>
       </div>
 
-      <div class="glossary-rail">
-        <nav id="glossaryIndex" class="glossary-index" aria-label="五十音の見出しへ移動"></nav>
-        <p id="glossaryCount" class="glossary-count" aria-live="polite"></p>
+      <!-- 上に付いてくるのは検索の帯。右端の矢印で、種類の絞り込みと五十音の索引を開く。
+           絞り込みや五十音はたまにしか使わないので、ふだんは畳んで、検索と件数だけを見せる -->
+      <div class="glossary-bar">
+        <div class="glossary-bar-row">
+          <div class="glossary-search-box">
+            <svg class="glossary-search-icon" viewBox="0 0 24 24" aria-hidden="true" focusable="false">
+              <circle cx="11" cy="11" r="6.4"/>
+              <path d="M15.8 15.8L20.5 20.5"/>
+            </svg>
+            <input id="glossarySearch" class="glossary-search" type="search" aria-label="言葉をさがす" placeholder="かこうがん、付加体、石英…" autocomplete="off">
+          </div>
+          <p id="glossaryCount" class="glossary-count" aria-live="polite"></p>
+          <button id="glossaryToggle" class="glossary-toggle" type="button" aria-expanded="false" aria-controls="glossaryPanel" aria-label="絞り込みと五十音を開く" title="絞り込みと五十音">
+            <svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M6 9l6 6 6-6"/></svg>
+          </button>
+        </div>
+
+        <div id="glossaryPanel" class="glossary-panel" hidden>
+          <div class="glossary-panel-group">
+            <p class="glossary-panel-label">種類</p>
+            <div class="glossary-filters" role="group" aria-label="種類で絞り込む">
+              <button type="button" class="glossary-chip" data-kind="all" aria-pressed="true">すべて</button>
+              <button type="button" class="glossary-chip" data-kind="stone" aria-pressed="false">石</button>
+              <button type="button" class="glossary-chip" data-kind="mineral" aria-pressed="false">鉱物</button>
+              <button type="button" class="glossary-chip" data-kind="geology" aria-pressed="false">地質</button>
+              <button type="button" class="glossary-chip" data-kind="term" aria-pressed="false">用語</button>
+            </div>
+            <div id="glossarySubFilters" class="glossary-filters glossary-sub-filters" role="group" aria-label="石の種類で絞り込む" hidden>
+              <button type="button" class="glossary-chip" data-sub="all" aria-pressed="true">すべて</button>
+              <button type="button" class="glossary-chip" data-sub="火成岩" aria-pressed="false">火成岩</button>
+              <button type="button" class="glossary-chip" data-sub="堆積岩" aria-pressed="false">堆積岩</button>
+              <button type="button" class="glossary-chip" data-sub="変成岩" aria-pressed="false">変成岩</button>
+              <button type="button" class="glossary-chip" data-sub="その他" aria-pressed="false">その他</button>
+            </div>
+          </div>
+          <div class="glossary-panel-group">
+            <p class="glossary-panel-label">五十音</p>
+            <nav id="glossaryIndex" class="glossary-index" aria-label="五十音の見出しへ移動"></nav>
+          </div>
+        </div>
       </div>
 
       <div id="glossaryList" class="glossary-list">

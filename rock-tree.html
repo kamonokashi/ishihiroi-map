@@ -8,38 +8,36 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&display=swap">
-    <link rel="stylesheet" href="styles.css?v=20260923-07">
+    <link rel="stylesheet" href="styles.css?v=20260926-13">
     <script defer src="data/bundle.js?v=20260920-07"></script>
-    <script defer src="menu.js?v=20260923-03"></script>
-    <script defer src="link-preview.js?v=20260921-09"></script>
-    <script defer src="tree-layout.js?v=20260921-30"></script>
-    <script defer src="rock-tree.js?v=20260923-02"></script>
+    <script defer src="menu.js?v=20260926-01"></script>
+    <script defer src="link-preview.js?v=20260926-04"></script>
+    <script defer src="tree-layout.js?v=20260926-01"></script>
+    <script defer src="rock-tree.js?v=20260926-01"></script>
   </head>
   <body class="stone-page rock-tree-page">
     <header class="stone-header">
       <button id="backButton" class="stone-back-button" type="button" aria-label="地図に戻る" title="地図に戻る"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 6l-6 6 6 6"/></svg></button>
     </header>
 
-    <main class="rock-tree">
+    <main class="rock-tree has-side-tabs">
       <div class="rock-tree-head">
         <h1>分類マップ</h1>
       </div>
 
-      <!-- 石と鉱物の切り替え。ヘッダー（戻るボタンの帯）のすぐ下に、細い帯として貼り付ける。
-           ヘッダーはサイトの名前や戻る場所のためのもので、操作は入れない。
-           文字だけのタブと、選んでいる側の下線、境目の線1本だけにして、スクロール中に場所を取らないようにする -->
+      <!-- 石と鉱物の切り替え。画面の左端に縦書きのしおりとして貼り付ける（どの画面幅でも）。
+           上下の場所を取らないので、スクロール中も木を見る場所が減らない。
+           ヘッダーはサイトの名前や戻る場所のためのもので、操作は入れない -->
       <div class="tree-tabbar">
         <div id="treeSwitch" class="tree-switch" role="tablist" aria-label="分類マップの切り替え" data-active="stone">
           <button id="stoneTab" class="tree-switch-tab is-active" type="button" role="tab" aria-selected="true" aria-controls="treePanel" data-tab="stone">石</button>
           <button id="mineralTab" class="tree-switch-tab" type="button" role="tab" aria-selected="false" aria-controls="treePanel" data-tab="mineral">鉱物</button>
-          <span class="tree-switch-indicator" aria-hidden="true"></span>
         </div>
       </div>
 
       <div id="treePanel" role="tabpanel" aria-labelledby="stoneTab">
         <!-- 見方。見本（札・枝）は木の中と同じ部品で描いて、同じものを探せるようにする。石の札の写真は rock-tree.js が入れる -->
         <div data-tab-guide="stone">
-          <p class="rock-tree-sub">拾える石を、でき方ごとに枝分かれさせて並べています。</p>
           <dl class="tree-guide">
             <dt class="tree-guide-mark"><span class="tree-guide-arrow">左 → 右</span></dt>
             <dd>大きな分け方（火成岩・堆積岩など）から、細かい仲間へ分かれていきます</dd>
@@ -51,7 +49,6 @@
         </div>
 
         <div data-tab-guide="mineral" hidden>
-          <p class="rock-tree-sub">石をつくっている鉱物を、何でできているかで枝分かれさせて並べています。</p>
           <dl class="tree-guide">
             <dt class="tree-guide-mark"><span class="tree-guide-arrow">左 → 右</span></dt>
             <dd>何でできているか（ケイ酸塩・炭酸塩など）から、細かい仲間へ分かれていきます</dd>

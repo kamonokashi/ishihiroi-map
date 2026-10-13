@@ -84,8 +84,10 @@ function drawTree(root, clusterItems, wide = {}) {
   treeCanvas.style.width = `${width}px`;
   treeCanvas.innerHTML = `<ul class="tree-list" role="list">${nodes.map((node) => treeNodeHtml(node, clusterItems)).join("")}</ul>`;
   const elements = new Map([...treeCanvas.querySelectorAll(".tree-node, .cluster")].map((el) => [el.dataset.key, el]));
+  // 帯は、この時点ではまだ高さを決めていないので、縦書きの名前がちょうど収まる高さになっている。
+  // それを帯の最低の高さとして覚えておく（下の place() を参照）
   nodes.forEach((node) => {
-    node.height = node.bar ? 0 : elements.get(node.key).offsetHeight;
+    node.height = elements.get(node.key).offsetHeight;
   });
 
   // 縦の位置。房を上から順に積み、枝はいちばん上の子といちばん下の子のまん中に置く。
@@ -111,6 +113,14 @@ function drawTree(root, clusterItems, wide = {}) {
     // 帯は子の範囲いっぱいに伸ばす
     node.top = first.bar ? first.top : first.cluster ? first.top : first.y - first.height / 2;
     node.bottom = last.bar ? last.bottom : last.cluster ? last.top + last.height : last.y + last.height / 2;
+    // 子の範囲が帯の名前より短いと、縦書きの名前が収まらずに横へ折り返してはみ出す
+    // （石の分類マップの「鉱脈」は中身が脈石英1つだけで、房1段ぶんの高さしかなかった）。
+    // そのときは帯を名前の高さまで伸ばし、下の枝をそのぶん下げる
+    if (node.bar && node.bottom - node.top < node.height) {
+      const extra = node.height - (node.bottom - node.top);
+      node.bottom += extra;
+      cursor += extra;
+    }
   };
   place(root);
   const height = cursor - size.rowGap + size.pad;

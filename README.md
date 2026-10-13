@@ -12,17 +12,11 @@ Leaflet と産総研地質調査総合センター「20万分の1日本シーム
 - CSS
 - JavaScript
 - Leaflet
-- 必要な場合のみ PHP プロキシ
+- 必要な場合のみ中継（Cloudflare Pages Functions）
 
 ## 起動方法
 
 `index.html` をダブルクリックしてそのまま開けます。ただし周辺の面積比を測る処理はブラウザの制限で動かないため、ローカルサーバー経由での確認を推奨します。
-
-```bash
-php -S localhost:8000
-```
-
-PHP を使わない場合:
 
 ```bash
 python -m http.server 8000
@@ -107,11 +101,9 @@ node tools/build-lithology-map.mjs
 
 対応表には、地質図に描かれない随伴物も含めています。石英脈は幅が数cm〜数m、接触変成帯は幅が数百mしかなく、20万分の1の縮尺では表現できませんが、石拾いでは普通に手に取るためです。
 
-## CORS と PHP プロキシ
+## CORS と中継
 
-ブラウザから GSJ API を直接取得できない場合に備え、`api/geology.php` を用意しています。JavaScript は直接取得に失敗した場合だけ PHP プロキシへフォールバックします。
-
-PHP サーバーで起動した場合のみプロキシが動きます。
+GSJ API はブラウザから直接取得できます（CORS 許可あり）。直接取得に失敗した場合だけ、`/api/geology` の中継にフォールバックします。本番では `functions/api/geology.js`（Cloudflare Pages Functions）、手元では `node local-server.cjs` が中継します。
 
 ## 注意
 

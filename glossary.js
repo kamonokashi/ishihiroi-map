@@ -8,6 +8,8 @@ const glossaryCount = document.querySelector("#glossaryCount");
 const glossarySearch = document.querySelector("#glossarySearch");
 const glossaryIndex = document.querySelector("#glossaryIndex");
 const glossarySubFilters = document.querySelector("#glossarySubFilters");
+const glossaryToggle = document.querySelector("#glossaryToggle");
+const glossaryPanel = document.querySelector("#glossaryPanel");
 
 const KANA_ROWS = [
   ["あ", "あいうえおぁぃぅぇぉゔ"],
@@ -65,8 +67,38 @@ window.addEventListener("DOMContentLoaded", async () => {
     });
   });
 
+  bindPanel();
   render();
 });
+
+// 検索の帯の右端の矢印で、絞り込みと五十音の索引を開け閉めする。
+// 五十音で行を選んだら、その行へ飛んで閉じる（開いたままだと、飛んだ先の見出しが索引の下に隠れる）。
+// 絞り込みは続けて選ぶことがあるので、選んでも閉じない。外を押すか Esc で閉じる
+function bindPanel() {
+  const setOpen = (open) => {
+    glossaryPanel.hidden = !open;
+    glossaryToggle.setAttribute("aria-expanded", String(open));
+    glossaryToggle.setAttribute("aria-label", open ? "絞り込みと五十音を閉じる" : "絞り込みと五十音を開く");
+  };
+
+  glossaryToggle.addEventListener("click", () => setOpen(glossaryPanel.hidden));
+  glossaryIndex.addEventListener("click", (event) => {
+    if (event.target.closest("a")) {
+      setOpen(false);
+    }
+  });
+  document.addEventListener("keydown", (event) => {
+    if (event.key === "Escape" && !glossaryPanel.hidden) {
+      setOpen(false);
+      glossaryToggle.focus();
+    }
+  });
+  document.addEventListener("click", (event) => {
+    if (!glossaryPanel.hidden && !event.target.closest(".glossary-bar")) {
+      setOpen(false);
+    }
+  });
+}
 
 async function loadEntries() {
   const [rocks, minerals, terms] = await Promise.all([
@@ -145,10 +177,12 @@ function render() {
   const groups = groupByRow(hits);
   renderIndex(groups);
 
-  const scope = state.kind === "all" ? "" : `${KINDS[state.kind].label}${state.kind === "stone" && state.sub !== "all" ? `（${state.sub}）` : ""}のうち、`;
-  glossaryCount.textContent = needle
-    ? `${scope}「${state.query.trim()}」に当てはまるもの：${hits.length}件`
-    : `${scope}${hits.length}件`;
+  // 帯の中なので件数は短く。絞り込んでいるときだけ、何で絞っているかを前に添える
+  // （絞り込みは畳んだ中にあるので、ここに出さないと絞ったままなのに気づかない）
+  const filtered = state.kind !== "all";
+  const scope = filtered ? `${KINDS[state.kind].label}${state.kind === "stone" && state.sub !== "all" ? `・${state.sub}` : ""} ` : "";
+  glossaryCount.textContent = `${scope}${hits.length}件`;
+  glossaryToggle.classList.toggle("has-filter", filtered);
 
   if (hits.length === 0) {
     glossaryList.innerHTML = `<p class="glossary-empty">当てはまるものがありません。別の言葉やひらがなで試すか、絞り込みを「すべて」に戻してみてください。</p>`;

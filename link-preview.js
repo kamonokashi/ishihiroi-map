@@ -450,3 +450,67 @@ if (document.readyState === "loading") {
 } else {
   bindBackButton();
 }
+
+// ===== ご意見箱（Google フォーム） =====
+// フォームの住所と項目の番号はここ1か所で持つ。項目を足したり作り直したりしたら、番号をここで直す
+// （番号はフォームの公開ページの FB_PUBLIC_LOAD_DATA_ か、「事前入力した URL を取得」で分かる）。
+// どこから開いたかを「どの部分について」に先に書き込んでおく。石の分布の話は、場所が分からないと使えないため。
+const FEEDBACK_FORM = "https://docs.google.com/forms/d/e/1FAIpQLSetJHXtyiWMDeQEH7XnndUHczN52M5-liv6z6mQgaIvEeX14w/viewform";
+const FEEDBACK_FIELDS = { kind: "entry.1915499914", about: "entry.1557235914" };
+// 「ご意見の種類」の選択肢。フォームの文字と一字一句同じでないと選ばれない
+const FEEDBACK_KINDS = {
+  mistake: "サイト上の情報の間違い",
+  stones: "石について（現地の情報など）",
+  feature: "こんな機能が欲しい",
+  join: "一緒に作りたい"
+};
+
+function feedbackFormUrl({ kind, about } = {}) {
+  const params = new URLSearchParams();
+  if (kind || about) {
+    params.set("usp", "pp_url");
+  }
+  if (FEEDBACK_KINDS[kind]) {
+    params.set(FEEDBACK_FIELDS.kind, FEEDBACK_KINDS[kind]);
+  }
+  if (about) {
+    params.set(FEEDBACK_FIELDS.about, about);
+  }
+  const query = params.toString();
+  return query ? `${FEEDBACK_FORM}?${query}` : FEEDBACK_FORM;
+}
+
+// いま開いているページを「どの部分について」に書く形。タイトルは描画のあとで入るので、押したときに読む
+function currentPageLabel() {
+  const title = document.title.replace(/\s*-\s*いしひろいマップ$/, "");
+  return `${title}（${window.location.href}）`;
+}
+
+// data-feedback="種類" のリンクにフォームの住所を入れる（「このサイトについて」のご意見欄など）。
+// 詳細ページ・用語集・分類マップには、ページの終わりに「このページの間違いを知らせる」を足す。
+// 地図画面は結果欄に自前のリンクを出し、「このサイトについて」は本文にご意見欄があるので足さない。
+function bindFeedbackLinks() {
+  const body = document.body;
+  if (body.classList.contains("stone-page") && body.dataset.feedbackFooter !== "off") {
+    body.insertAdjacentHTML("beforeend", `
+      <footer class="page-feedback">
+        <a data-feedback="mistake" data-feedback-page target="_blank" rel="noopener">このページの間違いを知らせる</a>
+      </footer>
+    `);
+  }
+
+  document.querySelectorAll("a[data-feedback]").forEach((link) => {
+    link.href = feedbackFormUrl({ kind: link.dataset.feedback });
+    if (link.hasAttribute("data-feedback-page")) {
+      link.addEventListener("click", () => {
+        link.href = feedbackFormUrl({ kind: link.dataset.feedback, about: currentPageLabel() });
+      });
+    }
+  });
+}
+
+if (document.readyState === "loading") {
+  document.addEventListener("DOMContentLoaded", bindFeedbackLinks);
+} else {
+  bindFeedbackLinks();
+}

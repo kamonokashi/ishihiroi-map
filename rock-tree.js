@@ -178,7 +178,6 @@ function showTab(name, { remember = false } = {}) {
     button.setAttribute("aria-selected", String(active));
   });
   document.querySelector("#treeSwitch").dataset.active = name;
-  moveTabUnderline();
   document.querySelectorAll("[data-tab-guide]").forEach((guide) => {
     guide.hidden = guide.dataset.tabGuide !== name;
   });
@@ -201,28 +200,14 @@ function showTab(name, { remember = false } = {}) {
   // （そのままだと、短い木の下の余白を見ていることになる）
   if (remember) {
     const panel = document.querySelector("#treePanel");
-    const bar = document.querySelector(".tree-tabbar");
-    const top = panel.getBoundingClientRect().top - bar.getBoundingClientRect().bottom;
+    const header = document.querySelector(".stone-header");
+    const top = panel.getBoundingClientRect().top - header.getBoundingClientRect().bottom;
     if (top < 0) {
       // 行き先は絶対位置で渡す（scrollBy だと、途中で止まったり重なったりしたときにずれる）
       window.scrollTo({ top: window.scrollY + top - 8, behavior: "smooth" });
     }
   }
 }
-
-// 選んでいるタブの下線を、そのタブの幅と位置に合わせる。「石」と「鉱物」で字数が違うので、決め打ちにはできない
-function moveTabUnderline() {
-  const tab = document.querySelector(".tree-switch-tab.is-active");
-  const line = document.querySelector(".tree-switch-indicator");
-  if (!tab || !line) {
-    return;
-  }
-  line.style.width = `${tab.offsetWidth}px`;
-  line.style.transform = `translateX(${tab.offsetLeft}px)`;
-}
-
-// 字の大きさや余白が変わると幅も変わる（画面幅で変えている）ので、引き直す
-window.addEventListener("resize", moveTabUnderline);
 
 // spec の書き方（stones: [...] / minerals: [...] と children: [...]）を、どれも children を持つ形にそろえる。
 // カタログにないものは落とし、逆に spec に書かれていないものは kind.home() の枝の下に足す（一覧から漏らさないため）

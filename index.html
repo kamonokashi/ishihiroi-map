@@ -11,15 +11,15 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&display=swap">
-    <link rel="stylesheet" href="styles.css?v=20260923-07">
+    <link rel="stylesheet" href="styles.css?v=20260926-13">
     <script
       defer
       src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
     <!-- file:// で開いたとき用の石データ。サーバー経由なら data/*.json のほうが使われます。 -->
     <script defer src="data/bundle.js?v=20260919-10"></script>
-    <script defer src="menu.js?v=20260923-03"></script>
-    <script defer src="link-preview.js?v=20260921-09"></script>
-    <script defer src="script.js?v=20260921-09"></script>
+    <script defer src="menu.js?v=20260926-01"></script>
+    <script defer src="link-preview.js?v=20260926-04"></script>
+    <script defer src="script.js?v=20260926-03"></script>
   </head>
   <!-- 地図の検索結果ではホバーの説明カードを出さない（カードは詳細ページだけのもの） -->
   <body data-link-preview="off">
@@ -82,9 +82,10 @@
               <span class="result-place-label">選択地点</span>
               <span class="result-place-name" id="selectedPoint"></span>
             </p>
+            <!-- 狭い画面では左端の縦書きのしおりになるので、「を見る」を隠して「石」「地質」だけにする -->
             <div class="tab-buttons" role="tablist">
-              <button id="rocksTab" class="active" type="button" role="tab" aria-selected="true">&#30707;&#12434;&#35211;&#12427;</button>
-              <button id="geologyTab" type="button" role="tab" aria-selected="false">&#22320;&#36074;&#12434;&#35211;&#12427;</button>
+              <button id="rocksTab" class="active" type="button" role="tab" aria-selected="true">石<span class="tab-suffix">を見る</span></button>
+              <button id="geologyTab" type="button" role="tab" aria-selected="false">地質<span class="tab-suffix">を見る</span></button>
             </div>
           </div>
 
@@ -121,8 +122,12 @@
           </div>
         </section>
 
+        <!-- 詳しい注意書き・AIでの制作・出典は about.html。ここはその短い版 -->
         <p class="note">
-          &#12371;&#12398;&#32080;&#26524;&#12399;&#22320;&#36074;&#22259;&#12434;&#12418;&#12392;&#12395;&#12375;&#12383;&#25512;&#23450;&#12391;&#12377;&#12290;&#23455;&#38555;&#12395;&#35211;&#12388;&#12363;&#12427;&#30707;&#12399;&#12289;&#24029;&#12420;&#28023;&#12395;&#12424;&#12387;&#12390;&#21029;&#12398;&#22320;&#22495;&#12363;&#12425;&#36939;&#12400;&#12428;&#12390;&#12367;&#12427;&#22580;&#21512;&#12364;&#12354;&#12426;&#12414;&#12377;&#12290;
+          この結果は地質図をもとにした推定です。実際に見つかる石は、川や海によって別の地域から運ばれてくる場合があります。
+          国立公園や天然記念物の指定地など、石を拾ってはいけない場所もあります。現地の決まりに従ってください。
+          このサイトはAIを使って作っています。
+          <a href="about.html" target="_blank" rel="opener">くわしくは「このサイトについて」</a>
         </p>
       </aside>
     </main>

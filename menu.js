@@ -12,7 +12,8 @@ const MENU_ITEMS = [
   { href: "index.html", title: "地図", note: "地点を選んで、拾えそうな石を見る" },
   { href: "glossary.html", title: "用語集", note: "石・鉱物・地質の言葉をさがす" },
   { href: "rock-tree.html", title: "石と鉱物の分類マップ", note: "石と鉱物の仲間分けを、枝分かれでたどる" },
-  { href: "litho-tree.html", title: "地質の分類マップ", note: "地質図の610種類の地質を、枝分かれでたどる" }
+  { href: "litho-tree.html", title: "地質の分類マップ", note: "地質図の610種類の地質を、枝分かれでたどる" },
+  { href: "about.html", title: "このサイトについて", note: "推定のしくみ・拾うときの注意・AIでの制作・ご意見" }
 ];
 
 (() => {

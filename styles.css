@@ -1065,6 +1065,338 @@ h3 {
   display: none;
 }
 
+/* 見つけた／探したけど無かった。説明の下に細い線で区切って置く。
+   2つは同じ重さの答えなので、同じ大きさの枠ボタンを半分ずつ並べ、選んでいるほうだけ塗る */
+.rock-report {
+  display: grid;
+  gap: 8px;
+  margin-top: 4px;
+  padding-top: 12px;
+  border-top: 1px solid var(--line);
+}
+
+.rock-details .rock-report-label {
+  color: var(--ink);
+  font-size: 0.9rem;
+  font-weight: 700;
+}
+
+.rock-report-label a {
+  margin-left: 6px;
+  color: var(--muted);
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+.rock-report-buttons {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.rock-report-button {
+  min-height: 38px;
+  padding: 0 8px;
+  border: 1px solid var(--line);
+  background: #fff;
+  color: var(--ink);
+  font-size: 0.9rem;
+}
+
+.rock-report-button:hover {
+  border-color: var(--accent);
+  background: #fff;
+  color: var(--accent-dark);
+}
+
+.rock-report-button.is-found.is-on {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: #fff;
+}
+
+.rock-report-button.is-missing.is-on {
+  border-color: var(--rare);
+  background: var(--rare);
+  color: #fff;
+}
+
+.rock-report-button:disabled:not(.is-on) {
+  background: #fff;
+  color: var(--muted);
+  cursor: progress;
+}
+
+.rock-details .rock-report-count {
+  color: var(--muted);
+  font-size: 0.82rem;
+}
+
+.rock-details .rock-report-count:empty {
+  display: none;
+}
+
+/* 結果の終わりのご意見箱へのリンク。結果より前に出ないよう、断り書きと同じくらい控えめに */
+.rock-feedback {
+  margin: 18px 0 0;
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+.rock-feedback a,
+.page-feedback a {
+  color: var(--accent-dark);
+  font-weight: 700;
+}
+
+/* 詳細ページ・用語集・分類マップの終わりの「このページの間違いを知らせる」 */
+.page-feedback {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 8px;
+  margin: 0 auto;
+  padding: 20px 16px 36px;
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+/* ===== このサイトについて（about.html） =====
+   注意書き・出典など、読み物というより「確かめるための」ページ。長い箇条書きが続くと目が滑るので、
+   冒頭に要点3つ（.about-points）、本文は「見出し語＋説明」の行（.about-rows）を基本にする */
+
+.about-points {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.about-points a {
+  display: grid;
+  align-content: start;
+  gap: 8px;
+  height: 100%;
+  padding: 16px;
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  background: var(--panel);
+  color: var(--ink);
+  text-decoration: none;
+  transition: border-color 160ms ease, box-shadow 160ms ease;
+}
+
+.about-points a:hover,
+.about-points a:focus-visible {
+  border-color: var(--accent);
+  box-shadow: 0 6px 16px rgba(48, 52, 56, 0.08);
+}
+
+.about-points strong {
+  font-size: 0.98rem;
+  line-height: 1.4;
+}
+
+.about-points span:last-child {
+  color: #4f5659;
+  font-size: 0.86rem;
+  line-height: 1.65;
+}
+
+/* いちばん伝えたい1文。本文と同じ段落だと埋もれるので、色の付いた帯にする */
+.stone-info-panel p.about-callout {
+  margin: 4px 0 14px;
+  padding: 12px 16px;
+  border-left: 3px solid var(--accent);
+  border-radius: 0 6px 6px 0;
+  background: rgba(13, 162, 189, 0.07);
+  color: var(--ink);
+}
+
+.about-list {
+  display: grid;
+  gap: 6px;
+  margin: 0 0 14px;
+  padding-left: 1.2em;
+  color: #3f4549;
+  font-size: 0.98rem;
+  line-height: 1.8;
+}
+
+.about-list li::marker {
+  color: var(--accent);
+}
+
+.about-list-small {
+  margin: 12px 0 0;
+  color: var(--muted);
+  font-size: 0.88rem;
+}
+
+/* 見出し語＋説明の行。広い画面では左右に、狭い画面では上下に並べる */
+.about-rows {
+  margin: 0 0 14px;
+  border-top: 1px solid var(--line);
+}
+
+.about-rows > div {
+  display: grid;
+  grid-template-columns: 11em minmax(0, 1fr);
+  gap: 4px 16px;
+  padding: 11px 0;
+  border-bottom: 1px solid var(--line);
+}
+
+.about-rows dt {
+  color: var(--ink);
+  font-size: 0.92rem;
+  font-weight: 700;
+  line-height: 1.7;
+}
+
+.about-rows dd {
+  margin: 0;
+  color: #3f4549;
+  font-size: 0.95rem;
+  line-height: 1.75;
+}
+
+.about-rows a,
+.about-page .stone-info-panel p a:not(.about-button) {
+  color: var(--accent-dark);
+  font-weight: 700;
+}
+
+/* 根拠の法律名。本文の後ろに小さな札で添える */
+.about-law {
+  display: inline-block;
+  margin-left: 6px;
+  padding: 0 7px;
+  border-radius: 999px;
+  background: #eef0ed;
+  color: var(--muted);
+  font-size: 0.76rem;
+  font-weight: 700;
+  line-height: 1.7;
+  white-space: nowrap;
+}
+
+.about-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 42px;
+  padding: 0 20px;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #fff;
+  font-weight: 700;
+  text-decoration: none;
+  transition: background 160ms ease;
+}
+
+.about-button:hover {
+  background: var(--accent-dark);
+}
+
+/* ご意見の節は、このページでいちばんしてほしいこと。枠を色で縁取って目立たせる */
+.detail-main .about-contact {
+  border-color: rgba(13, 162, 189, 0.45);
+  background: linear-gradient(180deg, rgba(13, 162, 189, 0.06), var(--panel) 160px);
+}
+
+/* 一緒に作りたい方への呼びかけ。送り先は同じご意見箱なので、ボタンは分けずに文だけ添える */
+.stone-info-panel p.about-join {
+  margin-bottom: 16px;
+}
+
+.stone-info-panel p.about-hint {
+  margin-top: 16px;
+  color: var(--muted);
+  font-size: 0.86rem;
+}
+
+/* 作っている人の名前。名前を大きめに、学年は法律名と同じ小さな札で添える */
+.stone-info-panel p.about-author {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 8px;
+  color: var(--ink);
+  font-size: 1.15rem;
+}
+
+.about-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px 14px;
+}
+
+/* 右の列のご意見箱。狭い画面では本文の終わりにご意見の節があるので出さない。
+   目次も狭い画面では出ないので、右の列ごと消す（空の列が残ると見出しの下に余白が倍に空く） */
+.about-aside-contact {
+  display: none;
+}
+
+@media (max-width: 999px) {
+  .about-page .detail-aside {
+    display: none;
+  }
+}
+
+@media (min-width: 1000px) {
+  .about-aside-sticky {
+    position: sticky;
+    top: 80px;
+    display: grid;
+    gap: 16px;
+  }
+
+  .about-page .detail-toc {
+    position: static;
+  }
+
+  .about-aside-contact {
+    display: grid;
+    gap: 10px;
+    padding: 16px 18px;
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    background: var(--panel);
+  }
+
+  .about-aside-contact p {
+    margin: 0;
+    color: #4f5659;
+    font-size: 0.88rem;
+    line-height: 1.6;
+  }
+}
+
+@media (max-width: 720px) {
+  .about-points {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  /* 1列のときは、アイコンを左に置いた背の低い札にする */
+  .about-points a {
+    grid-template-columns: 30px minmax(0, 1fr);
+    column-gap: 12px;
+    row-gap: 2px;
+    padding: 12px 14px;
+  }
+
+  .about-points .stone-panel-icon {
+    grid-row: span 2;
+  }
+
+  .about-rows > div {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+
 .rock-meta,
 .geology-meta {
   color: var(--muted);
@@ -1312,6 +1644,11 @@ h3 {
   color: var(--muted);
   font-size: 0.78rem;
   line-height: 1.7;
+}
+
+.note a {
+  color: var(--accent-dark);
+  font-weight: 700;
 }
 
 html.stone-root,
@@ -1863,16 +2200,74 @@ body.stone-page {
     border-left: 0;
   }
 
+  /* 狭い画面では結果欄の高さが半分しかない。「選択地点」とタブの帯を上に貼り付けると、それだけで
+     結果を見る場所の3割近くを取ってしまう。だから
+     - 「選択地点」は貼り付けず、スクロールすれば見えなくなる見出しにする
+     - タブは、分類マップと同じく左端に縦書きのしおりとして出す（上下の場所を取らない）
+     しおりを結果欄のスクロールに付いてこさせるため、.result-head を display: contents にして
+     タブを .tabs の直接の子として扱う（.result-head の中のままだと、sticky が .result-head の高さで止まる） */
   .result-head {
-    padding: 14px 0 0;
+    display: contents;
   }
 
   .result-place {
-    padding: 0 14px;
+    padding: 14px 14px 0;
   }
 
+  /* 高さ0の入れ物を上に貼り付け、しおりはそこから下へはみ出させる。高さ0なので中身の操作を邪魔しない */
+  .tab-buttons {
+    position: sticky;
+    top: 14px;
+    z-index: 4;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 6px;
+    height: 0;
+    border: 0;
+  }
+
+  /* 入れ物の高さが0なので、縮めないように止める（縮むと1字ずつ横に並んでしまう） */
+  .tab-buttons button {
+    flex: none;
+    min-height: 0;
+    padding: 14px 8px;
+    border-radius: 0 10px 10px 0;
+    background: var(--panel);
+    box-shadow: 0 2px 10px rgba(48, 52, 56, 0.14);
+    font-size: 0.85rem;
+    letter-spacing: 0.08em;
+    writing-mode: vertical-rl;
+    /* 選んでいないほうは少し引っこめて、選んでいるほうだけが出ているように見せる */
+    transform: translateX(-5px);
+    transition: transform 200ms ease, background 200ms ease, color 200ms ease;
+  }
+
+  .tab-buttons button:hover {
+    background: var(--panel);
+    transform: translateX(0);
+  }
+
+  .tab-buttons button.active {
+    background: var(--accent-dark);
+    color: #fff;
+    transform: translateX(0);
+  }
+
+  /* 縦書きのしおりに「石を見る」は長いので、「石」「地質」だけにする */
+  .tab-suffix {
+    display: none;
+  }
+
+  /* 下線は横並びのタブのときだけのもの */
+  .tab-buttons button::after,
+  .tab-buttons button.active::after {
+    display: none;
+  }
+
+  /* しおりの幅（約30px）のぶん、左を空ける */
   .tab-panel {
-    padding: 14px 14px 0;
+    padding: 14px 14px 0 44px;
   }
 
   .note {
@@ -1887,6 +2282,11 @@ body.stone-page {
     right: 14px;
     bottom: 10px;
     transform: none;
+  }
+
+  /* つまみが右下に来るので、出典の文字はその左で折り返す（重なると出典が読めず、つまみも押しにくい） */
+  .leaflet-control-attribution {
+    margin-right: 56px !important;
   }
 
   .map-restore-button {
@@ -1946,9 +2346,8 @@ body.stone-page {
     width: var(--rock-card-size);
   }
 
-  .result-pane {
-    padding: 14px;
-  }
+  /* 結果パネル自体には余白を付けない（左右の余白は .result-place と .tab-panel が持つ）。
+     上に余白があると、上に貼り付けた見出し（.result-head）の上に隙間ができ、スクロールした結果が透けて見える */
 
   .stone-header {
     min-height: 58px;
@@ -2666,12 +3065,30 @@ a.stone-back-button {
   font-size: 0.86rem;
 }
 
-/* 検索欄がこのページの主役。幅いっぱいの大きめの入力にする */
+/* 検索の帯。スクロールしても上に残す（以前は五十音の帯を残していたが、よく使うのは検索のほう）。
+   左に検索欄、右に件数と開閉の矢印。矢印を押すと、下に種類の絞り込みと五十音の索引が開く */
+.glossary-bar {
+  position: sticky;
+  top: 60px;
+  z-index: 5;
+  margin-top: 14px;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--line);
+  background: var(--bg);
+}
+
+.glossary-bar-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .glossary-search-box {
   position: relative;
   display: flex;
+  flex: 1 1 auto;
   align-items: center;
-  max-width: 420px;
+  min-width: 0;
 }
 
 .glossary-search-icon {
@@ -2708,11 +3125,92 @@ a.stone-back-button {
   cursor: pointer;
 }
 
+.glossary-count {
+  flex: 0 0 auto;
+  margin: 0;
+  color: var(--muted);
+  font-size: 0.84rem;
+  white-space: nowrap;
+}
+
+/* 開閉の矢印。全体の button の指定（塗りつぶし・押すと沈む）を打ち消して、枠だけの丸にする */
+.glossary-toggle {
+  position: relative;
+  display: grid;
+  flex: 0 0 auto;
+  place-items: center;
+  width: 40px;
+  min-height: 40px;
+  padding: 0;
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  background: var(--panel);
+  color: var(--accent-dark);
+}
+
+.glossary-toggle:hover {
+  border-color: var(--accent);
+  background: var(--panel);
+}
+
+.glossary-toggle:active {
+  transform: none;
+}
+
+.glossary-toggle svg {
+  width: 18px;
+  height: 18px;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2.2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  transition: transform 200ms ease;
+}
+
+.glossary-toggle[aria-expanded="true"] svg {
+  transform: rotate(180deg);
+}
+
+/* 絞り込んでいるときの目印。絞り込みは畳んだ中にあるので、閉じていても分かるようにする */
+.glossary-toggle.has-filter::after {
+  position: absolute;
+  top: 3px;
+  right: 3px;
+  width: 8px;
+  height: 8px;
+  border: 2px solid var(--bg);
+  border-radius: 50%;
+  background: var(--accent);
+  content: "";
+}
+
+.glossary-panel {
+  display: grid;
+  gap: 14px;
+  margin-top: 12px;
+  padding: 14px 16px;
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  background: var(--panel);
+}
+
+/* hidden 属性より display: grid が強いので、隠す指定を明示しておく */
+.glossary-panel[hidden] {
+  display: none;
+}
+
+.glossary-panel-label {
+  margin: 0 0 8px;
+  color: var(--muted);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
 .glossary-filters {
   display: flex;
   flex-wrap: wrap;
   gap: 8px;
-  margin-top: 14px;
 }
 
 /* hidden 属性より display: flex が強いので、隠す指定を明示しておく */
@@ -2746,37 +3244,22 @@ a.stone-back-button {
   color: #fff;
 }
 
-/* 五十音の帯と件数。スクロールしても上に残す */
-.glossary-rail {
-  position: sticky;
-  top: 60px;
-  z-index: 5;
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 4px 16px;
-  margin-top: 20px;
-  padding: 8px 0;
-  border-bottom: 1px solid var(--line);
-  background: var(--bg);
-}
-
 .glossary-index {
   display: flex;
-  flex-wrap: nowrap;
-  gap: 2px;
-  overflow-x: auto;
+  flex-wrap: wrap;
+  gap: 4px;
 }
 
 .glossary-index-link {
   flex: 0 0 auto;
   display: inline-grid;
   place-items: center;
-  min-width: 30px;
-  height: 30px;
+  min-width: 36px;
+  height: 36px;
   border-radius: 999px;
+  background: rgba(171, 167, 157, 0.12);
   color: var(--accent-dark);
-  font-size: 0.95rem;
+  font-size: 0.98rem;
   font-weight: 700;
   text-decoration: none;
 }
@@ -2786,14 +3269,8 @@ a.stone-back-button {
 }
 
 .glossary-index-link.is-empty {
+  background: none;
   color: #c9cbc4;
-}
-
-.glossary-count {
-  margin: 0;
-  margin-left: auto;
-  color: var(--muted);
-  font-size: 0.84rem;
 }
 
 .glossary-loading,
@@ -2814,7 +3291,8 @@ a.stone-back-button {
   margin: 0 0 10px;
   padding-bottom: 6px;
   border-bottom: 2px solid var(--line);
-  scroll-margin-top: 110px;
+  /* 上のバー（60px）と検索の帯（約65px）の下に見出しが来るように */
+  scroll-margin-top: 140px;
 }
 
 .glossary-row-kana {
@@ -3384,15 +3862,10 @@ a.stone-back-button {
   padding: 26px 0 60px;
 }
 
+/* 見出しのすぐ下は見方（.tree-guide）。以前は間に1文の紹介があったが、見方と木で伝わるので消した */
 .rock-tree-head h1 {
-  margin-bottom: 2px;
+  margin-bottom: 14px;
   font-size: 1.3rem;
-}
-
-.rock-tree-sub {
-  margin-bottom: 18px;
-  color: var(--muted);
-  font-size: 0.86rem;
 }
 
 /* 横幅は枠に合わせて組むので、はみ出さない。
@@ -3967,45 +4440,51 @@ a.tree-node:focus-visible .tree-node-name {
   font-size: 0.86rem;
 }
 
-/* 石と鉱物の切り替えタブ。ヘッダー（戻るボタンの帯）のすぐ下に、細い帯として貼り付ける。
-   ヘッダーはサイトの名前や戻る場所のためのものなので、操作は入れない（ヘッダーに入れると、そこだけ浮いて見えた）。
-   文字だけのタブと、選んでいる側の下線、境目の線1本だけ。高さは44pxで、スクロール中に木を見る場所をほとんど取らない。
-   ここに落ち着くまでに試した形は CLAUDE.md に残してある */
+/* 石と鉱物の切り替えタブ。画面の左端に縦書きで貼り付ける（しおりのように少し出っぱらせる）。
+   上下の場所をまったく取らないので、スクロールしても木を見る場所が減らない。
+   以前は 1024px より狭い画面ではヘッダーの下の細い帯にしていたが、狭い画面ほど上下の場所が惜しいので、どの幅でもしおりにした。
+   札が木に重ならないよう、本文の左にしおりのぶんの場所を空けておく。
+   ヘッダーには操作を入れない（ヘッダーに入れると、そこだけ浮いて見えた）。ここに落ち着くまでに試した形は CLAUDE.md に残してある */
 .tree-tabbar {
-  position: sticky;
-  top: 60px;
-  z-index: 9;
-  margin-bottom: 18px;
-  border-bottom: 1px solid var(--line);
-  background: rgba(244, 245, 243, 0.92);
-  backdrop-filter: blur(12px);
+  position: fixed;
+  /* 上のバー（60px）のすぐ下あたり。真ん中寄り（34%）だと下すぎて目に入りにくかった */
+  top: 96px;
+  left: 0;
+  z-index: 12;
 }
 
 .tree-switch {
-  position: relative;
   display: flex;
-  gap: 4px;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 6px;
 }
 
-/* 全体の button の指定（高さ42px・塗りつぶし・押すと沈む）を打ち消す */
+/* 全体の button の指定（高さ42px・塗りつぶし・押すと沈む）を打ち消す。
+   選んでいないほうは少し引っこめて、選んでいるほうだけが出ているように見せる */
 .tree-switch-tab {
   min-height: 0;
-  padding: 12px 18px;
-  border-radius: 0;
-  background: transparent;
+  padding: 18px 9px;
+  border-radius: 0 12px 12px 0;
+  background: var(--panel);
+  box-shadow: 0 2px 10px rgba(48, 52, 56, 0.12);
   color: var(--muted);
   font-size: 0.95rem;
   font-weight: 700;
-  transition: color 160ms ease;
+  letter-spacing: 0.1em;
+  writing-mode: vertical-rl;
+  transform: translateX(-5px);
+  transition: transform 200ms ease, background 200ms ease, color 200ms ease;
 }
 
 .tree-switch-tab:hover {
-  background: rgba(171, 167, 157, 0.12);
+  background: var(--panel);
   color: var(--ink);
+  transform: translateX(0);
 }
 
 .tree-switch-tab:active {
-  transform: none;
+  transform: translateX(0);
 }
 
 .tree-switch-tab:focus-visible {
@@ -4014,89 +4493,31 @@ a.tree-node:focus-visible .tree-node-name {
 }
 
 .tree-switch-tab.is-active {
-  color: var(--accent-dark);
+  background: var(--accent-dark);
+  color: #fff;
   font-weight: 800;
+  transform: translateX(0);
 }
 
-/* 選んでいるタブの下線。帯の境目の線に重ねて引く。幅と位置は rock-tree.js が入れる（タブごとに幅が違うため） */
-.tree-switch-indicator {
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  width: 60px;
-  height: 2px;
-  background: var(--accent);
-  transition: transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1), width 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+/* 左端のしおりのぶん、本文の左を空ける。広い画面では左右対称にして、木が寄って見えないようにする */
+.rock-tree.has-side-tabs {
+  width: min(1200px, calc(100% - 112px));
+}
+
+@media (max-width: 1023px) {
+  .rock-tree.has-side-tabs {
+    width: auto;
+    margin: 0 16px 0 48px;
+  }
 }
 
 @media (max-width: 640px) {
   .tree-switch-tab {
-    padding: 11px 14px;
-    font-size: 0.9rem;
-  }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .tree-switch-indicator {
-    transition: none;
-  }
-}
-
-/* 広い画面では、切り替えを画面の左端に縦向きで貼り付ける（しおりのように少し出っぱらせる）。
-   上下の場所をまったく取らないので、木を見る場所が減らない。
-   狭い画面では木が画面いっぱいで、端に出すと中身に重なるので、ヘッダーの下の細い帯のままにする。
-   札が木に重ならないよう、横に出すあいだは本文の幅を左右56pxずつ狭めて、札の場所をあらかじめ空ける。
-   1024px より狭いと、そのぶん木が窮屈になるので帯に戻す */
-@media (min-width: 1024px) {
-  /* 左端の札のぶんだけ本文を狭める（左右対称にして、木が寄って見えないようにする） */
-  .rock-tree {
-    width: min(1200px, calc(100% - 112px));
+    padding: 14px 7px;
+    font-size: 0.85rem;
   }
 
-  .tree-tabbar {
-    position: fixed;
-    /* 画面の真ん中より少し上。木の頭（紹介文のあたり）と同じ高さに来る */
-    top: 34%;
-    left: 0;
-    right: auto;
-    z-index: 12;
-    margin: 0;
-    border: 0;
-    background: none;
-    backdrop-filter: none;
-    transform: translateY(-50%);
-  }
-
-  .tree-switch {
-    flex-direction: column;
-    gap: 6px;
-  }
-
-  /* 選んでいないほうは少し引っこめて、選んでいるほうだけが出ているように見せる */
-  .tree-switch-tab {
-    padding: 18px 9px;
-    border-radius: 0 12px 12px 0;
-    background: var(--panel);
-    box-shadow: 0 2px 10px rgba(48, 52, 56, 0.12);
-    writing-mode: vertical-rl;
-    letter-spacing: 0.1em;
-    transform: translateX(-5px);
-    transition: transform 200ms ease, background 200ms ease, color 200ms ease;
-  }
-
-  .tree-switch-tab:hover {
-    background: var(--panel);
-    transform: translateX(0);
-  }
-
-  .tree-switch-tab.is-active {
-    background: var(--accent-dark);
-    color: #fff;
-    transform: translateX(0);
-  }
-
-  /* 下線は帯のときだけのもの */
-  .tree-switch-indicator {
-    display: none;
+  .rock-tree.has-side-tabs {
+    margin: 0 12px 0 40px;
   }
 }

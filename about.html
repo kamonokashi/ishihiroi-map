@@ -1,0 +1,243 @@
+<!doctype html>
+<html lang="ja" class="stone-root">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>このサイトについて - いしひろいマップ</title>
+    <!-- 日本語の本文用。読み込めなくても端末のゴシック体に落ちるだけで、表示は崩れない -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@400;500;700;800&display=swap">
+    <link rel="stylesheet" href="styles.css?v=20260926-13">
+    <script defer src="data/bundle.js?v=20260919-10"></script>
+    <script defer src="menu.js?v=20260926-01"></script>
+    <script defer src="link-preview.js?v=20260926-04"></script>
+  </head>
+  <!-- 石・岩相・用語のページと同じ2段組み。左に本文、右に目次とご意見箱。
+       注意書き・出典・AIでの制作・作者・連絡先の「詳しい版」をここに集める。短い版は地図画面の結果パネルの足もとにある。
+       長い箇条書きが続くと読みにくいので、冒頭に要点3つ、本文は「見出し語＋説明」の行（.about-rows）を基本にする -->
+  <body class="stone-page about-page" data-feedback-footer="off">
+    <header class="stone-header">
+      <button id="backButton" class="stone-back-button" type="button" aria-label="前のページに戻る" title="前のページに戻る"><svg viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M15 6l-6 6 6 6"/></svg></button>
+    </header>
+
+    <main class="stone-detail">
+      <div class="detail-layout">
+        <header class="detail-title">
+          <p class="stone-category">試作版</p>
+          <h1>このサイトについて</h1>
+          <p class="detail-lead">いしひろいマップは、地図で選んだ場所の地質から「そこで拾えそうな石」を推定して見せるサイトです。まだ作っている途中の試作版です。</p>
+        </header>
+
+        <aside class="detail-aside" aria-label="目次">
+          <!-- 目次とご意見箱をひとまとめにしてスクロールに付いてこさせる（それぞれに sticky を付けると重なる） -->
+          <div class="about-aside-sticky">
+          <nav class="detail-toc" aria-label="このページの内容">
+            <p class="detail-toc-title">このページの内容</p>
+            <ol>
+              <li><a href="#estimate">推定のしくみと限界</a></li>
+              <li><a href="#rules">石を拾うときの注意</a></li>
+              <li><a href="#reports">「見つけた」の記録について</a></li>
+              <li><a href="#ai">AIを使った制作について</a></li>
+              <li><a href="#data">使っているデータと出典</a></li>
+              <li><a href="#contact">ご意見・情報</a></li>
+              <li><a href="#author">作っている人</a></li>
+            </ol>
+          </nav>
+          <div class="about-aside-contact">
+            <p>お気づきのことは、ひとことでもお寄せください。</p>
+            <a class="about-button" data-feedback="" target="_blank" rel="noopener">ご意見箱を開く</a>
+          </div>
+          </div>
+        </aside>
+
+        <div class="detail-main">
+          <!-- まずこれだけ読めば足りる、という3つ。押すとその節へ -->
+          <ul class="about-points" aria-label="はじめに知っておいてほしいこと">
+            <li>
+              <a href="#estimate">
+                <span class="stone-panel-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="11" cy="11" r="6.4"/><path d="M15.8 15.8L20.5 20.5"/></svg></span>
+                <strong>表示は推定です</strong>
+                <span>地質図から推定した石です。実際にあるとは限りません。</span>
+              </a>
+            </li>
+            <li>
+              <a href="#rules">
+                <span class="stone-panel-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M12 4l9 16H3z"/><path d="M12 10v4.5"/><path d="M12 17.4v.1"/></svg></span>
+                <strong>拾えない場所もあります</strong>
+                <span>国立公園や天然記念物など、石を取ってはいけない場所があります。</span>
+              </a>
+            </li>
+            <li>
+              <a href="#ai">
+                <span class="stone-panel-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M12 3.5l1.9 5.1 5.1 1.9-5.1 1.9L12 17.5l-1.9-5.1L5 10.5l5.1-1.9z"/><path d="M18.5 16v4"/><path d="M16.5 18h4"/></svg></span>
+                <strong>AIと一緒に作っています</strong>
+                <span>作者が確かめていますが、誤りがあればお知らせください。</span>
+              </a>
+            </li>
+          </ul>
+
+          <article id="estimate" class="stone-info-panel">
+            <h2><span class="stone-panel-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="11" cy="11" r="6.4"/><path d="M15.8 15.8L20.5 20.5"/></svg></span>推定のしくみと限界</h2>
+            <p>選んだ地点とそのまわりの地質を、産総研の「20万分の1日本シームレス地質図V2」で調べ、それぞれの地質で見つかりやすい石を点数にして並べています。</p>
+            <p>川原や段丘のように石が運ばれてくる場所では、標高のデータから上流の範囲を割り出し、そこにある地質も数に入れています。</p>
+            <p class="about-callout">表示しているのは<strong>地質図からの推定</strong>です。その場所に実際にその石があると確かめたものではありません。</p>
+            <h3 class="stone-subheading">まだ苦手なこと</h3>
+            <ul class="about-list">
+              <li>「よく見つかる」「見つかるかも」の境目は、実際の採集記録とまだ突き合わせていません。</li>
+              <li>20万分の1の地質図なので、細かい地層や小さな岩体は描かれていません。</li>
+              <li>護岸の石・埋め立ての土・道路の砕石など、人が運んだ石は数に入っていません。</li>
+            </ul>
+            <p>「この場所ではこんな石が拾えた」「この石は出ないはず」といった声が、推定をよくするいちばんの手がかりになります。<a data-feedback="stones" target="_blank" rel="noopener">こちら</a>からご意見をお願いします！</p>
+          </article>
+
+          <article id="rules" class="stone-info-panel">
+            <h2><span class="stone-panel-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M12 4l9 16H3z"/><path d="M12 10v4.5"/><path d="M12 17.4v.1"/></svg></span>石を拾うときの注意</h2>
+            <p class="about-callout">地図に石が出ていても、そこで拾ってよいとは限りません。現地の看板や、管理している役所・持ち主の決まりに従ってください。</p>
+
+            <h3 class="stone-subheading">拾えない・許可が要る場所</h3>
+            <dl class="about-rows">
+              <div>
+                <dt>国立公園・国定公園</dt>
+                <dd>特別保護地区・特別地域では、許可なく石や土を取れません。<span class="about-law">自然公園法</span></dd>
+              </div>
+              <div>
+                <dt>天然記念物</dt>
+                <dd>指定された岩石・鉱物・地層や、その指定地では、取ることも傷つけることもできません。<span class="about-law">文化財保護法</span></dd>
+              </div>
+              <div>
+                <dt>川原・海岸</dt>
+                <dd>土石は国や自治体が管理しています。採取禁止の看板がある場所では拾わないでください。<span class="about-law">河川法・海岸法</span></dd>
+              </div>
+              <div>
+                <dt>私有地・採石場・鉱山跡</dt>
+                <dd>持ち主や管理者の許可なく入らないでください。</dd>
+              </div>
+            </dl>
+
+            <h3 class="stone-subheading">マナー</h3>
+            <ul class="about-list">
+              <li>持ち帰るのは、手に取れる数個までにしましょう。</li>
+              <li>穴を掘ったり、道具で崖や露頭を割ったりしないでください。</li>
+              <li>ひっくり返した石は元に戻しましょう。石の下は虫や小さな魚のすみかです。</li>
+            </ul>
+
+            <h3 class="stone-subheading">安全のために</h3>
+            <ul class="about-list">
+              <li>川は上流の雨やダムの放流で急に増水します。天気が崩れそうなときや、サイレンが鳴ったときは、すぐに川原から離れてください。</li>
+              <li>崖の下は落石に気をつけ、立入禁止の場所には入らないでください。</li>
+            </ul>
+          </article>
+
+          <article id="reports" class="stone-info-panel">
+            <h2><span class="stone-panel-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="12" r="8.4"/><path d="M8.3 12.3l2.5 2.5 5-5"/></svg></span>「見つけた」の記録について</h2>
+            <p>地図で調べた石の説明を開くと、「見つけた」「探したけど無かった」のボタンがあります。記録は、推定が当たっているかを確かめて、よくしていくために使います。「無かった」も同じくらい大事な手がかりです。</p>
+            <dl class="about-rows">
+              <div>
+                <dt>いらないもの</dt>
+                <dd>アカウント・名前・メールアドレス</dd>
+              </div>
+              <div>
+                <dt>記録するもの</dt>
+                <dd>石の種類、調べた地点（約100mの細かさに丸めます）、そのとき表示していた見つかる度、日時</dd>
+              </div>
+              <div>
+                <dt>記録しないもの</dt>
+                <dd>端末の現在地</dd>
+              </div>
+              <div>
+                <dt>ほかの人に見えるもの</dt>
+                <dd>約1km四方ごとの「見つけた／無かった」の人数だけ。誰がどこで記録したかは出しません</dd>
+              </div>
+            </dl>
+            <ul class="about-list about-list-small">
+              <li>同じ石・同じあたりの記録は1人1件です。もう一度押すと取り消せます。</li>
+              <li>人の区別には、ブラウザが作るランダムな番号を使います。ブラウザのデータを消したり、別の端末を使ったりすると、別の人として数えられます。</li>
+            </ul>
+          </article>
+
+          <article id="ai" class="stone-info-panel">
+            <h2><span class="stone-panel-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M12 3.5l1.9 5.1 5.1 1.9-5.1 1.9L12 17.5l-1.9-5.1L5 10.5l5.1-1.9z"/><path d="M18.5 16v4"/><path d="M16.5 18h4"/></svg></span>AIを使った制作について</h2>
+            <p>このサイトは、作者が方針と中身を決め、<strong>AI（Anthropic社のClaude）</strong>と一緒に作っています。</p>
+            <dl class="about-rows">
+              <div>
+                <dt>AIが書き、作者が確かめたもの</dt>
+                <dd>プログラム、ページの文章、石・鉱物・用語の説明、地質と石の対応表</dd>
+              </div>
+              <div>
+                <dt>文献で確かめたもの</dt>
+                <dd>分類の数値（シリカの量や粒の大きさの境目など）。国際的な分類の文献にあるものだけを載せ、出典を添えています</dd>
+              </div>
+              <div>
+                <dt>AIを使っていないもの</dt>
+                <dd>石の写真。産総研 地質調査総合センターの標本写真です</dd>
+              </div>
+            </dl>
+            <p>作者は地質の専門家ではないため、誤りが残っているかもしれません。お気づきの点は<a data-feedback="mistake" target="_blank" rel="noopener">ご意見箱</a>へお知らせください。</p>
+          </article>
+
+          <article id="data" class="stone-info-panel">
+            <h2><span class="stone-panel-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M12 7c-1.4-1.3-3.4-2-5.5-2H4v13h2.5c2.1 0 4.1.7 5.5 2 1.4-1.3 3.4-2 5.5-2H20V5h-2.5c-2.1 0-4.1.7-5.5 2z"/><path d="M12 7v13"/></svg></span>使っているデータと出典</h2>
+            <dl class="about-rows">
+              <div>
+                <dt>地質図・地質の凡例</dt>
+                <dd><a href="https://gbank.gsj.jp/seamless/" target="_blank" rel="noreferrer noopener">産総研 地質調査総合センター「20万分の1日本シームレス地質図V2」</a></dd>
+              </div>
+              <div>
+                <dt>石の標本写真</dt>
+                <dd><a href="https://gbank.gsj.jp/musee/" target="_blank" rel="noreferrer noopener">産総研 地質調査総合センター 地質標本館</a>（<a href="https://www.gsj.jp/license/license.html" target="_blank" rel="noreferrer noopener">政府標準利用規約 第2.0版</a>）。写真ごとの出典は各石のページにあります</dd>
+              </div>
+              <div>
+                <dt>背景の地図・標高</dt>
+                <dd><a href="https://maps.gsi.go.jp/development/ichiran.html" target="_blank" rel="noreferrer noopener">国土地理院 地理院タイル</a></dd>
+              </div>
+              <div>
+                <dt>地名の検索・住所</dt>
+                <dd><a href="https://nominatim.org/" target="_blank" rel="noreferrer noopener">Nominatim</a>（地図データ &copy; <a href="https://www.openstreetmap.org/copyright" target="_blank" rel="noreferrer noopener">OpenStreetMap contributors</a>）</dd>
+              </div>
+              <div>
+                <dt>地図の表示</dt>
+                <dd><a href="https://leafletjs.com/" target="_blank" rel="noreferrer noopener">Leaflet</a></dd>
+              </div>
+            </dl>
+          </article>
+
+          <article id="contact" class="stone-info-panel about-contact">
+            <h2><span class="stone-panel-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M5 5.5h14v10H10.5L6 19v-3.5H5z"/></svg></span>ご意見・情報</h2>
+            <p>次のようなことがありましたら、ぜひお気軽にご意見をお寄せください。匿名で送信できます。</p>
+            <ul class="about-list">
+              <li>ページの内容の誤り</li>
+              <li>「実際に行ったが、こんな石は出ない／この石がよく拾える」などの、現地の情報</li>
+              <li>「こんな機能が欲しい！」という要望</li>
+            </ul>
+            <!-- 送り先はどれも同じご意見箱なので、ボタンは1つだけ。一緒に作りたい方への呼びかけは、ボタンの前に文で添える -->
+            <p class="about-join">作者は石にはあまり詳しくないので、詳しい方のご意見がとても参考になります。<strong>一緒にサイトを作ってみたい方</strong>も、ぜひご連絡ください。</p>
+            <p><a class="about-button" data-feedback="" target="_blank" rel="noopener">ご意見箱を開く</a></p>
+
+            <p class="about-hint">地図で調べた結果の下や、各ページの終わりにあるリンクから開くと、どの場所・どのページの話かが最初から書き込まれます。</p>
+          </article>
+
+          <!-- 本名・学校名・住んでいる地域・顔写真は載せない。連絡はご意見箱に一本化している -->
+          <article id="author" class="stone-info-panel">
+            <h2><span class="stone-panel-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><circle cx="12" cy="8.5" r="3.5"/><path d="M5 20c.8-3.6 3.6-5.5 7-5.5s6.2 1.9 7 5.5"/></svg></span>作っている人</h2>
+            <p class="about-author"><strong>kasshi</strong><span class="about-law">大学生</span></p>
+            <p>石を拾うのが好きですが、拾った石の種類がなかなか分かりませんでした。もっと簡単に調べられるサイトがあればと思い、このサイトを作り始めました。石については勉強中です。</p>
+            <dl class="about-rows">
+              <div>
+                <dt>SNS</dt>
+                <!-- リンクができたら、「準備中」を消して次の形で足す（rel="me" は本人のアカウントであることを示す）
+                     <a href="https://x.com/アカウント名" target="_blank" rel="noreferrer noopener me">X</a> -->
+                <dd class="about-links">準備中</dd>
+              </div>
+              <div>
+                <dt>作ったもの</dt>
+                <!-- アプリの名前・ひとこと・Google Play のページへのリンクを入れる -->
+                <dd>Android アプリ（準備中）</dd>
+              </div>
+            </dl>
+          </article>
+        </div>
+      </div>
+    </main>
+  </body>
+</html>
