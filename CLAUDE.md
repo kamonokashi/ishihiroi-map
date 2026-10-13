@@ -147,8 +147,9 @@
 - `data/bundle.js` — rocks / lithology-map / legend-index / minerals / terms を1つにまとめたもの。**生成物**。`file://` で開くと `fetch` が使えないので、そのときだけこちらから読む
 - `data/lithology-detail-bundle.js` — `lithology-detail.json` の `file://` 用。**生成物**。`bundle.js` と同じくらい大きく、`bundle.js` は地図画面が毎回読むので分けてある
 - `tools/build-lithology-map.mjs` — 生成物（lithology-map / legend-index / lithology-detail / 2つの bundle / PHOTO-CREDITS.md）を作るスクリプト
-- `about.html` — このサイトについて。推定のしくみと限界・石を拾うときの注意（採集ルールと安全）・AIを使った制作・データの出典・作者・ご意見の送り先の**詳しい版**。地図画面の結果パネル足もとの `.note` が短い版で、ここへリンクする。メニューの最後の項目
+- `about.html` — このサイトについて。推定のしくみと限界・石を拾うときの注意（採集ルールと安全）・「見つけた」の記録・ほかのサービスに送られる情報（`#privacy`）・AIを使った制作・データの出典・作者・ご意見の送り先の**詳しい版**。地図画面の結果パネル足もとの `.note` が短い版で、ここへリンクする。メニューの最後の項目
   - 採集ルール・AIでの制作の書き方を変えたら、`.note` の短い版もずらさない
+  - ブラウザから通信する外部サービスを足したり外したりしたら、`#privacy`（何を送るか）と `#data`（出典）の両方を直す
 - **ご意見箱（Google フォーム）** — フォームの住所・項目の番号（`entry.…`）・「ご意見の種類」の選択肢の文字は `link-preview.js` の `FEEDBACK_FORM` / `FEEDBACK_FIELDS` / `FEEDBACK_KINDS` の1か所だけで持つ（`feedbackFormUrl()`）。選択肢の文字はフォームと一字一句同じでないと選ばれない。フォームを直したらここも直す
   - 「どの部分について」に、開いた場所を先に書き込む。地図の結果の終わり（`renderRockFeedback()`）は地点名・緯度経度・表示していた石、詳細ページ・用語集・分類マップの終わりの「このページの間違いを知らせる」（`link-preview.js` が body の終わりに足す）はページ名とURL。地名や題名は遅れて入るので、押したときに組み立てる
   - `about.html` は本文にご意見欄があるので、`data-feedback-footer="off"` で終わりのリンクを止めている。`data-feedback="種類"` を付けたリンクには住所が自動で入る

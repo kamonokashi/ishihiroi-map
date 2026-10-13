@@ -38,6 +38,7 @@
               <li><a href="#estimate">推定のしくみと限界</a></li>
               <li><a href="#rules">石を拾うときの注意</a></li>
               <li><a href="#reports">「見つけた」の記録について</a></li>
+              <li><a href="#privacy">ほかのサービスに送られる情報</a></li>
               <li><a href="#ai">AIを使った制作について</a></li>
               <li><a href="#data">使っているデータと出典</a></li>
               <li><a href="#contact">ご意見・情報</a></li>
@@ -153,6 +154,42 @@
             <ul class="about-list about-list-small">
               <li>同じ石・同じあたりの記録は1人1件です。もう一度押すと取り消せます。</li>
               <li>人の区別には、ブラウザが作るランダムな番号を使います。ブラウザのデータを消したり、別の端末を使ったりすると、別の人として数えられます。</li>
+            </ul>
+          </article>
+
+          <!-- 外部サービスを足したり外したりしたら、ここも直す（出典は #data、送る中身はここ） -->
+          <article id="privacy" class="stone-info-panel">
+            <h2><span class="stone-panel-icon" aria-hidden="true"><svg viewBox="0 0 24 24" focusable="false"><path d="M4 12h11"/><path d="M12 8l4 4-4 4"/><path d="M15 5h5v14h-5"/></svg></span>ほかのサービスに送られる情報</h2>
+            <p>このサイトは、地図や地質のデータをほかの機関のサービスから直接読み込んでいます。そのため、使い方に応じて次の情報がそれぞれのサービスに送られます。どのサービスにも、ブラウザの通信として IP アドレスが伝わります。</p>
+            <dl class="about-rows">
+              <div>
+                <dt>産総研 地質調査総合センター</dt>
+                <dd>調べた地点とその周りの範囲（緯度・経度）。地質図と地質の凡例を読み込むため</dd>
+              </div>
+              <div>
+                <dt>国土地理院</dt>
+                <dd>表示している地図の範囲。背景の地図と標高を読み込むため</dd>
+              </div>
+              <div>
+                <dt>OpenStreetMap（Nominatim）</dt>
+                <dd>検索欄に入れた言葉と、調べた地点の緯度・経度。地名を探し、住所を表示するため</dd>
+              </div>
+              <div>
+                <dt>Google</dt>
+                <dd>ご意見箱（Google フォーム）に書いた内容。文字の表示に Google Fonts も使っています</dd>
+              </div>
+              <div>
+                <dt>Cloudflare</dt>
+                <dd>このサイトを置いている場所です。「見つけた」の記録もここに保存します</dd>
+              </div>
+              <div>
+                <dt>unpkg</dt>
+                <dd>地図を表示するプログラム（Leaflet）の配信元。送るのは通常の読み込みの通信だけです</dd>
+              </div>
+            </dl>
+            <ul class="about-list about-list-small">
+              <li>「現在地」ボタンで取得した位置は、調べた地点として上と同じように送られます。「見つけた」の記録には、端末の現在地は残しません。</li>
+              <li>ご意見箱のメールアドレスは任意です。書かなくても送れます。</li>
             </ul>
           </article>
 
