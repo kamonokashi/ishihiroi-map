@@ -160,6 +160,9 @@
   - `file://` では出さない
 - `functions/api/geology.js` — GSJ の凡例 API の中継（Cloudflare Pages Functions、`/api/geology`）。ふだんはブラウザから GSJ に直接取りに行き（CORS は許可されている）、失敗したときだけ使う。手元では `local-server.cjs` が同じ道で同じ中継をする。問い合わせの形を変えたら両方を直す
 - `local-server.cjs` — Node だけで動く確認用サーバー
+- `favicon.svg` / `favicon-32.png` / `apple-touch-icon.png` — サイトのマーク（地図のピンの頭に、つやのある川原の丸い石）。全ページの `<head>` で読む。地図画面のヘッダーのマーク（`.app-logo`）も同じ絵を `index.html` に直接書いている。絵を変えたら4か所とも直す（PNG は Safari・iPhone のホーム画面用。apple-touch-icon は端末が角を丸めるので四角いまま塗る）
+  - 線を引いた石（縞・脈）は、小さくするとコーヒー豆や錠剤に見えたのでやめた
+- 検索欄の例（「富士山、多摩川など」）は `script.js` の `fixedPlaces` にも入れて、Nominatim がつながらなくても開けるようにしている。多摩川は川全体の名前で地点が決まらないので、二子玉川の河原（河川堆積物）に固定。例を変えたら `fixedPlaces` と `text.searchFailed` も直す
 
 ## 起動
 
