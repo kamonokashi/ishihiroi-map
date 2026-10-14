@@ -290,10 +290,11 @@ h3 {
   pointer-events: auto;
 }
 
+/* とげの横位置は、ピンの真上・真下に来るよう script.js が --tip-x で渡す（画面の端で吹き出しをずらしたとき用） */
 .map-inspect-popup::before {
   position: absolute;
   bottom: -10px;
-  left: 50%;
+  left: var(--tip-x, 50%);
   width: 18px;
   height: 18px;
   background: #fff;

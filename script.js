@@ -453,6 +453,7 @@ function setInspectPopupButtonsState({ disabled, label }) {
 
 const POPUP_GAP = 12;
 const POPUP_EDGE = 8;
+const POPUP_TIP_INSET = 18;
 // 地図の上端には検索バーが重なっている。
 // ここにふきだしが乗ると検索が押せなくなるので、収まらなければ下側に出す。
 const POPUP_TOP_INSET = 78;
@@ -484,8 +485,13 @@ function updateInspectPopupPosition() {
   const maxLeft = Math.max(POPUP_EDGE, mapPaneRect.width - width - POPUP_EDGE);
   const maxTop = Math.max(POPUP_EDGE, mapPaneRect.height - height - POPUP_EDGE);
 
-  inspectPopupOverlay.style.left = `${Math.round(clamp(anchor.x - width / 2, POPUP_EDGE, maxLeft))}px`;
+  const left = Math.round(clamp(anchor.x - width / 2, POPUP_EDGE, maxLeft));
+  inspectPopupOverlay.style.left = `${left}px`;
   inspectPopupOverlay.style.top = `${Math.round(clamp(top, POPUP_EDGE, maxTop))}px`;
+  // 画面の端に寄せて吹き出しをずらしても、とげはピンを指すように動かす。
+  // 角丸にかからないよう、両端から POPUP_TIP_INSET より内側に収める
+  const tipX = clamp(anchor.x - left, POPUP_TIP_INSET, width - POPUP_TIP_INSET);
+  inspectPopupOverlay.style.setProperty("--tip-x", `${Math.round(tipX)}px`);
 }
 
 async function inspectGeology(latlng) {
