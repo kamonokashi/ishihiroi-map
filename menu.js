@@ -17,10 +17,12 @@ const MENU_ITEMS = [
 ];
 
 (() => {
-  const here = window.location.pathname.split("/").pop() || "index.html";
+  // 本番（Cloudflare Pages）は /glossary.html を /glossary に転送するので、.html を外して比べる
+  const pageName = (path) => (path || "index").replace(/\.html$/, "");
+  const here = pageName(window.location.pathname.split("/").pop());
   const arrow = `<svg class="app-menu-arrow" viewBox="0 0 24 24" aria-hidden="true" focusable="false"><path d="M9 5l7 7-7 7"/></svg>`;
   const items = MENU_ITEMS.map(({ href, title, note }) => `
-    <a class="app-menu-item" href="${href}"${href === here ? ` aria-current="page"` : ""}>
+    <a class="app-menu-item" href="${href}"${pageName(href) === here ?` aria-current="page"` : ""}>
       <span class="app-menu-item-text">
         <span class="app-menu-title">${title}</span>
         <span class="app-menu-note">${note}</span>
